@@ -18,7 +18,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 
 		<!-- Project dependencies -->
-		<spring.version>4.3.6.RELEASE</spring.version>
+		<spring.version>5.3.20</spring.version>
 		<swagger.version>2.4.0</swagger.version>
 		<jackson.version>2.9.8</jackson.version>
 		<thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
@@ -32,7 +32,7 @@
 		<!-- Jetty configuration -->
 		<jetty.version>9.4.21.v20190926</jetty.version>
 		<jetty.http.port>9000</jetty.http.port>
-		<jetty.context>/employee</jetty.context>
+		<jetty.context>/pos</jetty.context>
 		<failOnMissingWebXml>false</failOnMissingWebXml>
 
 
@@ -59,6 +59,13 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
 			<version>${spring.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>5.3.21</version>
 		</dependency>
 
 
@@ -150,6 +157,38 @@
 			<version>${javax.servlet.version}</version>
 			<scope>provided</scope>
 		</dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.200</version>
+            <scope>compile</scope>
+        </dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.codehaus.mojo/jaxb2-maven-plugin -->
+		<dependency>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>jaxb2-maven-plugin</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/org.apache.xmlgraphics/fop -->
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>fop</artifactId>
+			<version>2.7</version>
+		</dependency>
+
+
+
 
 	</dependencies>
 

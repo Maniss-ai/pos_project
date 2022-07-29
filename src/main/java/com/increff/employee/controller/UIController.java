@@ -18,19 +18,34 @@ public class UIController {
 		return "index.html";
 	}
 
-	@RequestMapping(value = "/ui/home")
-	public ModelAndView home() {
-		return mav("home.html");
+	@RequestMapping(value = "/ui/brand")
+	public ModelAndView brand() {
+		return mav("brand.html");
 	}
 
-	@RequestMapping(value = "/ui/features")
-	public ModelAndView features() {
-		return mav("features.html");
+	@RequestMapping(value = "/ui/product")
+	public ModelAndView product() {
+		return mav("product.html");
 	}
 
-	@RequestMapping(value = "/ui/pricing")
-	public ModelAndView pricing() {
-		return mav("pricing.html");
+	@RequestMapping(value = "/ui/inventory")
+	public ModelAndView inventory() {
+		return mav("inventory.html");
+	}
+
+	@RequestMapping(value = "/ui/order/place_order")
+	public ModelAndView placeOrder() {
+		return mav("place_order.html");
+	}
+
+	@RequestMapping(value = "/ui/order/view_order")
+	public ModelAndView viewOrder() {
+		return mav("view_order.html");
+	}
+
+	@RequestMapping(value = "/ui/report")
+	public ModelAndView report() {
+		return mav("report.html");
 	}
 
 	private ModelAndView mav(String page) {

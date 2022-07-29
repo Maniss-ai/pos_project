@@ -7,7 +7,7 @@ public class InfoData {
 	private String message;
 
 	public InfoData() {
-		message = "Activity time: " + LocalDateTime.now().toString();
+		message = "Activity time: " + LocalDateTime.now();
 	}
 
 	public String getMessage() {

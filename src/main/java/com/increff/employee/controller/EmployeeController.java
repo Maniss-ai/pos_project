@@ -29,14 +29,13 @@ public class EmployeeController {
 	@ApiOperation(value = "Adds an employee")
 	@RequestMapping(path = "/api/employee", method = RequestMethod.POST)
 	public void add(@RequestBody EmployeeForm form) {
-		EmployeePojo p = convert(form);
-		service.add(p);
+		EmployeePojo pojo = convertFormToPojo(form);
+		service.add(pojo);
 	}
 
 	
-	@ApiOperation(value = "Deletes and employee")
+	@ApiOperation(value = "Deletes an employee")
 	@RequestMapping(path = "/api/employee/{id}", method = RequestMethod.DELETE)
-	// /api/1
 	public void delete(@PathVariable int id) {
 		service.delete(id);
 	}
@@ -44,42 +43,42 @@ public class EmployeeController {
 	@ApiOperation(value = "Gets an employee by ID")
 	@RequestMapping(path = "/api/employee/{id}", method = RequestMethod.GET)
 	public EmployeeData get(@PathVariable int id) throws ApiException {
-		EmployeePojo p = service.get(id);
-		return convert(p);
+		EmployeePojo pojo = service.get(id);
+		return convertPojoToData(pojo);
 	}
 
 	@ApiOperation(value = "Gets list of all employees")
 	@RequestMapping(path = "/api/employee", method = RequestMethod.GET)
 	public List<EmployeeData> getAll() {
 		List<EmployeePojo> list = service.getAll();
-		List<EmployeeData> list2 = new ArrayList<EmployeeData>();
+		List<EmployeeData> list2 = new ArrayList<>();
 		for (EmployeePojo p : list) {
-			list2.add(convert(p));
+			list2.add(convertPojoToData(p));
 		}
 		return list2;
 	}
 
 	@ApiOperation(value = "Updates an employee")
 	@RequestMapping(path = "/api/employee/{id}", method = RequestMethod.PUT)
-	public void update(@PathVariable int id, @RequestBody EmployeeForm f) throws ApiException {
-		EmployeePojo p = convert(f);
-		service.update(id, p);
+	public void update(@PathVariable int id, @RequestBody EmployeeForm form) throws ApiException {
+		EmployeePojo pojo = convertFormToPojo(form);
+		service.update(id, pojo);
 	}
 	
 
-	private static EmployeeData convert(EmployeePojo p) {
-		EmployeeData d = new EmployeeData();
-		d.setAge(p.getAge());
-		d.setName(p.getName());
-		d.setId(p.getId());
-		return d;
+	private static EmployeeData convertPojoToData(EmployeePojo pojo) {
+		EmployeeData data = new EmployeeData();
+		data.setAge(pojo.getAge());
+		data.setName(pojo.getName());
+		data.setId(pojo.getId());
+		return data;
 	}
 
-	private static EmployeePojo convert(EmployeeForm f) {
-		EmployeePojo p = new EmployeePojo();
-		p.setAge(f.getAge());
-		p.setName(f.getName());
-		return p;
+	private static EmployeePojo convertFormToPojo(EmployeeForm form) {
+		EmployeePojo pojo = new EmployeePojo();
+		pojo.setAge(form.getAge());
+		pojo.setName(form.getName());
+		return pojo;
 	}
 
 }

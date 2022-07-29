@@ -1,44 +1,78 @@
 <head th:fragment="name_head">
 
-<!-- Required meta tags -->
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="baseUrl" th:attr="content=${baseUrl}">
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="baseUrl" th:attr="content=${baseUrl}">
 
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-<link rel="stylesheet" th:href="@{/static/app.css}">
+  <link rel="stylesheet" th:href="@{/static/app.css}">
+  <link rel="stylesheet" th:href="@{/static/bootstrap.css}">
 
 </head>
 
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="name_navbar">
-  <a class="navbar-brand" th:href="@{/ui/home}">
+  <a class="navbar-brand" th:href="@{/}">
     <img th:src="@{/static/logo.jpg}" class="d-inline-block align-top" alt="">
   </a>
 
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+    aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
+
   <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
+
+    <ul class="nav nav-tabs">
+
       <li class="nav-item">
-        <a class="nav-link" th:href="@{/ui/features}">Features</a>
+        <a class="nav-link" th:href="@{/ui/brand}">Brand</a>
       </li>
+
       <li class="nav-item">
-        <a class="nav-link" th:href="@{/ui/pricing}">Pricing</a>
+        <a class="nav-link" th:href="@{/ui/product}">Product</a>
       </li>
+
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/ui/inventory}">Inventory</a>
+      </li>
+      
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" th:href="@{/ui/order/place_order}" role="button" aria-expanded="false">Order</a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" th:href="@{/ui/order/place_order}">Place Order</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" th:href="@{/ui/order/view_order}">View Order</a></li>
+        </ul>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/ui/report}">Report</a>
+      </li>
+
+      <div class="animation start-home"></div>
+
     </ul>
+
   </div>
 </nav>
 
-<footer class="footer" th:fragment="name_footer">
-	Copyright Increff 2019
-	&nbsp;
-	[[${info.getMessage()}]]
-	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-	<script th:src="@{/static/app.js}"/></script>
-	
+
+<footer class="footer" th:fragment="name_footer" style="background-color: #97e2db">
+  Copyright Increff 2019
+  &nbsp;
+  [[${info.getMessage()}]]
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script th:src="@{/static/brand.js}"></script>
+  <script th:src="@{/static/product.js}"></script>
+  <script th:src="@{/static/inventory.js}"></script>
+  <script th:src="@{/static/place_order.js}"></script>
+  <script th:src="@{/static/view_order.js}"></script>
+  <script th:src="@{/static/report.js}"></script>
+
+  <script th:src="@{/static/papaparse.min.js}"></script>
+  <link rel="stylesheet" th:href="@{/static/app.css}">
+
+
 </footer>
-
-

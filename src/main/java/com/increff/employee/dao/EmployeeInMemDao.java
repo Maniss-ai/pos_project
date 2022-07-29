@@ -18,7 +18,7 @@ public class EmployeeInMemDao {
 
 	@PostConstruct
 	public void init() {
-		rows = new HashMap<Integer, EmployeePojo>();
+		rows = new HashMap<>();
 	}
 	
 	public void insert(EmployeePojo p) {
@@ -36,7 +36,7 @@ public class EmployeeInMemDao {
 	}
 	
 	public List<EmployeePojo> selectAll() {
-		ArrayList<EmployeePojo> list = new ArrayList<EmployeePojo>();
+		ArrayList<EmployeePojo> list = new ArrayList<>();
 		list.addAll(rows.values());
 		return list;
 	}

@@ -8,6 +8,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.increff.employee.pojo.EmployeePojo;
@@ -15,11 +16,12 @@ import com.increff.employee.pojo.EmployeePojo;
 @Repository
 public class EmployeeDao {
 
-	private static String delete_id = "delete from EmployeePojo p where id=:id";
-	private static String select_id = "select p from EmployeePojo p where id=:id";
-	private static String select_all = "select p from EmployeePojo p";
+	private static final String delete_id = "delete from EmployeePojo p where id=:id";
+	private static final String select_id = "select p from EmployeePojo p where id=:id";
+	private static final String select_all = "select p from EmployeePojo p";
 
 	@PersistenceContext
+	@Autowired
 	private EntityManager em;
 
 	@Transactional
@@ -27,10 +29,10 @@ public class EmployeeDao {
 		em.persist(p);
 	}
 
-	public int delete(int id) {
+	public void delete(int id) {
 		Query query = em.createQuery(delete_id);
 		query.setParameter("id", id);
-		return query.executeUpdate();
+		query.executeUpdate();
 	}
 
 	public EmployeePojo select(int id) {
@@ -45,6 +47,7 @@ public class EmployeeDao {
 	}
 
 	public void update(EmployeePojo p) {
+
 	}
 
 	TypedQuery<EmployeePojo> getQuery(String jpql) {

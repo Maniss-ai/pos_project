@@ -28,7 +28,7 @@ public class EmployeeService {
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
-	public EmployeePojo get(int id) throws ApiException {
+	public EmployeePojo get(int id) throws RuntimeException {
 		return getCheck(id);
 	}
 
@@ -38,7 +38,7 @@ public class EmployeeService {
 	}
 
 	@Transactional(rollbackOn  = ApiException.class)
-	public void update(int id, EmployeePojo p) throws ApiException {
+	public void update(int id, EmployeePojo p) throws RuntimeException {
 		normalize(p);
 		EmployeePojo ex = getCheck(id);
 		ex.setAge(p.getAge());
@@ -47,10 +47,10 @@ public class EmployeeService {
 	}
 
 	@Transactional
-	public EmployeePojo getCheck(int id) throws ApiException {
+	public EmployeePojo getCheck(int id) {
 		EmployeePojo p = dao.select(id);
 		if (p == null) {
-			throw new ApiException("Employee with given ID does not exit, id: " + id);
+			throw new RuntimeException();
 		}
 		return p;
 	}
