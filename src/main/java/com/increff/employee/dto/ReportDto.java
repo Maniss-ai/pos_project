@@ -5,6 +5,7 @@ import com.increff.employee.model.InventoryData;
 import com.increff.employee.model.ReportForm;
 import com.increff.employee.pojo.*;
 import com.increff.employee.service.*;
+import com.mysql.cj.conf.ConnectionUrlParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -30,8 +30,22 @@ public class ReportDto {
     @Autowired
     private ViewOrderService viewOrderService;
 
+
+    /****************************  GENERATE REPORT: STARTS  ****************************/
     public StringBuilder getAllSales(ReportForm form) throws ApiException {
         if(form.getStart_date() != null && form.getEnd_date() != null && !form.getStart_date().isEmpty() && !form.getEnd_date().isEmpty()) {
+
+            // check weather brand or category exists ...
+            if(!form.getBrand().isEmpty() && !form.getCategory().isEmpty() && form.getBrand() != null && form.getCategory() != null && !checkBrandCategoryExists(form.getBrand(), form.getCategory())) {
+                throw new ApiException("Brand or Category doesn't exists ....");
+            }
+            if(!form.getBrand().isEmpty() && form.getBrand() != null && !checkBrandExists(form.getBrand())) {
+                throw new ApiException("Brand doesn't exists ....");
+            }
+            if(!form.getCategory().isEmpty() && form.getCategory() != null && !checkCategoryExists(form.getCategory())) {
+                throw new ApiException("Category doesn't exists ....");
+            }
+
             StringBuilder salesData = new StringBuilder("Brand\tCategory\tQuantity\tRevenue\n");
             List<ProductPojo> productPojoList;
 
@@ -48,9 +62,9 @@ public class ReportDto {
 
             // USING BRAND ONLY + DATE
             else if(!form.getBrand().isEmpty() && form.getBrand() != null) {
-                salesData.append(form.getBrand()).append(form.getCategory());
                 productPojoList = productService.getProductWithBrand(form);
-                getReportWithBrand(start_date, end_date, salesData, productPojoList);
+                System.out.println("BRAND SIZE : " + productPojoList.size());
+                getReportWithBrand(start_date, end_date, salesData, productPojoList, form);
             }
 
             // USING CATEGORY ONLY + DATE
@@ -60,7 +74,6 @@ public class ReportDto {
 
             // USING DATE ONLY
             else {
-                System.out.println("WORKING!!");
                 productPojoList = productService.getProductWithDate(form);
             }
 
@@ -69,6 +82,108 @@ public class ReportDto {
         else {
             throw new ApiException("Date can't be empty ....");
         }
+    }
+
+    public StringBuilder getAllBrand() {
+        StringBuilder dataListString = new StringBuilder("");
+        List<BrandPojo> pojoList = brandService.getAll();
+        List<BrandData> dataList = new ArrayList<>();
+
+        dataListString.append("Brand").append("\t").append("Category").append("\n");
+
+        for (BrandPojo pojo : pojoList) {
+            dataList.add(BrandDto.convertPojoToData(pojo));
+            dataListString.append(pojo.getBrand()).append("\t").append(pojo.getCategory()).append("\n");
+        }
+
+        brandJavaObjToTsvFile(dataList);
+        return dataListString;
+    }
+
+    public StringBuilder getAllInventory() throws ApiException {
+        StringBuilder dataListString = new StringBuilder("");
+        List<InventoryPojo> pojoList = inventoryService.getAll();
+        List<InventoryData> dataList = new ArrayList<>();
+
+        dataListString.append("Barcode").append("\t").append("Inventory").append("\t").append("Brand").append("\t").append("Category").append("\n");
+
+        for (InventoryPojo pojo : pojoList) {
+            dataList.add(InventoryDto.convertPojoToData(pojo));
+            String brand = productService.get(pojo.getBarcode()).getBrand();
+            String category = productService.get(pojo.getBarcode()).getCategory();
+
+            dataListString.append(pojo.getBarcode()).append("\t").append(pojo.getInventory()).append("\t").append(brand).append("\t").append(category).append("\n");
+        }
+
+        inventoryJavaObjToTsvFile(dataList);
+
+        return dataListString;
+    }
+
+    /****************************  GENERATE REPORT: ENDS  ****************************/
+
+    /*************************************************************************************/
+
+    /****************************  GENERATE SALES DATA: STARTS  ****************************/
+    private void getReportWithBrand(LocalDate start_date, LocalDate end_date, StringBuilder salesData, List<ProductPojo> productPojoList, ReportForm form) throws ApiException {
+        List<PlaceOrderPojo> placeOrderPojoList = new ArrayList<>();
+        for (ProductPojo pojo : productPojoList) {
+            placeOrderPojoList.addAll(placeOrderService.getCheckWithBarcode(pojo.getBarcode()));
+        }
+
+        // Get Order Ids
+        List<OrderPojo> orderPojoList = viewOrderService.getSelectedOrdersWithoutId(start_date, end_date);
+
+        // Match Order Ids according to the given Time Range ....
+        for(int i = 0; i < placeOrderPojoList.size(); i++) {
+            boolean equalIds = false;
+            for(OrderPojo orderPojo : orderPojoList) {
+                if(placeOrderPojoList.get(i).getOrder_id() == orderPojo.getOrder_id()) {
+                    equalIds = true;
+                    break;
+                }
+            }
+
+            if(!equalIds) {
+                placeOrderPojoList.remove(i);
+                i--;
+            }
+        }
+
+        Map<String, ConnectionUrlParser.Pair<Integer, Integer>> revenueQuantityMap = new HashMap<>();
+        int totalQuantity;
+        int totalRevenue;
+
+        for (PlaceOrderPojo placeOrderPojo : placeOrderPojoList) {
+            totalQuantity = placeOrderPojo.getQuantity();
+            totalRevenue = placeOrderPojo.getQuantity() * placeOrderPojo.getSelling_price();
+
+            if (revenueQuantityMap.containsKey(productService.get(placeOrderPojo.getBarcode()).getCategory())) {
+                totalQuantity += revenueQuantityMap.get(productService.get(placeOrderPojo.getBarcode()).getCategory()).left;
+                totalRevenue += revenueQuantityMap.get(productService.get(placeOrderPojo.getBarcode()).getCategory()).right;
+            }
+
+            ConnectionUrlParser.Pair<Integer, Integer> pair = new ConnectionUrlParser.Pair<>(totalQuantity, totalRevenue);
+            revenueQuantityMap.put(
+                    productService.get(placeOrderPojo.getBarcode()).getCategory(),
+                    pair
+            );
+
+        }
+
+        for(Map.Entry<String, ConnectionUrlParser.Pair<Integer, Integer>> entry : revenueQuantityMap.entrySet()) {
+            salesData.append(form.getBrand())
+                        .append("\t")
+                        .append(entry.getKey())
+                        .append("\t")
+                        .append(entry.getValue().left)
+                        .append("\t")
+                        .append(entry.getValue().right)
+                        .append("\n");
+        }
+
+        System.out.println(salesData);
+
     }
 
     private void getReportWithBrandCategory(LocalDate start_date, LocalDate end_date, StringBuilder salesData, List<ProductPojo> productPojoList) throws ApiException {
@@ -108,40 +223,43 @@ public class ReportDto {
         salesData.append(totalQuantity).append("\t").append(totalRevenue);
     }
 
-    public StringBuilder getAllBrand() {
-        StringBuilder dataListString = new StringBuilder("");
-        List<BrandPojo> pojoList = brandService.getAll();
-        List<BrandData> dataList = new ArrayList<>();
+    /****************************  GENERATE SALES DATA: ENDS  ****************************/
 
-        dataListString.append("Brand").append("\t").append("Category").append("\n");
+    /*************************************************************************************/
 
-        for (BrandPojo pojo : pojoList) {
-            dataList.add(BrandDto.convertPojoToData(pojo));
-            dataListString.append(pojo.getBrand()).append("\t").append(pojo.getCategory()).append("\n");
+    /****************************  HELPER FUNCTIONS: STARTS  ****************************/
+
+    private boolean checkBrandCategoryExists(String brand, String category) {
+        List<BrandPojo> brandPojoList = brandService.getAll();
+        for(BrandPojo brandPojo : brandPojoList) {
+            if(Objects.equals(brandPojo.getBrand(), brand) && Objects.equals(brandPojo.getCategory(), category)) {
+                return true;
+            }
         }
 
-        brandJavaObjToTsvFile(dataList);
-        return dataListString;
+        return false;
     }
 
-    public StringBuilder getAllInventory() throws ApiException {
-        StringBuilder dataListString = new StringBuilder("");
-        List<InventoryPojo> pojoList = inventoryService.getAll();
-        List<InventoryData> dataList = new ArrayList<>();
-
-        dataListString.append("Barcode").append("\t").append("Inventory").append("\t").append("Brand").append("\t").append("Category").append("\n");
-
-        for (InventoryPojo pojo : pojoList) {
-            dataList.add(InventoryDto.convertPojoToData(pojo));
-            String brand = productService.get(pojo.getBarcode()).getBrand();
-            String category = productService.get(pojo.getBarcode()).getCategory();
-
-            dataListString.append(pojo.getBarcode()).append("\t").append(pojo.getInventory()).append("\t").append(brand).append("\t").append(category).append("\n");
+    private boolean checkBrandExists(String brand) {
+        List<BrandPojo> brandPojoList = brandService.getAll();
+        for(BrandPojo brandPojo : brandPojoList) {
+            if(Objects.equals(brandPojo.getBrand(), brand)) {
+                return true;
+            }
         }
 
-        inventoryJavaObjToTsvFile(dataList);
+        return false;
+    }
 
-        return dataListString;
+    private boolean checkCategoryExists(String category) {
+        List<BrandPojo> brandPojoList = brandService.getAll();
+        for(BrandPojo brandPojo : brandPojoList) {
+            if(Objects.equals(brandPojo.getCategory(), category)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void brandJavaObjToTsvFile(List<BrandData> dataList) {
@@ -182,4 +300,6 @@ public class ReportDto {
             System.out.println("Error Printing Tab Delimited File");
         }
     }
+
+    /****************************  HELPER FUNCTIONS: ENDS  ****************************/
 }
