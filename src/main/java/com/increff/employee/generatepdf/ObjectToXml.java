@@ -1,6 +1,6 @@
 package com.increff.employee.generatepdf;
 
-import com.increff.employee.model.PlaceOrderData;
+import com.increff.employee.model.data.PlaceOrderData;
 import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.service.PlaceOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import javax.xml.bind.Marshaller;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,9 +22,11 @@ public class ObjectToXml {
         ArrayList<OrderInvoicePojo> orderInvoicePojoList = new ArrayList<>();
 
         int total_amount = 0;
+        int number = 1;
         for(PlaceOrderData placeOrderData : placeOrderDataList) {
             OrderInvoicePojo orderInvoicePojo = new OrderInvoicePojo();
 
+            orderInvoicePojo.setSNo(number++);
             orderInvoicePojo.setBarcode(placeOrderData.getBarcode());
             orderInvoicePojo.setQuantity(placeOrderData.getQuantity());
             orderInvoicePojo.setSelling_price(placeOrderData.getSelling_price());

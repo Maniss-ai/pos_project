@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-public class InventoryDao {
+public class InventoryDao extends AbstractDao {
     private static final String delete_id = "delete from InventoryPojo p where id=:id";
     private static final String select_id = "select p from InventoryPojo p where id=:id";
     private static final String select_id1 = "select p from InventoryPojo p where barcode_id=:barcode_id";
@@ -21,7 +21,7 @@ public class InventoryDao {
 
     @PersistenceContext
     @Autowired
-    private EntityManager em;
+    private final EntityManager em = getEntityManager();
 
     @Transactional
     public InventoryPojo insert(InventoryPojo p) {
@@ -36,19 +36,19 @@ public class InventoryDao {
     }
 
     public InventoryPojo select(int id) {
-        TypedQuery<InventoryPojo> query = getQuery(select_id);
+        TypedQuery<InventoryPojo> query = getQuery(select_id, InventoryPojo.class);
         query.setParameter("id", id);
         return query.getSingleResult();
     }
 
     public InventoryPojo select1(int barcode_id) {
-        TypedQuery<InventoryPojo> query = getQuery(select_id1);
+        TypedQuery<InventoryPojo> query = getQuery(select_id1, InventoryPojo.class);
         query.setParameter("barcode_id", barcode_id);
         return query.getSingleResult();
     }
 
     public List<InventoryPojo> selectAll() {
-        TypedQuery<InventoryPojo> query = getQuery(select_all);
+        TypedQuery<InventoryPojo> query = getQuery(select_all, InventoryPojo.class);
         return query.getResultList();
     }
 
@@ -56,13 +56,9 @@ public class InventoryDao {
 
     }
     public InventoryPojo selectBarcode(String barcode) {
-        TypedQuery<InventoryPojo> query = getQuery(select_barcode);
+        TypedQuery<InventoryPojo> query = getQuery(select_barcode, InventoryPojo.class);
         query.setParameter("barcode", barcode);
         return query.getSingleResult();
-    }
-
-    TypedQuery<InventoryPojo> getQuery(String jpql) {
-        return em.createQuery(jpql, InventoryPojo.class);
     }
 
 }

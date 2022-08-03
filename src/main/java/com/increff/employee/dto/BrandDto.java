@@ -1,9 +1,8 @@
 package com.increff.employee.dto;
 
-import com.increff.employee.model.BrandData;
-import com.increff.employee.model.BrandForm;
+import com.increff.employee.model.data.BrandData;
+import com.increff.employee.model.form.BrandForm;
 import com.increff.employee.pojo.BrandPojo;
-import com.increff.employee.pojo.ProductPojo;
 import com.increff.employee.service.ApiException;
 import com.increff.employee.service.BrandService;
 import com.increff.employee.service.ProductService;
@@ -35,7 +34,7 @@ public class BrandDto {
         }
         else {
             if(!isUnique(pojo))
-                throw new ApiException("Brand Category already exists ...");
+                throw new ApiException("Brand Category already exists...");
             else
                 throw new ApiException("Brand or Category can't be empty ...");
         }
@@ -86,13 +85,6 @@ public class BrandDto {
 
     // TODO
     private boolean idExistsInProductPojo(int id) {
-        List<ProductPojo> list = productService.getAll();
-        for(ProductPojo pojo : list) {
-//            if(pojo.getBrand_category() == id) {
-//                return true;
-//            }
-            return true;
-        }
         return false;
     }
 

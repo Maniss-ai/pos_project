@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-
-                xmlns:fo="http://www.w3.org/1999/XSL/Format">
+                xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:java="http://xml.apache.org/xslt/java"
+                exclude-result-prefixes="java" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://xml.apache.org/xslt/java ">
 
     <!-- Attribute used for table border -->
 
@@ -49,7 +51,9 @@
                     <fo:block font-size="12pt" text-align="center" font-family="Helvetica" font-weight="bold"
                               space-after="5mm">
 
-                        Order Time-<xsl:value-of select="time"/>
+                        Order Time -
+                        <xsl:value-of
+                                select="java:format(java:java.text.SimpleDateFormat.new('dd-MM-yyyy hh:mm:ss'), java:java.util.Date.new())"/>
 
                     </fo:block>
 
@@ -63,17 +67,17 @@
 
                             <fo:table-column column-width="5cm"/>
 
-                            <fo:table-column column-width="3cm"/>
+                            <fo:table-column column-width="5cm"/>
 
-                            <fo:table-column column-width="3cm"/>
+                            <fo:table-column column-width="5cm"/>
 
-                            <fo:table-column column-width="3cm"/>
+                            <fo:table-column column-width="5cm"/>
 
                             <fo:table-header font-weight="bold">
 
                                 <fo:table-cell border="1pt solid black" xsl:use-attribute-sets="tableBorder">
 
-                                    <fo:block font-size="15pt" text-align="center" font-weight="bold">S.NO.</fo:block>
+                                    <fo:block font-size="13pt" text-align="center" font-weight="bold">S.No.</fo:block>
 
                                 </fo:table-cell>
 
@@ -85,28 +89,28 @@
 
                                 <fo:table-cell border="1pt solid black" xsl:use-attribute-sets="tableBorder">
 
-                                    <fo:block font-size="15pt" text-align="center" font-weight="bold">Bar Code
+                                    <fo:block font-size="13pt" text-align="center" font-weight="bold">Bar Code
                                     </fo:block>
 
                                 </fo:table-cell>
 
                                 <fo:table-cell border="1pt solid black" xsl:use-attribute-sets="tableBorder">
 
-                                    <fo:block font-size="15pt" text-align="center" font-weight="bold">Quantity
+                                    <fo:block font-size="13pt" text-align="center" font-weight="bold">Quantity
                                     </fo:block>
 
                                 </fo:table-cell>
 
                                 <fo:table-cell border="1pt solid black" xsl:use-attribute-sets="tableBorder">
 
-                                    <fo:block font-size="15pt" text-align="center" font-weight="bold">Selling Price
+                                    <fo:block font-size="13pt" text-align="center" font-weight="bold">Selling Price
                                     </fo:block>
 
                                 </fo:table-cell>
 
                                 <fo:table-cell border="1pt solid black" xsl:use-attribute-sets="tableBorder">
 
-                                    <fo:block font-size="15pt" text-align="center" font-weight="bold">Total Price
+                                    <fo:block font-size="13pt" text-align="center" font-weight="bold">Total Price
                                     </fo:block>
 
                                 </fo:table-cell>
@@ -123,13 +127,13 @@
 
                     </fo:block>
 
-                    <fo:block font-size="18pt" font-family="Helvetica" text-align="left" color="black"
+                    <fo:block font-size="16pt" font-family="Helvetica" text-align="left" color="black"
                               font-weight="bold" padding-left="20%" padding-top="5%" space-after="10mm">
 
                         <!--                         TODO-->
                         Total Bill Amount:
                         <xsl:value-of select="total_amount"/>
-
+                         Rs.
                     </fo:block>
 
                 </fo:flow>
@@ -146,7 +150,7 @@
 
             <fo:table-cell border="1pt solid black" xsl:use-attribute-sets="tableBorder">
 
-                <fo:block text-align="left" font-size="15pt">
+                <fo:block text-align="center" font-size="13pt">
 
                     <xsl:value-of select="SNo"/>
 
@@ -166,7 +170,7 @@
 
             <fo:table-cell border="1pt solid black" xsl:use-attribute-sets="tableBorder">
 
-                <fo:block text-align="left" font-size="15pt">
+                <fo:block text-align="center" font-size="13pt">
 
                     <xsl:value-of select="barcode"/>
 
@@ -176,7 +180,7 @@
 
             <fo:table-cell border="1pt solid black" xsl:use-attribute-sets="tableBorder">
 
-                <fo:block text-align="left" font-size="15pt">
+                <fo:block text-align="center" font-size="13pt">
 
                     <xsl:value-of select="quantity"/>
 
@@ -186,7 +190,7 @@
 
             <fo:table-cell border="1pt solid black" xsl:use-attribute-sets="tableBorder">
 
-                <fo:block text-align="left" font-size="15pt">
+                <fo:block text-align="center" font-size="13pt">
 
                     <xsl:value-of select="selling_price"/>
 
@@ -196,7 +200,7 @@
 
             <fo:table-cell border="1pt solid black" xsl:use-attribute-sets="tableBorder">
 
-                <fo:block text-align="right" font-size="15pt">
+                <fo:block text-align="center" font-size="13pt">
 
                     <xsl:value-of select="bill_amount"/>
 

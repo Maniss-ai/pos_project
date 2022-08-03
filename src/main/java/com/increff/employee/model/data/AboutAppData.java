@@ -1,4 +1,4 @@
-package com.increff.employee.model;
+package com.increff.employee.model.data;
 
 public class AboutAppData {
 

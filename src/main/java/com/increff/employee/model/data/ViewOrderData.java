@@ -1,4 +1,6 @@
-package com.increff.employee.model;
+package com.increff.employee.model.data;
+
+import com.increff.employee.model.form.ViewOrderForm;
 
 public class ViewOrderData extends ViewOrderForm {
     int id;

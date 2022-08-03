@@ -42,11 +42,10 @@ public class BrandService {
 
     @Transactional(rollbackOn  = ApiException.class)
     public BrandPojo update(int id, BrandPojo p) throws ApiException {
-        BrandPojo ex = getCheck(id);
-        ex.setCategory(p.getCategory());
-        ex.setBrand(p.getBrand());
-        dao.update(p);
-        return ex;
+        BrandPojo brandPojo = getCheck(id);
+        brandPojo.setCategory(p.getCategory());
+        brandPojo.setBrand(p.getBrand());
+        return brandPojo;
     }
 
     @Transactional

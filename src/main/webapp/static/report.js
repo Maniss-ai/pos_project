@@ -83,6 +83,11 @@ function writeFileDataReport(data) {
     tempLink.click(); 
 }
 
+function handleAjaxError(response){
+	var response = JSON.parse(response.responseText);
+	toastr.error(response.message, "Error");
+}
+
 /**************************  INITIALIZATION CODE  **************************/
 function init() {
 	$('#generate_brand_report').click(generateBrandReport);

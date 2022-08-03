@@ -1,4 +1,6 @@
-package com.increff.employee.model;
+package com.increff.employee.model.data;
+
+import com.increff.employee.model.form.ReportForm;
 
 public class ReportData extends ReportForm {
     int id;

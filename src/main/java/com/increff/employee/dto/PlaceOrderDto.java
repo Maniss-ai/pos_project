@@ -1,7 +1,7 @@
 package com.increff.employee.dto;
 
-import com.increff.employee.model.PlaceOrderData;
-import com.increff.employee.model.PlaceOrderForm;
+import com.increff.employee.model.data.PlaceOrderData;
+import com.increff.employee.model.form.PlaceOrderForm;
 import com.increff.employee.pojo.InventoryPojo;
 import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.pojo.PlaceOrderPojo;
@@ -34,7 +34,8 @@ public class PlaceOrderDto {
 
     // CRUD ....
     public PlaceOrderData add(PlaceOrderForm form) throws ApiException {
-        PlaceOrderPojo pojo = convertFormToPojo(form);
+        nullCheck(form);
+        PlaceOrderPojo pojo = convertFormToPojo(form, 0);
         normalize(pojo);
 
         if(form.getQuantity() == 0 || form.getSelling_price() == 0) {
@@ -53,12 +54,6 @@ public class PlaceOrderDto {
             throw new ApiException("Selling Price Can't be More Than MRP ...");
         }
         else {
-            /*
-            InventoryPojo inventoryPojo = inventoryService.get(inventory_id);
-            inventoryPojo.setInventory(inventory_items - form.getQuantity());
-            inventoryService.update(form.getBarcode_id(), inventoryPojo);
-             */
-
             if(alreadyAdded(form)) {
                 throw new ApiException("Order already exists, Please Update ...");
             }
@@ -68,10 +63,11 @@ public class PlaceOrderDto {
         }
     }
 
+
     private boolean alreadyAdded(PlaceOrderForm form) {
         List<PlaceOrderPojo> list = placeOrderService.getAll();
         for(PlaceOrderPojo placeOrderPojo : list) {
-            if(Objects.equals(placeOrderPojo.getBarcode(), form.getBarcode()) && form.getOrder_id() == placeOrderPojo.getOrder_id()) {
+            if(Objects.equals(placeOrderPojo.getBarcode(), form.getBarcode()) && 0 == placeOrderPojo.getOrder_id()) {
                 return true;
             }
         }
@@ -100,7 +96,7 @@ public class PlaceOrderDto {
         List<PlaceOrderPojo> pojoList = placeOrderService.getAll();
         List<PlaceOrderData> dataList = new ArrayList<>();
         for (PlaceOrderPojo pojo : pojoList) {
-            // if order is not submitted than display it ....
+            // if order is not placed than display it ....
             if(pojo.getOrder_id() == 0) {
                 dataList.add(convertPojoToData(pojo));
             }
@@ -122,7 +118,6 @@ public class PlaceOrderDto {
             total_bill_amount += (form.getQuantity() * form.getSelling_price());
         }
 
-        System.out.println("total_bill_amount :: " + total_bill_amount);
         orderPojo.setBill_amount(total_bill_amount);
 
         placeOrderService.submit(orderPojo);
@@ -130,8 +125,8 @@ public class PlaceOrderDto {
 
         // add order_id and update items ....
         for (PlaceOrderForm form : orderFormList) {
-            form.setOrder_id(order_id);
-            PlaceOrderPojo placeOrderPojo = convertFormToPojo(form);
+//            form.setOrder_id(order_id);
+            PlaceOrderPojo placeOrderPojo = convertFormToPojo(form, order_id);
             placeOrderService.updateOrderId(placeOrderPojo.getBarcode(), placeOrderPojo);
 
             // update inventory ....
@@ -146,7 +141,8 @@ public class PlaceOrderDto {
     }
 
     public void update(int place_order_id, PlaceOrderForm form) throws ApiException {
-        PlaceOrderPojo pojo = convertFormToPojo(form);
+        nullCheck(form);
+        PlaceOrderPojo pojo = convertFormToPojo(form, 0);
 
         // get inventory_id using barcode_id match ....
         int inventory_id = getInventoryIdMatchWithBarcode(pojo);
@@ -165,6 +161,13 @@ public class PlaceOrderDto {
     }
 
     // CHECKS ....
+
+    private void nullCheck(PlaceOrderForm form) throws ApiException {
+        if(form.getBarcode().isEmpty() || form.getBarcode() == null || form.getQuantity() == 0 || form.getSelling_price() == 0) {
+            throw new ApiException("Order info can't be empty");
+        }
+    }
+
     boolean isUnique(PlaceOrderPojo pojo) {
         List<PlaceOrderData> dataList = getAll();
         for(PlaceOrderData placeOrderData : dataList) {
@@ -203,9 +206,10 @@ public class PlaceOrderDto {
         return data;
     }
 
-    protected static PlaceOrderPojo convertFormToPojo(PlaceOrderForm form) {
+    protected static PlaceOrderPojo convertFormToPojo(PlaceOrderForm form, int order_id) {
         PlaceOrderPojo pojo = new PlaceOrderPojo();
-        pojo.setOrder_id(form.getOrder_id());
+//        pojo.setOrder_id(form.getOrder_id());
+        pojo.setOrder_id(order_id);
         pojo.setBarcode(form.getBarcode());
         pojo.setQuantity(form.getQuantity());
         pojo.setSelling_price(form.getSelling_price());

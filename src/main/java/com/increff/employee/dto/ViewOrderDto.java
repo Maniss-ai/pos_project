@@ -1,8 +1,8 @@
 package com.increff.employee.dto;
 
-import com.increff.employee.model.OrderData;
-import com.increff.employee.model.PlaceOrderForm;
-import com.increff.employee.model.ViewOrderForm;
+import com.increff.employee.model.data.OrderData;
+import com.increff.employee.model.form.PlaceOrderForm;
+import com.increff.employee.model.form.ViewOrderForm;
 import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.pojo.PlaceOrderPojo;
 import com.increff.employee.service.ApiException;
@@ -59,7 +59,7 @@ public class ViewOrderDto {
 
     protected static PlaceOrderPojo convertFormToPojo(PlaceOrderForm form) {
         PlaceOrderPojo pojo = new PlaceOrderPojo();
-        pojo.setOrder_id(form.getOrder_id());
+//        pojo.setOrder_id(form.getOrder_id());
         pojo.setBarcode(form.getBarcode());
         pojo.setQuantity(form.getQuantity());
         pojo.setSelling_price(form.getSelling_price());

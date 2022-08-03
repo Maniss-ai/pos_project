@@ -1,17 +1,14 @@
 package com.increff.employee.controller;
 
 import com.increff.employee.dto.ProductDto;
-import com.increff.employee.model.BrandData;
-import com.increff.employee.model.BrandForm;
-import com.increff.employee.model.ProductData;
-import com.increff.employee.model.ProductForm;
+import com.increff.employee.model.data.ProductData;
+import com.increff.employee.model.form.ProductForm;
 import com.increff.employee.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.plaf.IconUIResource;
 import java.util.List;
 
 @Api
@@ -23,6 +20,7 @@ public class ProductControllerApi {
     @ApiOperation(value = "Adds an Product")
     @RequestMapping(path = "/api/product", method = RequestMethod.POST)
     public ProductData add(@RequestBody ProductForm form) throws ApiException {
+        System.out.println("working");
         return dto.add(form);
     }
 

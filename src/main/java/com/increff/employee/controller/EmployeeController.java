@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.increff.employee.model.EmployeeData;
-import com.increff.employee.model.EmployeeForm;
+import com.increff.employee.model.data.EmployeeData;
+import com.increff.employee.model.form.EmployeeForm;
 import com.increff.employee.pojo.EmployeePojo;
 import com.increff.employee.service.ApiException;
 import com.increff.employee.service.EmployeeService;

@@ -1,8 +1,8 @@
-package com.increff.employee.model;
+package com.increff.employee.model.form;
 
 public class PlaceOrderForm {
     String barcode;
-    int order_id;
+//    int order_id;
     int quantity;
     int selling_price;
 
@@ -14,13 +14,13 @@ public class PlaceOrderForm {
         this.barcode = barcode;
     }
 
-    public int getOrder_id() {
-        return order_id;
-    }
-
-    public void setOrder_id(int order_id) {
-        this.order_id = order_id;
-    }
+//    public int getOrder_id() {
+//        return order_id;
+//    }
+//
+//    public void setOrder_id(int order_id) {
+//        this.order_id = order_id;
+//    }
 
     public int getQuantity() {
         return quantity;

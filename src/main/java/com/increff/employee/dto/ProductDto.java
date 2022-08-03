@@ -1,7 +1,8 @@
 package com.increff.employee.dto;
 
-import com.increff.employee.model.ProductData;
-import com.increff.employee.model.ProductForm;
+import com.google.protobuf.Api;
+import com.increff.employee.model.data.ProductData;
+import com.increff.employee.model.form.ProductForm;
 import com.increff.employee.pojo.InventoryPojo;
 import com.increff.employee.pojo.ProductPojo;
 import com.increff.employee.service.ApiException;
@@ -27,24 +28,28 @@ public class ProductDto {
 
     // CRUD ....
     public ProductData add(ProductForm form) throws ApiException {
+        nullCheck(form);
+
         ProductPojo pojo = convertFormToPojo(form);
         normalize(pojo);
         boolean unique = isUnique(pojo);
-        boolean not_empty = isNotEmpty(pojo);
         boolean brand_category_exists = isBrandCategoryExists(pojo);
 
-        if(unique && not_empty && brand_category_exists) {
+        if(unique && brand_category_exists) {
             return convertPojoToData(productService.add(pojo));
         } else {
             if(!unique) {
                 throw new ApiException("Barcode should be unique ....");
             }
-            else if(!not_empty) {
-                throw new ApiException("Product info can't be empty ....");
-            }
             else {
-                throw new ApiException("Brand-Category doesn't exists ....");
+                throw new ApiException("Brand-Category doesn't exists mann....");
             }
+        }
+    }
+
+    private void nullCheck(ProductForm form) throws ApiException {
+        if(form.getBarcode().isEmpty() || form.getProduct().isEmpty() || form.getMrp() == 0) {
+            throw new ApiException("Product info can't be empty ....");
         }
     }
 
@@ -108,19 +113,13 @@ public class ProductDto {
     }
 
     public void update(int id, ProductForm form) throws ApiException {
+        nullCheck(form);
         ProductPojo pojo = convertFormToPojo(form);
-        boolean unique = isUnique(id, pojo);
-        boolean not_empty = isNotEmpty(pojo);
 
-        if(unique && not_empty) {
+        if(isUnique(id, pojo)) {
             productService.update(id, pojo);
         } else {
-            if(!unique) {
-                throw new ApiException("Barcode should be Unique");
-            }
-            else {
-                throw new ApiException("Product info can't be Empty");
-            }
+            throw new ApiException("Barcode should be Unique");
         }
     }
 
@@ -144,10 +143,6 @@ public class ProductDto {
             }
         }
         return true;
-    }
-
-    public boolean isNotEmpty(ProductPojo pojo) {
-        return !pojo.getBarcode().isEmpty() && !pojo.getProduct().isEmpty() && pojo.getMrp() != 0;
     }
 
     // MODIFYING ....

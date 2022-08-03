@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.increff.employee.pojo.EmployeePojo;
 
 @Repository
-public class EmployeeDao {
+public class EmployeeDao extends AbstractDao {
 
 	private static final String delete_id = "delete from EmployeePojo p where id=:id";
 	private static final String select_id = "select p from EmployeePojo p where id=:id";
@@ -22,7 +22,7 @@ public class EmployeeDao {
 
 	@PersistenceContext
 	@Autowired
-	private EntityManager em;
+	private final EntityManager em = getEntityManager();
 
 	@Transactional
 	public void insert(EmployeePojo p) {
@@ -36,22 +36,18 @@ public class EmployeeDao {
 	}
 
 	public EmployeePojo select(int id) {
-		TypedQuery<EmployeePojo> query = getQuery(select_id);
+		TypedQuery<EmployeePojo> query = getQuery(select_id, EmployeePojo.class);
 		query.setParameter("id", id);
 		return query.getSingleResult();
 	}
 
 	public List<EmployeePojo> selectAll() {
-		TypedQuery<EmployeePojo> query = getQuery(select_all);
+		TypedQuery<EmployeePojo> query = getQuery(select_all, EmployeePojo.class);
 		return query.getResultList();
 	}
 
 	public void update(EmployeePojo p) {
 
-	}
-
-	TypedQuery<EmployeePojo> getQuery(String jpql) {
-		return em.createQuery(jpql, EmployeePojo.class);
 	}
 
 }

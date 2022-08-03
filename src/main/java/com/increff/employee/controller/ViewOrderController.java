@@ -1,8 +1,8 @@
 package com.increff.employee.controller;
 
 import com.increff.employee.dto.ViewOrderDto;
-import com.increff.employee.model.OrderData;
-import com.increff.employee.model.ViewOrderForm;
+import com.increff.employee.model.data.OrderData;
+import com.increff.employee.model.form.ViewOrderForm;
 import com.increff.employee.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

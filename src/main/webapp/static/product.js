@@ -27,7 +27,7 @@ function addProduct(event) {
 			console.log("Product created");
 			getProductList();
 		},
-		error: handleAjaxError
+		error: handleAjaxErrorProduct
 	});
 
 	return false;
@@ -54,7 +54,7 @@ function updateProduct(event) {
 			console.log("Product update");
 			getProductList();     //...
 		},
-		error: handleAjaxError
+		error: handleAjaxErrorProduct
 	});
 
 	return false;
@@ -73,32 +73,9 @@ function getProductList() {
 			console.log(data);
 			displayProductList(data);
 		},
-		error: handleAjaxError
+		error: handleAjaxErrorProduct
 	});
 }
-
-// function getBrandCategory(index, data) {
-// 	if (index == data.length) {
-// 		displayProductList(data);
-// 		return;
-// 	}
-
-// 	var url = getBrandUrl() + '/' + data[index].brand_category;
-// 	$.ajax({
-// 		url: url,
-// 		type: 'GET',
-// 		// brand_data -> brand and category of particular id that is present in current indexed product
-// 		success: function (brand_data) {
-// 			console.log("Brand-Category data fetched");
-// 			console.log(brand_data);
-// 			data[index].brand = brand_data.brand;
-// 			data[index].category = brand_data.category
-// 			getBrandCategory(index + 1, data);     //...
-// 		},
-// 		error: handleAjaxError
-// 	});
-// }
-
 
 function deleteProduct(id) {
 	var url = getProductUrl() + "/" + id;
@@ -110,7 +87,7 @@ function deleteProduct(id) {
 			console.log("Product deleted");
 			getProductList();     //...
 		},
-		error: handleAjaxError
+		error: handleAjaxErrorProduct
 	});
 }
 
@@ -124,7 +101,7 @@ function getBrandCategoryList(event) {
 			console.log(data);
 			displayBrandCategoryList(data);     //...
 		},
-		error: handleAjaxError
+		error: handleAjaxErrorProduct
 	});
 }
 
@@ -308,7 +285,7 @@ function displayEditProduct(id) {
 			console.log(data);
 			displayProduct(data);     //...
 		},
-		error: handleAjaxError
+		error: handleAjaxErrorProduct
 	});
 }
 
@@ -343,6 +320,10 @@ function displayBrandCategoryList(data) {
 	}
 }
 
+function handleAjaxErrorProduct(response){
+	var response = JSON.parse(response.responseText);
+	toastr.error(response.message, "Error");
+}
 
 //HELPER METHOD
 function toJson($form) {

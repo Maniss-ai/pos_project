@@ -61,6 +61,24 @@ section {
     display: block;
 }
 
+#mtoast {
+    /* (A) POSITION */
+    position: fixed; z-index: 99;
+    top: 5px; right: 5px;
+   
+    /* (B) DIMENSION */
+    width: 200px;
+    padding: 10px;
+   
+    /* (C) COLORS */
+    border: 1px solid #c52828;
+    background: #ffebe1;
+    border: 1px solid #000;
+   
+    /* (D) HIDDEN BY DEFAULT */
+    display: none;
+  }
+
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";

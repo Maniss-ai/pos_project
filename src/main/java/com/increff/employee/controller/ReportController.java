@@ -1,7 +1,7 @@
 package com.increff.employee.controller;
 
 import com.increff.employee.dto.ReportDto;
-import com.increff.employee.model.ReportForm;
+import com.increff.employee.model.form.ReportForm;
 import com.increff.employee.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

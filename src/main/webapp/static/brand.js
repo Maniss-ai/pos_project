@@ -22,6 +22,7 @@ function addBrand(event){
 	   success: function(response) {
 	   		console.log("Brand created");
 	   		getBrandList();
+			toastr.success("Brand added successfully", "Success");
 	   },
 	   error: handleAjaxError
 	});
@@ -49,7 +50,8 @@ function updateBrand(event){
        },
 	   success: function(response) {
 	   		console.log("Brand update");
-	   		getBrandList();     //...
+	   		getBrandList();
+			toastr.success("Brand updates successfully", "Success");
 	   },
 	   error: handleAjaxError
 	});
@@ -129,10 +131,6 @@ function uploadRowsBrand(){
 	rowBrand.push(row);
 	console.log(rowBrand);
 
-
-	// var json = JSON.stringify(row);
-	// var url = getBrandUrl();
-
 	var json = {}
 	json["brand"] = row.brand;
 	json["category"] = row.category;
@@ -140,34 +138,6 @@ function uploadRowsBrand(){
 	jsonArray.push(json);
 
 	uploadRowsBrand();
-
-	// Make ajax call
-	// $.ajax({
-	//    url: url,
-	//    type: 'POST',
-	//    data: json,
-	//    headers: {
-    //    	'Content-Type': 'application/json'
-    //    },	   
-	//    success: function(response) {
-	// 		uploadRowsBrand();
-	//    },
-	//    error: function(response) {
-	// 		row.error = response.responseText;
-	// 		errorDataBrand.push(row);
-	// 		console.log(row);
-	// 		console.log("error: " + errorDataBrand);
-	// 		uploadRowsBrand();
-	// 		// var lines = response.responseJSON.message.split("\n");
-	// 		// console.log("RESPONSE: " + response.responseText);
-	// 		// errorDataBrand = lines;
-			
-	// 		// errorDataBrand.splice(errorDataBrand.length-1, 1);
-	// 		// console.log(errorDataBrand);
-	// 		// updateUploadDialogBrand();
-	// 	}
-	// });
-
 }
 
 /****************************************** BULK ADD BRAND : TODO ******************************************/
@@ -185,14 +155,11 @@ function bulkAddBrand() {
        },	   
 	   success: function(response) {
 	   		getBrandList();
+			toastr.success("Bulk Brands added successfully", "Success");
 	   },
 	   error: function(response) {
 			var lines = response.responseJSON.message.split("\n");
-			console.log("RESPONSE: " + lines);
-
 			createErrorDataBrand(lines);
-
-			console.log("errorDataBrand : " + errorDataBrand[0]);
 			updateUploadDialogBrand();
 		}
 	});
@@ -320,12 +287,11 @@ function toJson($form) {
 
 function handleAjaxError(response){
 	var response = JSON.parse(response.responseText);
-	alert(response.message);
+	toastr.error(response.message, "Error");
 }
 
 
 function readFileDataBrand(file, callback){
-	console.log("5. WORKING FINE!!!");
 	var config = {
 		header: true,
 		delimiter: "\t",
@@ -362,7 +328,6 @@ function writeFileDataBrand(arr) {
     tempLink.click(); 
 }
 
-
 //INITIALIZATION CODE
 function init() {
 	$('#add-brand').click(addBrand);
@@ -377,4 +342,5 @@ function init() {
 
 $(document).ready(init);
 $(document).ready(getBrandList);
+
 

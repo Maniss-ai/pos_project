@@ -1,7 +1,7 @@
 package com.increff.employee.service;
 
 import com.increff.employee.dao.ProductDao;
-import com.increff.employee.model.ReportForm;
+import com.increff.employee.model.form.ReportForm;
 import com.increff.employee.pojo.InventoryPojo;
 import com.increff.employee.pojo.ProductPojo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +55,8 @@ public class ProductService {
     }
 
     @Transactional
-    public List<ProductPojo> getProductWithBrand(ReportForm form) {
-        return dao.getProductWithBrand(form);
+    public List<ProductPojo> getProductWithBrand(String brand) {
+        return dao.getProductWithBrand(brand);
     }
 
     @Transactional

@@ -1,6 +1,6 @@
 package com.increff.employee.controller;
 
-import com.increff.employee.model.MessageData;
+import com.increff.employee.model.data.MessageData;
 import com.increff.employee.service.ApiException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

@@ -1,9 +1,7 @@
 package com.increff.employee.dto;
 
-import com.increff.employee.model.InventoryData;
-import com.increff.employee.model.InventoryForm;
-import com.increff.employee.model.ProductData;
-import com.increff.employee.model.ProductForm;
+import com.increff.employee.model.data.InventoryData;
+import com.increff.employee.model.form.InventoryForm;
 import com.increff.employee.pojo.InventoryPojo;
 import com.increff.employee.service.ApiException;
 import com.increff.employee.service.InventoryService;
@@ -25,17 +23,16 @@ public class InventoryDto {
 
     // CRUD ....
     public InventoryData add(InventoryForm form) throws ApiException {
+        nullCheck(form);
         InventoryPojo pojo = convertFormToPojo(form);
         normalize(pojo);
         boolean barcode_exists = isBarcodeExists(pojo);
-        if(doesNotExist(form) && barcode_exists) {
+        if (doesNotExist(form) && barcode_exists) {
             return convertPojoToData(inventoryService.add(pojo));
-        }
-        else {
-            if(!barcode_exists) {
+        } else {
+            if (!barcode_exists) {
                 throw new ApiException("Barcode doesn't exists ....");
-            }
-            else {
+            } else {
                 throw new ApiException("Inventory already exists, Please Update ....");
             }
         }
@@ -94,28 +91,25 @@ public class InventoryDto {
         List<InventoryPojo> pojoList = inventoryService.getAll();
         List<InventoryData> dataList = new ArrayList<>();
         for (InventoryPojo pojo : pojoList) {
-            System.out.println("GET ALL WORKING BARCODE: " + pojo.getBarcode());
             dataList.add(convertPojoToData(pojo));
         }
         return dataList;
     }
 
     public void update(String barcode, InventoryForm form) throws ApiException {
+        nullCheck(form);
         InventoryPojo pojo = convertFormToPojo(form);
         inventoryService.update(barcode, pojo);
     }
 
     // CHECKS ....
 
-    boolean isUnique(InventoryPojo pojo) {
-        List<InventoryData> dataList = getAll();
-        for(InventoryData inventoryData : dataList) {
-            if(Objects.equals(inventoryData.getBarcode(), pojo.getBarcode())) {
-                return false;
-            }
+    private void nullCheck(InventoryForm form) throws ApiException {
+        if(form.getInventory() == 0 || form.getBarcode().isEmpty() || form.getBarcode() == null) {
+            throw new ApiException("Inventory Info can't be empty or null");
         }
-        return true;
     }
+
     // MODIFYING ....
     public static void normalize(InventoryPojo p) {
         p.setBarcode(p.getBarcode().toLowerCase().trim());

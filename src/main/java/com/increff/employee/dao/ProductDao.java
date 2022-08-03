@@ -1,7 +1,6 @@
 package com.increff.employee.dao;
 
-import com.increff.employee.model.ReportForm;
-import com.increff.employee.pojo.InventoryPojo;
+import com.increff.employee.model.form.ReportForm;
 import com.increff.employee.pojo.ProductPojo;
 import com.increff.employee.service.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-public class ProductDao {
+public class ProductDao extends AbstractDao {
     private static final String delete_id = "delete from ProductPojo p where id=:id";
     private static final String select_id = "select p from ProductPojo p where id=:id";
     private static final String select_all = "select p from ProductPojo p";
@@ -27,7 +26,7 @@ public class ProductDao {
 
     @PersistenceContext
     @Autowired
-    private EntityManager em;
+    private final EntityManager em = getEntityManager();
 
     @Transactional
     public ProductPojo insert(ProductPojo p) {
@@ -43,7 +42,7 @@ public class ProductDao {
 
     public ProductPojo select(int id) throws ApiException {
         try {
-            TypedQuery<ProductPojo> query = getQuery(select_id);
+            TypedQuery<ProductPojo> query = getQuery(select_id, ProductPojo.class);
             query.setParameter("id", id);
             return query.getSingleResult();
         }
@@ -53,7 +52,7 @@ public class ProductDao {
     }
 
     public List<ProductPojo> selectAll() {
-        TypedQuery<ProductPojo> query = getQuery(select_all);
+        TypedQuery<ProductPojo> query = getQuery(select_all, ProductPojo.class);
         return query.getResultList();
     }
 
@@ -62,42 +61,34 @@ public class ProductDao {
     }
 
     public List<ProductPojo> getProductWithBrandCategory(ReportForm form) {
-        TypedQuery<ProductPojo> query = getQuery(select_with_brand_category);
+        TypedQuery<ProductPojo> query = getQuery(select_with_brand_category, ProductPojo.class);
         query.setParameter("brand", form.getBrand());
         query.setParameter("category", form.getCategory());
-//        query.setParameter("start_date", form.getStart_date());
-//        query.setParameter("end_date", form.getEnd_date());
         return query.getResultList();
     }
 
-    public List<ProductPojo> getProductWithBrand(ReportForm form) {
-        TypedQuery<ProductPojo> query = getQuery(select_with_brand);
-        query.setParameter("brand", form.getBrand());
-//        query.setParameter("start_date", form.getStart_date());
-//        query.setParameter("end_date", form.getEnd_date());
+    public List<ProductPojo> getProductWithBrand(String brand) {
+        TypedQuery<ProductPojo> query = getQuery(select_with_brand, ProductPojo.class);
+        query.setParameter("brand", brand);
         return query.getResultList();
     }
 
     public List<ProductPojo> getProductWithCategory(ReportForm form) {
-        TypedQuery<ProductPojo> query = getQuery(select_with_category);
+        TypedQuery<ProductPojo> query = getQuery(select_with_category, ProductPojo.class);
         query.setParameter("category", form.getCategory());
-//        query.setParameter("start_date", form.getStart_date());
-//        query.setParameter("end_date", form.getEnd_date());
         return query.getResultList();
     }
 
     public List<ProductPojo> getProductWithDate(ReportForm form) {
-        TypedQuery<ProductPojo> query = getQuery(select_with_brand_category);
+        TypedQuery<ProductPojo> query = getQuery(select_with_brand_category, ProductPojo.class);
         query.setParameter("brand", form.getBrand());
         query.setParameter("category", form.getCategory());
-//        query.setParameter("start_date", form.getStart_date());
-//        query.setParameter("end_date", form.getEnd_date());
         return query.getResultList();
     }
 
     public ProductPojo getInventoryBarcode(String barcode) throws ApiException {
         try {
-            TypedQuery<ProductPojo> query = getQuery(select_barcode);
+            TypedQuery<ProductPojo> query = getQuery(select_barcode, ProductPojo.class);
             query.setParameter("barcode", barcode);
             return query.getSingleResult();
         }
@@ -106,7 +97,4 @@ public class ProductDao {
         }
     }
 
-    TypedQuery<ProductPojo> getQuery(String jpql) {
-        return em.createQuery(jpql, ProductPojo.class);
-    }
 }

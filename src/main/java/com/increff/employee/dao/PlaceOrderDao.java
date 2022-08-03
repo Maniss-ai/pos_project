@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-public class PlaceOrderDao {
+public class PlaceOrderDao extends AbstractDao {
     private static final String delete_id = "delete from PlaceOrderPojo p where id=:id";
     private static final String select_id = "select p from PlaceOrderPojo p where id=:id";
     private static final String select_barcode = "select p from PlaceOrderPojo p where barcode=:barcode and order_id!=0";
@@ -24,7 +24,7 @@ public class PlaceOrderDao {
 
     @PersistenceContext
     @Autowired
-    private EntityManager em;
+    private final EntityManager em = getEntityManager();
 
     @Transactional
     public PlaceOrderPojo insert(PlaceOrderPojo p) {
@@ -34,7 +34,7 @@ public class PlaceOrderDao {
 
     @Transactional
     public void insertOrder(OrderPojo orderPojo) {
-    em.persist(orderPojo);
+        em.persist(orderPojo);
     }
 
     public void delete(int id) {
@@ -44,40 +44,35 @@ public class PlaceOrderDao {
     }
 
     public PlaceOrderPojo select(int id) {
-        TypedQuery<PlaceOrderPojo> query = getQuery(select_id);
+        TypedQuery<PlaceOrderPojo> query = getQuery(select_id, PlaceOrderPojo.class);
         query.setParameter("id", id);
         return query.getSingleResult();
     }
 
     public List<PlaceOrderPojo> selectSingleOrder(int order_id) {
-        TypedQuery<PlaceOrderPojo> query = getQuery(select_with_order_id);
+        TypedQuery<PlaceOrderPojo> query = getQuery(select_with_order_id, PlaceOrderPojo.class);
         query.setParameter("order_id", order_id);
         return query.getResultList();
     }
 
     public List<PlaceOrderPojo> select1(String barcode) {
-        TypedQuery<PlaceOrderPojo> query = getQuery(select_barcode);
+        TypedQuery<PlaceOrderPojo> query = getQuery(select_barcode, PlaceOrderPojo.class);
         query.setParameter("barcode", barcode);
         return query.getResultList();
     }
 
     public PlaceOrderPojo selectOrderId(String barcode) {
-        TypedQuery<PlaceOrderPojo> query = getQuery(select_order_id);
+        TypedQuery<PlaceOrderPojo> query = getQuery(select_order_id, PlaceOrderPojo.class);
         query.setParameter("barcode", barcode);
         return query.getSingleResult();
     }
 
     public List<PlaceOrderPojo> selectAll() {
-        TypedQuery<PlaceOrderPojo> query = getQuery(select_all);
+        TypedQuery<PlaceOrderPojo> query = getQuery(select_all, PlaceOrderPojo.class);
         return query.getResultList();
     }
 
     public void update(PlaceOrderPojo p) {
 
     }
-
-    TypedQuery<PlaceOrderPojo> getQuery(String jpql) {
-        return em.createQuery(jpql, PlaceOrderPojo.class);
-    }
-
 }

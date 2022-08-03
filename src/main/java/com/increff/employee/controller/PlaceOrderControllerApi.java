@@ -3,8 +3,8 @@ package com.increff.employee.controller;
 import com.increff.employee.dto.PlaceOrderDto;
 import com.increff.employee.dto.ViewOrderDto;
 import com.increff.employee.generatepdf.ObjectToXml;
-import com.increff.employee.model.PlaceOrderData;
-import com.increff.employee.model.PlaceOrderForm;
+import com.increff.employee.model.data.PlaceOrderData;
+import com.increff.employee.model.form.PlaceOrderForm;
 import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.service.ApiException;
 import io.swagger.annotations.Api;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
@@ -67,8 +66,6 @@ public class PlaceOrderControllerApi extends javax.servlet.http.HttpServlet impl
     @ApiOperation(value = "Updates Place order")
     @RequestMapping(path = "/api/order/place_order/{place_order_id}", method = RequestMethod.PUT)
     public void update(@PathVariable int place_order_id, @RequestBody PlaceOrderForm form) throws ApiException {
-        System.out.println("UPDATE BARCODE : " + form.getBarcode());
-        System.out.println("INV ID: " + place_order_id);
         dto.update(place_order_id, form);
     }
 

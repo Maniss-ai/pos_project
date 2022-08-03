@@ -1,8 +1,8 @@
 package com.increff.employee.controller;
 
 import com.increff.employee.dto.BrandDto;
-import com.increff.employee.model.BrandData;
-import com.increff.employee.model.BrandForm;
+import com.increff.employee.model.data.BrandData;
+import com.increff.employee.model.form.BrandForm;
 import com.increff.employee.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -1,4 +1,4 @@
-package com.increff.employee.model;
+package com.increff.employee.model.data;
 
 import java.time.LocalDateTime;
 

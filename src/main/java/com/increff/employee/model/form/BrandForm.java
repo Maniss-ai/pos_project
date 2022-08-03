@@ -1,4 +1,4 @@
-package com.increff.employee.model;
+package com.increff.employee.model.form;
 
 public class BrandForm {
     private String brand;

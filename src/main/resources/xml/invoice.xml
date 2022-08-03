@@ -2,19 +2,47 @@
 <orderInvoice id="1">
     <orderInvoicePojoList>
         <barcode>abc123</barcode>
-        <bill_amount>100</bill_amount>
-        <quantity>10</quantity>
-        <SNo>0</SNo>
-        <selling_price>10</selling_price>
+        <bill_amount>1</bill_amount>
+        <quantity>1</quantity>
+        <SNo>1</SNo>
+        <selling_price>1</selling_price>
+    </orderInvoicePojoList>
+    <orderInvoicePojoList>
+        <barcode>abc124</barcode>
+        <bill_amount>1</bill_amount>
+        <quantity>1</quantity>
+        <SNo>2</SNo>
+        <selling_price>1</selling_price>
     </orderInvoicePojoList>
     <orderInvoicePojoList>
         <barcode>abc125</barcode>
-        <bill_amount>54</bill_amount>
-        <quantity>6</quantity>
-        <SNo>0</SNo>
-        <selling_price>9</selling_price>
+        <bill_amount>1</bill_amount>
+        <quantity>1</quantity>
+        <SNo>3</SNo>
+        <selling_price>1</selling_price>
     </orderInvoicePojoList>
-    <order_id>1</order_id>
-    <time>2022-07-28</time>
-    <total_amount>154</total_amount>
+    <orderInvoicePojoList>
+        <barcode>abc126</barcode>
+        <bill_amount>1</bill_amount>
+        <quantity>1</quantity>
+        <SNo>4</SNo>
+        <selling_price>1</selling_price>
+    </orderInvoicePojoList>
+    <orderInvoicePojoList>
+        <barcode>abc127</barcode>
+        <bill_amount>1</bill_amount>
+        <quantity>1</quantity>
+        <SNo>5</SNo>
+        <selling_price>1</selling_price>
+    </orderInvoicePojoList>
+    <orderInvoicePojoList>
+        <barcode>abc129</barcode>
+        <bill_amount>1</bill_amount>
+        <quantity>1</quantity>
+        <SNo>6</SNo>
+        <selling_price>1</selling_price>
+    </orderInvoicePojoList>
+    <order_id>30</order_id>
+    <time>2022-08-03</time>
+    <total_amount>6</total_amount>
 </orderInvoice>
