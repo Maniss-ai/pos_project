@@ -25,7 +25,6 @@ public class InventoryService {
 
     @Transactional(rollbackOn = ApiException.class)
     public InventoryPojo get(int id) throws ApiException {
-        System.out.println("get worked");
         return dao.select(id);
     }
 
@@ -35,10 +34,12 @@ public class InventoryService {
     }
 
     @Transactional(rollbackOn  = ApiException.class)
-    public void update(String barcode, InventoryPojo p) throws ApiException {
+    public InventoryPojo update(String barcode, InventoryPojo p) throws ApiException {
+        System.out.println("1. Inventory Service Working!!");
         InventoryPojo pojo = getCheck(barcode);
+        System.out.println("2. Inventory Service Working!!");
         pojo.setInventory(p.getInventory());
-        dao.update(p);
+        return pojo;
     }
 
     @Transactional

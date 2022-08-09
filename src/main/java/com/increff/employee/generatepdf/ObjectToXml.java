@@ -3,6 +3,7 @@ package com.increff.employee.generatepdf;
 import com.increff.employee.model.data.PlaceOrderData;
 import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.service.PlaceOrderService;
+import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.xml.bind.JAXBContext;
@@ -21,7 +22,7 @@ public class ObjectToXml {
         // convert placeOrderPojoList -> OrderInvoicePojoList
         ArrayList<OrderInvoicePojo> orderInvoicePojoList = new ArrayList<>();
 
-        int total_amount = 0;
+        Double total_amount = 0.0;
         int number = 1;
         for(PlaceOrderData placeOrderData : placeOrderDataList) {
             OrderInvoicePojo orderInvoicePojo = new OrderInvoicePojo();
@@ -29,8 +30,8 @@ public class ObjectToXml {
             orderInvoicePojo.setSNo(number++);
             orderInvoicePojo.setBarcode(placeOrderData.getBarcode());
             orderInvoicePojo.setQuantity(placeOrderData.getQuantity());
-            orderInvoicePojo.setSelling_price(placeOrderData.getSelling_price());
-            orderInvoicePojo.setBill_amount(placeOrderData.getQuantity() * placeOrderData.getSelling_price());
+            orderInvoicePojo.setSelling_price(Precision.round(placeOrderData.getSelling_price(), 2));
+            orderInvoicePojo.setBill_amount(Precision.round(placeOrderData.getQuantity() * placeOrderData.getSelling_price(), 2));
 
             total_amount += orderInvoicePojo.getBill_amount();
 
@@ -41,7 +42,6 @@ public class ObjectToXml {
 
         Marshaller marshallerObj = contextObj.createMarshaller();
         marshallerObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
 
         OrderInvoice orderInvoice = new OrderInvoice(1, orderInvoicePojoList, orderPojo.getTime().toString(), orderPojo.getOrder_id(), total_amount);
         StringWriter stringWriter = new StringWriter();

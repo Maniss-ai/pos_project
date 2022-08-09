@@ -1,7 +1,6 @@
-barcode_id	inventory
-2	100
-3	100
-4	100
-5	40
-6	56
-7	28
+barcode	inventory
+abc123	100
+abc124	100
+abc125	100
+abc126	40
+abc127	56

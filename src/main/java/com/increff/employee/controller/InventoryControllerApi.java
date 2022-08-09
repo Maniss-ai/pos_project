@@ -3,6 +3,7 @@ package com.increff.employee.controller;
 import com.increff.employee.dto.InventoryDto;
 import com.increff.employee.model.data.InventoryData;
 import com.increff.employee.model.form.InventoryForm;
+import com.increff.employee.model.form.InventoryUpdateForm;
 import com.increff.employee.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,7 +24,7 @@ public class InventoryControllerApi {
         return dto.add(form);
     }
 
-    @ApiOperation(value = "Adds an Inventory")
+    @ApiOperation(value = "Add Inventory in Bulk")
     @RequestMapping(path = "/api/inventory/bulkAddInventory", method = RequestMethod.POST)
     public List<InventoryData> addBulkInventory(@RequestBody List<InventoryForm> formList) throws ApiException {
         System.out.println("WORKING FINE JAVA CODE::::");
@@ -42,15 +43,17 @@ public class InventoryControllerApi {
         return dto.get(id);
     }
 
-    @ApiOperation(value = "Gets list of all Inventory")
+    @ApiOperation(value = "Get list of all Inventory")
     @RequestMapping(path = "/api/inventory", method = RequestMethod.GET)
     public List<InventoryData> getAllFromPage() {
+        System.out.println("Working 1");
         return dto.getAll();
     }
 
-    @ApiOperation(value = "Updates an Inventory")
+    @ApiOperation(value = "Update an Inventory")
     @RequestMapping(path = "/api/inventory/{barcode}", method = RequestMethod.PUT)
-    public void update(@PathVariable String barcode, @RequestBody InventoryForm form) throws ApiException {
+    public void update(@PathVariable String barcode, @RequestBody InventoryUpdateForm form) throws ApiException {
+        System.out.println("1. Controller");
         dto.update(barcode, form);
     }
 }

@@ -10,8 +10,6 @@ function addBrand(event){
 	var json = toJson($form);
 	var url = getBrandUrl();
 
-	console.log(json);
-
 	$.ajax({
 	   url: url,
 	   type: 'POST',
@@ -41,6 +39,8 @@ function updateBrand(event){
 	var $form = $("#brand-edit-form");
 	var json = toJson($form);
 
+	console.log("json update : " + json);
+
 	$.ajax({
 	   url: url,
 	   type: 'PUT',
@@ -51,7 +51,7 @@ function updateBrand(event){
 	   success: function(response) {
 	   		console.log("Brand update");
 	   		getBrandList();
-			toastr.success("Brand updates successfully", "Success");
+			toastr.success("Brand updated successfully", "Success");
 	   },
 	   error: handleAjaxError
 	});
@@ -68,7 +68,7 @@ function getBrandList() {
 	   success: function(data) {
 	   		console.log("Brand data fetched");
 	   		console.log(data);
-	   		displayBrandList(data);     //...
+	   		displayBrandList(data);
 	   },
 	   error: handleAjaxError
 	});
@@ -82,7 +82,7 @@ function deleteBrand(id){
 	   type: 'DELETE',
 	   success: function(data) {
 	   		console.log("brand deleted");
-	   		getBrandList();     //...
+	   		getBrandList();
 	   },
 	   error: handleAjaxError
 	});
@@ -98,9 +98,16 @@ var rowBrand = [];
 
 function processDataBrand() {
 	var file = $('#brandFile')[0].files[0];
+	var fileName = document.querySelector('#brandFile').value;
+
+	// check for TSV extension ...
+	if(fileName.substring(fileName.length-3, fileName.length) != "tsv") {
+		toastr.warning("Please select TSV file", "Warning");
+		return;
+	}
 
 	if(document.getElementById("brandFile").files.length == 0) {
-		alert("please select a TSV file.");
+		toastr.warning("Please select TSV file", "Warning");
 		resetUploadDialogBrand();
 		return;
 	}
@@ -116,7 +123,7 @@ function readFileDataBrandCallback(results) {
 
 
 /****************************************** CHANGES : TODO ******************************************/
-function uploadRowsBrand(){
+function uploadRowsBrand() {
 	//Update progress
 	updateUploadDialogBrand();
 	//If everything processed then return
@@ -169,15 +176,12 @@ function createErrorDataBrand(lines) {
 	var countRow = 1;
 	var countLine = 0;
 
-	console.log("rowBrand: " + rowBrand[0].brand);
-
 	for(var i in rowBrand) {
 		console.log(i);
 		if(countRow == lines[countLine][0]) {
-			console.log("ERROR : " + lines[countLine]);
-			rowBrand[i].error = lines[countLine];
+			rowBrand[i].line_number = lines[countLine][0];
+			rowBrand[i].error = lines[countLine].substring(3, lines[countLine].length);
 			errorDataBrand.push(rowBrand[i]);
-			console.log("errorDataBrand : " + errorDataBrand);
 			countLine++;
 		}
 
@@ -194,8 +198,7 @@ function downloadErrorsBrand() {
 
 //UI DISPLAY METHODS
 /*************************************  UPLOAD DATA: START  *************************************/
-function displayUploadDataBrand(){
-	console.log("1. WORKING FINE!!!");
+function displayUploadDataBrand() {
 	resetUploadDialogBrand(); 	
    $('#upload-brand-modal').modal('toggle');
 }
@@ -206,7 +209,6 @@ function resetUploadDialogBrand(){
 	$file.val('');
 	$('#brandFileName').html("Choose File");
 	//Reset various counts
-	console.log("2. WORKING FINE!!!");
 	processCountBrand = 0;
 	fileDataBrand = [];
 	errorDataBrand = [];
@@ -217,7 +219,6 @@ function resetUploadDialogBrand(){
 }
 
 function updateUploadDialogBrand(){
-	console.log("3.  9. WORKING FINE!!!");
 	$('#rowCountBrand').html("" + fileDataBrand.length);
 	$('#processCountBrand').html("" + processCountBrand);
 	$('#errorCountBrand').html("" + errorDataBrand.length);
@@ -226,9 +227,15 @@ function updateUploadDialogBrand(){
 function updateFileNameBrand(){
 	var $file = $('#brandFile');
 	var fileName = $file.val();
+	fileName = fileName.replace(/^.*[\\\/]/, '');
 	$('#brandFileName').html(fileName);
 }
 /*************************************  UPLOAD DATA: END  *************************************/
+
+function refreshData() {
+	toastr.success("Refreshed successfully", "Success");
+	getBrandList();
+}
 
 function displayBrandList(data){
 	console.log('Printing brand data');
@@ -332,7 +339,7 @@ function writeFileDataBrand(arr) {
 function init() {
 	$('#add-brand').click(addBrand);
 	$('#update-brand').click(updateBrand);
-	$('#refresh-data-brand').click(getBrandList);
+	$('#refresh-data-brand').click(refreshData);
 
 	$('#upload-data-brand').click(displayUploadDataBrand);
 	$('#process-data-brand').click(processDataBrand);
@@ -342,5 +349,3 @@ function init() {
 
 $(document).ready(init);
 $(document).ready(getBrandList);
-
-

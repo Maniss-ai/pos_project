@@ -3,6 +3,7 @@ package com.increff.employee.controller;
 import com.increff.employee.dto.ProductDto;
 import com.increff.employee.model.data.ProductData;
 import com.increff.employee.model.form.ProductForm;
+import com.increff.employee.model.form.ProductUpdateForm;
 import com.increff.employee.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +21,6 @@ public class ProductControllerApi {
     @ApiOperation(value = "Adds an Product")
     @RequestMapping(path = "/api/product", method = RequestMethod.POST)
     public ProductData add(@RequestBody ProductForm form) throws ApiException {
-        System.out.println("working");
         return dto.add(form);
     }
 
@@ -37,21 +37,26 @@ public class ProductControllerApi {
     }
 
     @ApiOperation(value = "Gets an Product by ID")
-    @RequestMapping(path = "/api/product/{barcode}", method = RequestMethod.GET)
-    public ProductData get(@PathVariable String barcode) throws ApiException {
+    @RequestMapping(path = "/api/product/{id}", method = RequestMethod.GET)
+    public ProductData get(@PathVariable int id) throws ApiException {
+        return dto.getWithId(id);
+    }
+
+    @ApiOperation(value = "Gets an Product by ID")
+    @RequestMapping(path = "/api/product/barcode/{barcode}", method = RequestMethod.GET)
+    public ProductData getWithBarcode(@PathVariable String barcode) throws ApiException {
         return dto.get(barcode);
     }
 
     @ApiOperation(value = "Gets list of all Product")
     @RequestMapping(path = "/api/product", method = RequestMethod.GET)
-    public List<ProductData> getAllFromPage() {
+    public List<ProductData> getAll() throws ApiException {
         return dto.getAll();
     }
 
     @ApiOperation(value = "Updates an Product")
     @RequestMapping(path = "/api/product/{id}", method = RequestMethod.PUT)
-    public void update(@PathVariable int id, @RequestBody ProductForm form) throws ApiException {
+    public void update(@PathVariable int id, @RequestBody ProductUpdateForm form) throws ApiException {
         dto.update(id, form);
-        System.out.println(form.getMrp());
     }
 }

@@ -1,6 +1,6 @@
-barcode	brand_category	product	mrp
-abc123	1	sports shoes	4999
-abc124	2	denim shirt	2999
-abc125	3	full cream	59
-abc126	5	neon t-shirt	3599
-abc127	6	black shoes	6999
+barcode	brand	category	product	mrp
+abc123	puma	shoes	sports shoes	4999
+abc124	puma	shirts	denim shirt	2999
+abc125	amul	milk	full cream	59
+abc126	adidas	shirts	neon t-shirt	3599
+abc127	adidas	shoes	black shoes	6999

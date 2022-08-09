@@ -24,10 +24,11 @@ function addInventory(event) {
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
-	   		console.log("inventory created");
+	   		console.log("inventory created :: " + response[0]);
 	   		getInventoryList();
+			toastr.success("Inventory added successfully", "success");
 	   },
-	   error: handleAjaxError
+	   error: handleAjaxErrorInventory
 	});
 
 	return false;
@@ -53,9 +54,10 @@ function updateInventory(event) {
        },
 	   success: function(response) {
 	   		console.log("inventory update");
-	   		getInventoryList();     //...
+	   		getInventoryList();
+			toastr.success("Inventory updated successfully", "success");
 	   },
-	   error: handleAjaxError
+	   error: handleAjaxErrorInventory
 	});
 
 	return false;
@@ -72,7 +74,7 @@ function getInventoryList() {
 			console.log(data);
 			getBarcode(0, data);
 	   },
-	   error: handleAjaxError
+	   error: handleAjaxErrorInventory
 	});
 }
 
@@ -82,7 +84,7 @@ function getBarcode(index, data) {
 		return;
 	}
 	
-	var url = getProductUrl() + '/' + data[index].barcode;
+	var url = getProductUrl() + '/barcode/' + data[index].barcode;
 	$.ajax({
 		url: url,
 		type: 'GET',
@@ -93,7 +95,7 @@ function getBarcode(index, data) {
 				data[index].mrp = product_data.mrp;
 				getBarcode(index+1, data);     //...
 		},
-		error: handleAjaxError
+		error: handleAjaxErrorInventory
 	});
 }
 
@@ -108,7 +110,7 @@ function deleteInventory(id) {
 	   		console.log("inventory deleted");
 	   		getInventoryList();     //...
 	   },
-	   error: handleAjaxError
+	   error: handleAjaxErrorInventory
 	});
 }
 
@@ -122,7 +124,7 @@ function getBarcodeList(event) {
 				console.log(data);
 				displayBarcodeList(data);     //...
 		},
-		error: handleAjaxError
+		error: handleAjaxErrorInventory
 	});
 }
 
@@ -195,6 +197,7 @@ function bulkAddInventory() {
        },	   
 	   success: function(response) {
 	   		getInventoryList();
+			toastr.success("Bulk Inventory added successfully", "success");
 	   },
 	   error: function(response) {
 			console.log(response);
@@ -213,13 +216,11 @@ function createErrorDataInventory(lines) {
 	var countRow = 1;
 	var countLine = 0;
 
-	// console.log("rowInventory: " + rowInventory[0].inventory);
-
 	for(var i in rowInventory) {
 		console.log(i);
 		if(countRow == lines[countLine][0]) {
-			console.log("ERROR : " + lines[countLine]);
-			rowInventory[i].error = lines[countLine];
+			rowInventory[i].line_number = lines[countLine][0];
+			rowInventory[i].error = lines[countLine].substring(3, lines[countLine].length);
 			errorDataInventory.push(rowInventory[i]);
 			console.log("errorDataBrand : " + errorDataInventory);
 			countLine++;
@@ -287,7 +288,7 @@ function displayInventoryList(data) {
 			+ '<td>' + e.product_name + '</td>'
 			+ '<td>' + e.barcode + '</td>'
 			+ '<td>'  + e.inventory + '</td>'
-			+ '<td>'  + e.mrp + '</td>'
+			+ '<td>'  + e.mrp.toFixed(2) + '</td>'
 			+ '<td>' + buttonHtml + '</td>'
 			+ '</tr>';
     	tbody.append(row);
@@ -304,7 +305,7 @@ function displayEditInventory(id, mrp) {
 			data.mrp = mrp;
 	   		displayInventory(data);
 	   },
-	   error: handleAjaxError
+	   error: handleAjaxErrorInventory
 	});
 }
 
@@ -388,9 +389,23 @@ function writeFileDataInventory(arr){
     tempLink.click(); 
 }
 
-function handleAjaxError(response){
-	var response = JSON.parse(response.responseText);
-	toastr.error(response.message, "Error");
+function handleAjaxErrorInventory(response) {
+	try {
+		var response = JSON.parse(response.responseText);
+		toastr.error(response.message, "Error");
+	}
+	catch(e) {
+		toastr.error("Quantity should be an Integer", "Error");
+	}
+}
+
+function onlyNumberKey(evt) {
+          
+	// Only ASCII character in that range allowed
+	var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+	if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+		return false;
+	return true;
 }
 
 //INITIALIZATION CODE

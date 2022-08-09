@@ -1,15 +1,11 @@
 package com.increff.employee.model.data;
 
 import com.increff.employee.model.form.InventoryForm;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class InventoryData extends InventoryForm {
-    int id;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    private int id;
 }

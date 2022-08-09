@@ -43,13 +43,6 @@
 							placeholder="Enter Category">
 					</div>
 
-					<!-- <div class="input-group mb-3">
-						<span class="input-group-text" id="inputBrandcategory">Brand-Category</span>
-						<select id = "selector" class="form-select form-control" name="brand_category" aria-label="inputBrandcategory">
-							<option selected>Choose From the List ...</option>
-						</select>
-					</div> -->
-
 					<div class="input-group mb-3">
 						<span class="input-group-text" id="inputProduct">Product Name</span>
 						<input type="text" class="form-control" aria-label="Sizing example input"
@@ -59,9 +52,9 @@
 
 					<div class="input-group mb-3">
 						<span class="input-group-text" id="inputMRP">MRP</span>
-						<input type="text" class="form-control" aria-label="Sizing example input"
+						<input type="text" min="1" class="form-control" aria-label="Sizing example input"
 							aria-describedby="inputMRP" name="mrp" id="inputMRP"
-							placeholder="Enter MRP">
+							placeholder="Enter MRP" onkeypress="return onlyNumber(event)" step="0.01">
 					</div>
 
 					<div class="row">&nbsp;</div>
@@ -144,8 +137,8 @@
 
 							<div class="input-group mb-3">
 								<span class="input-group-text" id="inputMRP">MRP</span>
-								<input type="text" class="form-control" aria-label="Sizing example input"
-									aria-describedby="inputMRP" name="mrp" placeholder="Enter MRP">
+								<input type="text" step="0.01" class="form-control" aria-label="Sizing example input"
+									aria-describedby="inputMRP" name="mrp" placeholder="Enter MRP" min="1" onkeypress="return onlyNumber(event)">
 							</div>
 
 							<input type="hidden" name="id">

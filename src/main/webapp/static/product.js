@@ -12,8 +12,7 @@ function getBrandUrl() {
 function addProduct(event) {
 	//Set the values to update
 	var $form = $("#product-form");
-	var json = toJson($form);
-	console.log(json);
+	var json = toJsonProduct($form);
 	var url = getProductUrl();
 
 	$.ajax({
@@ -26,6 +25,7 @@ function addProduct(event) {
 		success: function (response) {
 			console.log("Product created");
 			getProductList();
+			toastr.success("Product added successfully", "Success");
 		},
 		error: handleAjaxErrorProduct
 	});
@@ -41,7 +41,9 @@ function updateProduct(event) {
 
 	//Set the values to update
 	var $form = $("#product-edit-form");
-	var json = toJson($form);
+	var json = toJsonProduct($form);
+
+	console.log("UPDATE PRODUCT : " + json);
 
 	$.ajax({
 		url: url,
@@ -52,7 +54,8 @@ function updateProduct(event) {
 		},
 		success: function (response) {
 			console.log("Product update");
-			getProductList();     //...
+			getProductList();
+			toastr.success("Product updated successfully", "Success");
 		},
 		error: handleAjaxErrorProduct
 	});
@@ -63,7 +66,6 @@ function updateProduct(event) {
 
 
 function getProductList() {
-
 	var url = getProductUrl();
 	$.ajax({
 		url: url,
@@ -175,6 +177,7 @@ function bulkAddProduct() {
        },	   
 	   success: function(response) {
 	   		getProductList();
+			toastr.success("Bulk Products added successfully", "success");
 	   },
 	   error: function(response) {
 			var lines = response.responseJSON.message.split("\n");
@@ -192,13 +195,11 @@ function createErrorDataProduct(lines) {
 	var countRow = 1;
 	var countLine = 0;
 
-	// console.log("rowProduct: " + rowProduct[0].barcode);
-
 	for(var i in rowProduct) {
 		console.log(i);
 		if(countRow == lines[countLine][0]) {
-			console.log("ERROR : " + lines[countLine]);
-			rowProduct[i].error = lines[countLine];
+			rowProduct[i].line_number = lines[countLine][0];
+			rowProduct[i].error = lines[countLine].substring(3, lines[countLine].length);;
 			errorDataProduct.push(rowProduct[i]);
 			console.log("errorDataProduct : " + errorDataProduct);
 			countLine++;
@@ -265,10 +266,10 @@ function displayProductList(data) {
 		var row = '<tr>'
 			+ '<td>' + value_count++ + '</td>'
 			+ '<td>' + e.barcode + '</td>'
-			+ '<td>' + e.brand + '</td>' // we dont have brand and category in the product data we just have brandId
+			+ '<td>' + e.brand + '</td>'
 			+ '<td>' + e.category + '</td>'
 			+ '<td>' + e.product + '</td>'
-			+ '<td>' + e.mrp + '</td>'
+			+ '<td>' + e.mrp.toFixed(2) + '</td>'
 			+ '<td>' + buttonHtml + '</td>'
 			+ '</tr>';
 		tbody.append(row);
@@ -276,6 +277,7 @@ function displayProductList(data) {
 }
 
 function displayEditProduct(id) {
+	console.log("working fine : " + id);
 	var url = getProductUrl() + "/" + id;
 	$.ajax({
 		url: url,
@@ -283,7 +285,7 @@ function displayEditProduct(id) {
 		success: function (data) {
 			console.log("product data fetched");
 			console.log(data);
-			displayProduct(data);     //...
+			displayProduct(data);
 		},
 		error: handleAjaxErrorProduct
 	});
@@ -321,21 +323,27 @@ function displayBrandCategoryList(data) {
 }
 
 function handleAjaxErrorProduct(response){
-	var response = JSON.parse(response.responseText);
-	toastr.error(response.message, "Error");
+	try {
+		var response = JSON.parse(response.responseText);
+		toastr.error(response.message, "Error");
+	}
+	catch(e) {
+		toastr.error("MRP should be a Number", "Error");
+	}
 }
 
+var cnt = 0;
 //HELPER METHOD
-function toJson($form) {
+function toJsonProduct($form) {
 	var serialized = $form.serializeArray();
-	console.log(serialized);
+	console.log("serialized : " + serialized);
 	var s = '';
 	var data = {};
 	for (s in serialized) {
 		data[serialized[s]['name']] = serialized[s]['value']
 	}
+
 	var json = JSON.stringify(data);
-	console.log(json);
 	return json;
 }
 
@@ -376,7 +384,25 @@ function writeFileDataProduct(arr) {
 	tempLink.click();
 }
 
+function onlyNumberkey(evt) {
+	// Only ASCII character in that range allowed
+	var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+	if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+		return false;
+	return true;
+}
 
+
+function onlyNumber(evt) {
+	// Only ASCII character in that range allowed
+	var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+	if(ASCIICode == 46) {
+		return true;
+	}
+	if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+		return false;
+	return true;
+}
 
 //INITIALIZATION CODE
 function init() {

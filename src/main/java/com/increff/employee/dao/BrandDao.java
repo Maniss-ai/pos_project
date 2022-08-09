@@ -54,7 +54,7 @@ public class BrandDao extends AbstractDao {
             return query.getSingleResult();
         }
         catch (Exception e) {
-            throw new ApiException("Brand Category doesn't exists ....");
+            throw new ApiException("Brand Category doesn't exists");
         }
     }
 

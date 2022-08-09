@@ -2,6 +2,7 @@ package com.increff.employee.dto;
 
 import com.increff.employee.model.data.InventoryData;
 import com.increff.employee.model.form.InventoryForm;
+import com.increff.employee.model.form.InventoryUpdateForm;
 import com.increff.employee.pojo.InventoryPojo;
 import com.increff.employee.service.ApiException;
 import com.increff.employee.service.InventoryService;
@@ -27,13 +28,16 @@ public class InventoryDto {
         InventoryPojo pojo = convertFormToPojo(form);
         normalize(pojo);
         boolean barcode_exists = isBarcodeExists(pojo);
+
         if (doesNotExist(form) && barcode_exists) {
             return convertPojoToData(inventoryService.add(pojo));
         } else {
             if (!barcode_exists) {
-                throw new ApiException("Barcode doesn't exists ....");
+                throw new ApiException("Barcode doesn't exists  ");
             } else {
-                throw new ApiException("Inventory already exists, Please Update ....");
+                InventoryUpdateForm inventoryUpdateForm = new InventoryUpdateForm();
+                inventoryUpdateForm.setInventory(form.getInventory());
+                return update(pojo.getBarcode(), inventoryUpdateForm);
             }
         }
     }
@@ -58,8 +62,6 @@ public class InventoryDto {
         if(!error.toString().isEmpty()) {
             throw new ApiException(error.toString());
         }
-
-        System.out.println("WORKING FINE JAVA CODE::::");
 
         return dataList;
     }
@@ -92,23 +94,37 @@ public class InventoryDto {
         List<InventoryData> dataList = new ArrayList<>();
         for (InventoryPojo pojo : pojoList) {
             dataList.add(convertPojoToData(pojo));
+            System.out.println(pojo.getBarcode());
         }
         return dataList;
     }
 
-    public void update(String barcode, InventoryForm form) throws ApiException {
-        nullCheck(form);
-        InventoryPojo pojo = convertFormToPojo(form);
-        inventoryService.update(barcode, pojo);
+    public InventoryData update(String barcode, InventoryUpdateForm form) throws ApiException {
+        System.out.println("1. DTO");
+        nullCheckForUpdate(form);
+        System.out.println("2. DTO");
+        InventoryPojo pojo = convertFormToPojoForUpdate(form);
+        System.out.println("3. DTO");
+        return convertPojoToData(inventoryService.update(barcode, pojo));
     }
 
     // CHECKS ....
 
     private void nullCheck(InventoryForm form) throws ApiException {
-        if(form.getInventory() == 0 || form.getBarcode().isEmpty() || form.getBarcode() == null) {
-            throw new ApiException("Inventory Info can't be empty or null");
+        if(form.getBarcode().isEmpty() || form.getBarcode() == null) {
+            throw new ApiException("Barcode can't be empty");
+        }
+        else if(form.getInventory() == 0) {
+            throw new ApiException("Inventory can't be empty");
         }
     }
+
+    private void nullCheckForUpdate(InventoryUpdateForm form) throws ApiException {
+        if(form.getInventory() == 0) {
+            throw new ApiException("Inventory can't be empty");
+        }
+    }
+
 
     // MODIFYING ....
     public static void normalize(InventoryPojo p) {
@@ -130,4 +146,12 @@ public class InventoryDto {
         pojo.setInventory(form.getInventory());
         return pojo;
     }
+
+    protected static InventoryPojo convertFormToPojoForUpdate(InventoryUpdateForm form) {
+        InventoryPojo pojo = new InventoryPojo();
+        pojo.setInventory(form.getInventory());
+        return pojo;
+    }
+
+
 }

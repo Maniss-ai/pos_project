@@ -1,18 +1,20 @@
 package com.increff.employee.dto;
 
-import com.google.protobuf.Api;
 import com.increff.employee.model.data.ProductData;
 import com.increff.employee.model.form.ProductForm;
+import com.increff.employee.model.form.ProductUpdateForm;
 import com.increff.employee.pojo.InventoryPojo;
 import com.increff.employee.pojo.ProductPojo;
 import com.increff.employee.service.ApiException;
 import com.increff.employee.service.BrandService;
 import com.increff.employee.service.InventoryService;
 import com.increff.employee.service.ProductService;
+import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,10 +28,11 @@ public class ProductDto {
     @Autowired
     private InventoryService inventoryService;
 
+    static DecimalFormat decimalFormat = new DecimalFormat("0.00");
+
     // CRUD ....
     public ProductData add(ProductForm form) throws ApiException {
         nullCheck(form);
-
         ProductPojo pojo = convertFormToPojo(form);
         normalize(pojo);
         boolean unique = isUnique(pojo);
@@ -39,17 +42,11 @@ public class ProductDto {
             return convertPojoToData(productService.add(pojo));
         } else {
             if(!unique) {
-                throw new ApiException("Barcode should be unique ....");
+                throw new ApiException("Barcode should be unique");
             }
             else {
-                throw new ApiException("Brand-Category doesn't exists mann....");
+                throw new ApiException("Brand-Category doesn't exists mann");
             }
-        }
-    }
-
-    private void nullCheck(ProductForm form) throws ApiException {
-        if(form.getBarcode().isEmpty() || form.getProduct().isEmpty() || form.getMrp() == 0) {
-            throw new ApiException("Product info can't be empty ....");
         }
     }
 
@@ -86,24 +83,25 @@ public class ProductDto {
             productService.delete(id);
         }
         else {
-            throw new ApiException("Unable to delete, Id exists in inventory ....");
+            throw new ApiException("Unable to delete, Id exists in inventory");
         }
     }
 
     private boolean idExistsInProductPojo(int id) {
-        List<InventoryPojo> list = inventoryService.getAll();
-        for(InventoryPojo pojo : list) {
-            return true;
-        }
         return false;
     }
 
-    public ProductData get(String barcode) throws ApiException {
-        ProductPojo pojo = productService.get(barcode);
+    public ProductData getWithId(int id) throws ApiException {
+        ProductPojo pojo = productService.getWithId(id);
         return convertPojoToData(pojo);
     }
 
-    public List<ProductData> getAll() {
+    public ProductData get(String barcode) throws ApiException {
+        ProductPojo pojo = productService.getWithBarcode(barcode);
+        return convertPojoToData(pojo);
+    }
+
+    public List<ProductData> getAll() throws ApiException {
         List<ProductPojo> pojoList = productService.getAll();
         List<ProductData> dataList = new ArrayList<>();
         for (ProductPojo pojo : pojoList) {
@@ -112,9 +110,10 @@ public class ProductDto {
         return dataList;
     }
 
-    public void update(int id, ProductForm form) throws ApiException {
-        nullCheck(form);
-        ProductPojo pojo = convertFormToPojo(form);
+    public void update(int id, ProductUpdateForm form) throws ApiException {
+        nullCheckForUpdate(form);
+        ProductPojo pojo = convertFormToPojoUpdate(form);
+        checkIfBarcodeExistsInProduct(id);
 
         if(isUnique(id, pojo)) {
             productService.update(id, pojo);
@@ -123,9 +122,9 @@ public class ProductDto {
         }
     }
 
-    // CHECKS ....
 
-    boolean isUnique(ProductPojo pojo) {
+    // CHECKS ....
+    boolean isUnique(ProductPojo pojo) throws ApiException {
         List<ProductData> dataList = getAll();
         for(ProductData productData : dataList) {
             if(Objects.equals(productData.getBarcode(), pojo.getBarcode())) {
@@ -135,7 +134,7 @@ public class ProductDto {
         return true;
     }
 
-    boolean isUnique(int current_id, ProductPojo pojo) {
+    boolean isUnique(int current_id, ProductPojo pojo) throws ApiException {
         List<ProductData> dataList = getAll();
         for(ProductData productData : dataList) {
             if(Objects.equals(productData.getBarcode(), pojo.getBarcode()) && productData.getId() != current_id) {
@@ -145,7 +144,19 @@ public class ProductDto {
         return true;
     }
 
+    public void checkIfBarcodeExistsInProduct(int id) throws ApiException {
+        String actualBarcode = productService.getWithId(id).getBarcode();
+
+        List<InventoryPojo> inventoryPojoList = inventoryService.getAll();
+        for(InventoryPojo pojo : inventoryPojoList) {
+            if(Objects.equals(actualBarcode, pojo.getBarcode())) {
+                throw new ApiException("Unable to edit, Barcode exists in Inventory");
+            }
+        }
+    }
+
     // MODIFYING ....
+
     public static void normalize(ProductPojo p) {
         p.setBarcode(p.getBarcode().toLowerCase().trim());
         p.setProduct(p.getProduct().toLowerCase().trim());
@@ -160,18 +171,50 @@ public class ProductDto {
         data.setBrand(pojo.getBrand());
         data.setCategory(pojo.getCategory());
         data.setProduct(pojo.getProduct());
-        data.setMrp(pojo.getMrp());
+        data.setMrp(Precision.round(pojo.getMrp(), 2));
         data.setId(pojo.getId());
         return data;
     }
-
     protected static ProductPojo convertFormToPojo(ProductForm form) {
         ProductPojo pojo = new ProductPojo();
         pojo.setBrand(form.getBrand());
         pojo.setCategory(form.getCategory());
         pojo.setBarcode(form.getBarcode());
         pojo.setProduct(form.getProduct());
-        pojo.setMrp(form.getMrp());
+        pojo.setMrp(Precision.round(form.getMrp(), 2));
         return pojo;
+    }
+
+    protected static ProductPojo convertFormToPojoUpdate(ProductUpdateForm form) {
+        ProductPojo pojo = new ProductPojo();
+        pojo.setBarcode(form.getBarcode());
+        pojo.setProduct(form.getProduct());
+        pojo.setMrp(Precision.round(form.getMrp(), 2));
+        return pojo;
+    }
+
+    private void nullCheckForUpdate(ProductUpdateForm form) throws ApiException {
+        if(form.getBarcode().isEmpty() || form.getBarcode() == null) {
+            throw new ApiException("Barcode can't be empty");
+        }
+        else if(form.getProduct().isEmpty() || form.getProduct() == null) {
+            throw new ApiException("Product name can't be empty");
+        }
+        else if(form.getMrp() == null || form.getMrp() == 0) {
+            throw new ApiException("MRP can't be empty");
+        }
+    }
+    private void nullCheck(ProductForm form) throws ApiException {
+        System.out.println("VALUE : " + form.getBarcode());
+        if(form.getBarcode().isEmpty() || form.getBarcode() == null) {
+            System.out.println("NULL CHECK Wokring!!!");
+            throw new ApiException("Barcode can't be empty");
+        }
+        else if(form.getProduct().isEmpty() || form.getProduct() == null) {
+            throw new ApiException("Product name can't be empty");
+        }
+        else if(form.getMrp() == null || form.getMrp() == 0) {
+            throw new ApiException("MRP can't be empty");
+        }
     }
 }

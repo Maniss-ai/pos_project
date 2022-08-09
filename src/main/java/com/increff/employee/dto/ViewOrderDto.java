@@ -8,9 +8,12 @@ import com.increff.employee.pojo.PlaceOrderPojo;
 import com.increff.employee.service.ApiException;
 import com.increff.employee.service.InventoryService;
 import com.increff.employee.service.ViewOrderService;
+import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -23,7 +26,12 @@ public class ViewOrderDto {
     @Autowired
     private InventoryService inventoryService;
 
-    public List<OrderData> search(ViewOrderForm form) throws ApiException {
+    public List<OrderData> search(ViewOrderForm form) throws ApiException, ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        if(sdf.parse(form.getStart_date()).compareTo(sdf.parse(form.getEnd_date())) > 0) {
+            throw new ApiException("Start Date should come before End Date");
+        }
+
         if(form.getStart_date() != null && form.getEnd_date() != null && !form.getStart_date().isEmpty() && !form.getEnd_date().isEmpty()) {
             List<OrderPojo> pojoList;
             List<OrderData> dataList = new ArrayList<>();
@@ -45,7 +53,7 @@ public class ViewOrderDto {
             return dataList;
         }
         else {
-            throw new ApiException("Date can't be empty ....");
+            throw new ApiException("Date can't be empty");
         }
     }
 
@@ -53,7 +61,7 @@ public class ViewOrderDto {
         OrderData data = new OrderData();
         data.setId(pojo.getOrder_id());
         data.setTime(pojo.getTime().toString());
-        data.setBill_amount(pojo.getBill_amount());
+        data.setBill_amount(Precision.round(pojo.getBill_amount(), 2));
         return data;
     }
 
@@ -62,7 +70,7 @@ public class ViewOrderDto {
 //        pojo.setOrder_id(form.getOrder_id());
         pojo.setBarcode(form.getBarcode());
         pojo.setQuantity(form.getQuantity());
-        pojo.setSelling_price(form.getSelling_price());
+        pojo.setSelling_price(Precision.round(form.getSelling_price(), 2));
         return pojo;
     }
 

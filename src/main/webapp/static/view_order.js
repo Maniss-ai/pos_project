@@ -32,7 +32,7 @@ function getViewOrderList(event) {
             console.log("Getting Placed Orders ....");
             displaySelectedOrders(view_order_data);
         },
-        error: handleAjaxError
+        error: handleAjaxErrorViewOrder
     });
 }
 
@@ -51,7 +51,7 @@ function displaySelectedOrders(data) {
 			+ '<td>' + value_count++ + '</td>'
 			+ '<td>' + e.id + '</td>'
 			+ '<td>' + e.time + '</td>'
-			+ '<td>'  + e.bill_amount + '</td>'
+			+ '<td>'  + e.bill_amount.toFixed(2) + '</td>'
 			+ '<td>' + buttonHtml + '</td>'
 			+ '</tr>';
     	tbody.append(row);
@@ -78,12 +78,7 @@ function generateInvoice(order_id) {
        	'Content-Type': 'application/pdf'
        },
 	   success: function (data) {
-		var blob = new Blob([data], {
-			type: 'application/pdf'
-		});
-
-		console.log(data)
-
+		console.log("generate data : " + data);
 		var file = new Blob([data], { type: 'application/pdf' });
 		var fileURL = URL.createObjectURL(file);
 		
@@ -91,8 +86,10 @@ function generateInvoice(order_id) {
 		window.open(fileURL);
 		})
 		console.log(fileURL);
+
+		toastr.success("Invoice generated successfully", "success");
     },
-	   error: handleAjaxError
+	   error: handleAjaxErrorViewOrder
 	});
 
 }
@@ -107,7 +104,7 @@ function viewSelectedOrders(order_id) {
 				console.log("get placed orders using order id");
 				displaySinglePlacedOrder(data);
 		},
-		error: handleAjaxError
+		error: handleAjaxErrorViewOrder
 	 });
 }
 
@@ -151,9 +148,24 @@ function toJson($form) {
     return json;
 }
 
-function handleAjaxError(response){
+function handleAjaxErrorViewOrder(response){
 	var response = JSON.parse(response.responseText);
 	toastr.error(response.message, "Error");
+}
+
+function dateSet() {
+	var date = new Date();
+	var year = date.getFullYear();
+	var monthStart = String(date.getMonth()).padStart(2,'0');
+	var monthEnd = String(date.getMonth()+1).padStart(2,'0');
+	var todayDate = String(date.getDate()).padStart(2,'0');
+
+	var datePatternStart = year + '-' + monthStart + '-' + todayDate;
+	var datePatternEnd = year + '-' + monthEnd + '-' + todayDate;
+
+	document.getElementById("inputStartDateOrder").value = datePatternStart;
+	document.getElementById("inputEndDateOrder").value = datePatternEnd;
+	getViewOrderList();
 }
 
 //INITIALIZATION CODE
@@ -163,3 +175,4 @@ function init() {
 
 $(document).ready(init);
 // $(document).ready(getViewOrderList);
+$(document).ready(dateSet);

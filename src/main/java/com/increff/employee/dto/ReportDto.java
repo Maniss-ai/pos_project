@@ -35,13 +35,13 @@ public class ReportDto {
 
             // check weather brand or category exists ...
             if(!form.getBrand().isEmpty() && !form.getCategory().isEmpty() && form.getBrand() != null && form.getCategory() != null && !checkBrandCategoryExists(form.getBrand(), form.getCategory())) {
-                throw new ApiException("Brand or Category doesn't exists ....");
+                throw new ApiException("Brand or Category doesn't exists");
             }
             if(!form.getBrand().isEmpty() && form.getBrand() != null && !checkBrandExists(form.getBrand())) {
-                throw new ApiException("Brand doesn't exists ....");
+                throw new ApiException("Brand doesn't exists");
             }
             if(!form.getCategory().isEmpty() && form.getCategory() != null && !checkCategoryExists(form.getCategory())) {
-                throw new ApiException("Category doesn't exists ....");
+                throw new ApiException("Category doesn't exists");
             }
 
             StringBuilder salesData = new StringBuilder("Brand\tCategory\tQuantity\tRevenue\n");
@@ -117,8 +117,8 @@ public class ReportDto {
 
         for (InventoryPojo pojo : pojoList) {
             dataList.add(InventoryDto.convertPojoToData(pojo));
-            String brand = productService.get(pojo.getBarcode()).getBrand();
-            String category = productService.get(pojo.getBarcode()).getCategory();
+            String brand = productService.getWithBarcode(pojo.getBarcode()).getBrand();
+            String category = productService.getWithBarcode(pojo.getBarcode()).getCategory();
 
             dataListString.append(pojo.getBarcode()).append("\t").append(pojo.getInventory()).append("\t").append(brand).append("\t").append(category).append("\n");
         }
@@ -190,28 +190,28 @@ public class ReportDto {
             }
         }
 
-        Map<String, ConnectionUrlParser.Pair<Integer, Integer>> revenueQuantityMap = new HashMap<>();
+        Map<String, ConnectionUrlParser.Pair<Integer, Double>> revenueQuantityMap = new HashMap<>();
         int totalQuantity;
-        int totalRevenue;
+        Double totalRevenue;
 
         for (PlaceOrderPojo placeOrderPojo : placeOrderPojoList) {
             totalQuantity = placeOrderPojo.getQuantity();
             totalRevenue = placeOrderPojo.getQuantity() * placeOrderPojo.getSelling_price();
 
-            if (revenueQuantityMap.containsKey(productService.get(placeOrderPojo.getBarcode()).getCategory())) {
-                totalQuantity += revenueQuantityMap.get(productService.get(placeOrderPojo.getBarcode()).getCategory()).left;
-                totalRevenue += revenueQuantityMap.get(productService.get(placeOrderPojo.getBarcode()).getCategory()).right;
+            if (revenueQuantityMap.containsKey(productService.getWithBarcode(placeOrderPojo.getBarcode()).getCategory())) {
+                totalQuantity += revenueQuantityMap.get(productService.getWithBarcode(placeOrderPojo.getBarcode()).getCategory()).left;
+                totalRevenue += revenueQuantityMap.get(productService.getWithBarcode(placeOrderPojo.getBarcode()).getCategory()).right;
             }
 
-            ConnectionUrlParser.Pair<Integer, Integer> pair = new ConnectionUrlParser.Pair<>(totalQuantity, totalRevenue);
+            ConnectionUrlParser.Pair<Integer, Double> pair = new ConnectionUrlParser.Pair<>(totalQuantity, totalRevenue);
             revenueQuantityMap.put(
-                    productService.get(placeOrderPojo.getBarcode()).getCategory(),
+                    productService.getWithBarcode(placeOrderPojo.getBarcode()).getCategory(),
                     pair
             );
 
         }
 
-        for(Map.Entry<String, ConnectionUrlParser.Pair<Integer, Integer>> entry : revenueQuantityMap.entrySet()) {
+        for(Map.Entry<String, ConnectionUrlParser.Pair<Integer, Double>> entry : revenueQuantityMap.entrySet()) {
             salesData.append(brand)
                     .append("\t")
                     .append(entry.getKey())
@@ -248,28 +248,28 @@ public class ReportDto {
             }
         }
 
-        Map<String, ConnectionUrlParser.Pair<Integer, Integer>> revenueQuantityMap = new HashMap<>();
+        Map<String, ConnectionUrlParser.Pair<Integer, Double>> revenueQuantityMap = new HashMap<>();
         int totalQuantity;
-        int totalRevenue;
+        Double totalRevenue;
 
         for (PlaceOrderPojo placeOrderPojo : placeOrderPojoList) {
             totalQuantity = placeOrderPojo.getQuantity();
             totalRevenue = placeOrderPojo.getQuantity() * placeOrderPojo.getSelling_price();
 
-            if (revenueQuantityMap.containsKey(productService.get(placeOrderPojo.getBarcode()).getBrand())) {
-                totalQuantity += revenueQuantityMap.get(productService.get(placeOrderPojo.getBarcode()).getBrand()).left;
-                totalRevenue += revenueQuantityMap.get(productService.get(placeOrderPojo.getBarcode()).getBrand()).right;
+            if (revenueQuantityMap.containsKey(productService.getWithBarcode(placeOrderPojo.getBarcode()).getBrand())) {
+                totalQuantity += revenueQuantityMap.get(productService.getWithBarcode(placeOrderPojo.getBarcode()).getBrand()).left;
+                totalRevenue += revenueQuantityMap.get(productService.getWithBarcode(placeOrderPojo.getBarcode()).getBrand()).right;
             }
 
-            ConnectionUrlParser.Pair<Integer, Integer> pair = new ConnectionUrlParser.Pair<>(totalQuantity, totalRevenue);
+            ConnectionUrlParser.Pair<Integer, Double> pair = new ConnectionUrlParser.Pair<>(totalQuantity, totalRevenue);
             revenueQuantityMap.put(
-                    productService.get(placeOrderPojo.getBarcode()).getBrand(),
+                    productService.getWithBarcode(placeOrderPojo.getBarcode()).getBrand(),
                     pair
             );
 
         }
 
-        for(Map.Entry<String, ConnectionUrlParser.Pair<Integer, Integer>> entry : revenueQuantityMap.entrySet()) {
+        for(Map.Entry<String, ConnectionUrlParser.Pair<Integer, Double>> entry : revenueQuantityMap.entrySet()) {
             salesData.append(entry.getKey())
                     .append("\t")
                     .append(form.getCategory())

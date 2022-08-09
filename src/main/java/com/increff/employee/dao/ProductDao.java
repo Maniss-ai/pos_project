@@ -47,7 +47,7 @@ public class ProductDao extends AbstractDao {
             return query.getSingleResult();
         }
         catch (Exception e) {
-            throw new ApiException("Barcode doesn't exists ....");
+            throw new ApiException("Barcode doesn't exists");
         }
     }
 
@@ -93,7 +93,7 @@ public class ProductDao extends AbstractDao {
             return query.getSingleResult();
         }
         catch (Exception e) {
-            throw new ApiException("Barcode doesn't exists ....");
+            throw new ApiException("Barcode doesn't exists");
         }
     }
 

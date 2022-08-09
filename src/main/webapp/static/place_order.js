@@ -34,8 +34,9 @@ function addPlaceOrder(event) {
 	   		console.log("place order created");
 			console.log(response);
 	   		getPlaceOrderList();
+			toastr.success("Order added successfully", "success");
 	   },
-	   error: handleAjaxError
+	   error: handleAjaxErrorPlaceOrder
 	});
 
 	return false;
@@ -68,9 +69,10 @@ function updatePlaceOrder(event) {
        },
 	   success: function(response) {
 	   		console.log("place order update");
-	   		getPlaceOrderList();     //...
+	   		getPlaceOrderList();
+			toastr.success("Order updated successfully", "success");
 	   },
-	   error: handleAjaxError
+	   error: handleAjaxErrorPlaceOrder
 	});
 
 	return false;
@@ -86,7 +88,7 @@ function getPlaceOrderList() {
 			data_list = data;
 			getBarcodePlaceOrder(0, data);
 	   },
-	   error: handleAjaxError
+	   error: handleAjaxErrorPlaceOrder
 	});
 }
 
@@ -96,7 +98,7 @@ function getBarcodePlaceOrder(index, data) {
 		return;
 	}
 
-	var url = getProductUrl() + '/' + data[index].barcode;
+	var url = getProductUrl() + '/barcode/' + data[index].barcode;
 	$.ajax({
 		url: url,
 		type: 'GET',
@@ -105,9 +107,9 @@ function getBarcodePlaceOrder(index, data) {
 				console.log(product_data);
 				data[index].barcode = product_data.barcode;
 				data[index].product_name = product_data.product;
-				getBarcodePlaceOrder(index+1, data);     //...
+				getBarcodePlaceOrder(index+1, data);
 		},
-		error: handleAjaxError
+		error: handleAjaxErrorPlaceOrder
 	});
 }
 
@@ -122,7 +124,7 @@ function deletePlaceOrder(id) {
 	   		console.log("place order deleted");
 	   		getPlaceOrderList();     //...
 	   },
-	   error: handleAjaxError
+	   error: handleAjaxErrorPlaceOrder
 	});
 }
 
@@ -136,7 +138,7 @@ function getBarcodeList(event) {
 				console.log(data);
 				displayBarcodeList(data);     //...
 		},
-		error: handleAjaxError
+		error: handleAjaxErrorPlaceOrder
 	});
 }
 
@@ -162,8 +164,9 @@ function submitPlaceOrder(event) {
 	   success: function(response) {
 	   		console.log("submit place order created");
 	   		getPlaceOrderList();
+			toastr.success("Order placed successfully", "success");
 	   },
-	   error: handleAjaxError
+	   error: handleAjaxErrorPlaceOrder
 	});
 
 	return false;
@@ -185,8 +188,8 @@ function displayPlaceOrderList(data) {
 			+ '<td>' + e.product_name + '</td>'
 			+ '<td>' + e.barcode + '</td>'
 			+ '<td>'  + e.quantity + '</td>'
-			+ '<td>'  + e.selling_price + '</td>'
-            + '<td>'  + e.selling_price * e.quantity + '</td>'
+			+ '<td>'  + e.selling_price.toFixed(2) + '</td>'
+            + '<td>'  +(e.selling_price * e.quantity).toFixed(2) + '</td>'
 			+ '<td>' + buttonHtml + '</td>'
 			+ '</tr>';
     	tbody.append(row);
@@ -203,7 +206,7 @@ function displayEditPlaceOrder(id) {
 			console.log("DISPLAY EDIT PLACEORDER : " + data);
 	   		displayPlaceOrder(data);
 	   },
-	   error: handleAjaxError
+	   error: handleAjaxErrorPlaceOrder
 	});
 }
 
@@ -251,9 +254,17 @@ function toJsonPO($form) {
     return data;
 }
 
-function handleAjaxError(response){
+function handleAjaxErrorPlaceOrder(response){
 	var response = JSON.parse(response.responseText);
 	toastr.error(response.message, "Error");
+}
+
+function onlyNumberKey(evt) {
+	// Only ASCII character in that range allowed
+	var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+	if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+		return false;
+	return true;
 }
 
 //INITIALIZATION CODE

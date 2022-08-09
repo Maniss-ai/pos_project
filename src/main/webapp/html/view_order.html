@@ -24,22 +24,22 @@
 					<div class="input-group mb-3">
 						<span class="input-group-text" id="inputGroup-sizing-default">Order Id</span>
 						<input type="text" class="form-control" aria-label="Sizing example input"
-							aria-describedby="inputGroup-sizing-default" name="order_id" id="inputQuantity"
+							aria-describedby="inputGroup-sizing-default" name="order_id" id="inputOrderId"
 							placeholder="Enter Order Id">
 					</div>
 
 					<div class="input-group mb-3">
 						<span class="input-group-text" id="inputGroup-sizing-default">Start Date</span>
 						<input type="date" class="form-control" aria-label="Sizing example input"
-							aria-describedby="inputGroup-sizing-default" name="start_date" id="inputStartDate"
-							placeholder="Enter Start Date">
+							aria-describedby="inputGroup-sizing-default" name="start_date" id="inputStartDateOrder"
+							placeholder="Enter Start Date" >
 					</div>
 
 					<div class="input-group mb-3">
 						<span class="input-group-text" id="inputGroup-sizing-default">End Date</span>
 						<input type="date" class="form-control" aria-label="Sizing example input"
-							aria-describedby="inputGroup-sizing-default" name="end_date" id="inputEndDate"
-							placeholder="Enter End Date">
+							aria-describedby="inputGroup-sizing-default" name="end_date" id="inputEndDateOrder"
+							placeholder="Enter End Date" >
 					</div>
 
 					<div class="row">&nbsp;</div>
@@ -119,7 +119,7 @@
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script th:src="@{/static/message.js}"></script>
-
+	
 	<footer th:replace="snippets.html :: name_footer"></footer>
 
 </body>

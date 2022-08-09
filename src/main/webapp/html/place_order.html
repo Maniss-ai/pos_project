@@ -38,16 +38,16 @@
 
 					<div class="input-group mb-3">
 						<span class="input-group-text" id="inputGroup-sizing-default">Quantity</span>
-						<input type="text" class="form-control" aria-label="Sizing example input"
+						<input type="number" class="form-control" aria-label="Sizing example input"
 							aria-describedby="inputGroup-sizing-default" name="quantity" id="inputQuantity"
-							placeholder="Enter Quantity">
+							placeholder="Enter Quantity" onkeypress="return onlyNumberKey(event)" min="0">
 					</div>
 
                     <div class="input-group mb-3">
 						<span class="input-group-text" id="inputGroup-sizing-default">Selling Price</span>
 						<input type="text" class="form-control" aria-label="Sizing example input"
 							aria-describedby="inputGroup-sizing-default" name="selling_price" id="inputSellingPrice"
-							placeholder="Enter Selling Price">
+							placeholder="Enter Selling Price" onkeypress="return onlyNumber(event)" min="0">
 					</div>
 
 					<div class="row">&nbsp;</div>
@@ -76,7 +76,7 @@
 							<th scope="col">Barcode</th>
 							<th scope="col">Quantity</th>
 							<th scope="col">Selling Price</th>
-                            <th scope="col">Amount</th>
+                            <th scope="col">Total Selling Price</th>
 							<th scope="col">Actions</th>
 						</tr>
 					</thead>
@@ -111,14 +111,14 @@
 
 							<div class="input-group mb-3">
 								<span class="input-group-text" id="inputQuantity">Quantity</span>
-								<input type="text" class="form-control" aria-label="Sizing example input"
-									aria-describedby="inputQuantity" name="quantity" placeholder="Enter Quantity">
+								<input type="number" class="form-control" aria-label="Sizing example input"
+									aria-describedby="inputQuantity" name="quantity" placeholder="Enter Quantity" onkeypress="return onlyNumberkey(event)" min="0">
 							</div>
 
 							<div class="input-group mb-3">
 								<span class="input-group-text" id="inputMRP">Selling Price</span>
 								<input type="text" class="form-control" aria-label="Sizing example input"
-									aria-describedby="inputSellingPrice" name="selling_price" placeholder="Enter Selling Price">
+									aria-describedby="inputSellingPrice" name="selling_price" placeholder="Enter Selling Price" onkeypress="return onlyNumber(event)" min="0">
 							</div>
 
 							<input type="hidden" name="id">

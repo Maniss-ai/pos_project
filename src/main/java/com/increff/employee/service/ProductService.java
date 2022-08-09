@@ -26,7 +26,12 @@ public class ProductService {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public ProductPojo get(String barcode) throws ApiException {
+    public ProductPojo getWithId(int id) throws ApiException {
+        return getCheck(id);
+    }
+
+    @Transactional(rollbackOn = ApiException.class)
+    public ProductPojo getWithBarcode(String barcode) throws ApiException {
         return getCheckWithBarcode(barcode);
     }
 
@@ -81,7 +86,7 @@ public class ProductService {
     private ProductPojo getCheckWithBarcode(String barcode) throws ApiException {
         ProductPojo p = dao.getInventoryBarcode(barcode);
         if (p == null) {
-            throw new ApiException("Brand-Category " + get(barcode).getBrand() + " does not exit");
+            throw new ApiException("Brand-Category " + getWithBarcode(barcode).getBrand() + " does not exit");
         }
         return p;
     }

@@ -1,15 +1,11 @@
 package com.increff.employee.model.data;
 
 import com.increff.employee.model.form.OrderForm;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class OrderData extends OrderForm {
-    int id;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    private int id;
 }

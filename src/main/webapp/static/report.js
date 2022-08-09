@@ -29,11 +29,16 @@ function generateSalesReport(event) {
             'Content-Type': 'application/json'
         },
         success: function(data) {
-            console.log("Getting Sales Reports ....");
+            console.log("Getting Sales Reports ...." + data.split("\n").length);
             console.log(data);
+			if(data.split("\n").length <= 2) {
+				toastr.info("Empty sales report for selected date", "info");
+				return;
+			}
 			writeFileDataReport(data);
+			toastr.success("Sales Report generated successfully", "success");
         },
-        error: handleAjaxError
+        error: handleAjaxErrorReport
     });
 }
 
@@ -46,8 +51,9 @@ function generateBrandReport(event) {
 	   		console.log("Brand Report fetched");
 			console.log(data);
 	   		writeFileDataReport(data);
+			toastr.success("Brand Report generated successfully", "success");
 	   },
-	   error: handleAjaxError
+	   error: handleAjaxErrorReport
 	});
 }
 
@@ -60,8 +66,9 @@ function generateInventoryReport(event) {
 	   		console.log("Inventory Report fetched");
 	   		console.log(data);
 			writeFileDataReport(data);
+			toastr.success("Inventory Report generated successfully", "success");
 	   },
-	   error: handleAjaxError
+	   error: handleAjaxErrorReport
 	});
 }
 
@@ -83,9 +90,23 @@ function writeFileDataReport(data) {
     tempLink.click(); 
 }
 
-function handleAjaxError(response){
+function handleAjaxErrorReport(response){
 	var response = JSON.parse(response.responseText);
 	toastr.error(response.message, "Error");
+}
+
+function dateSetReport() {
+	var date = new Date();
+	var year = date.getFullYear();
+	var monthStart = String(date.getMonth()).padStart(2,'0');
+	var monthEnd = String(date.getMonth()+1).padStart(2,'0');
+	var todayDate = String(date.getDate()).padStart(2,'0');
+
+	var datePatternStart = year + '-' + monthStart + '-' + todayDate;
+	var datePatternEnd = year + '-' + monthEnd + '-' + todayDate;
+
+	document.getElementById("inputStartDateReport").value = datePatternStart;
+	document.getElementById("inputEndDateReport").value = datePatternEnd;
 }
 
 /**************************  INITIALIZATION CODE  **************************/
@@ -96,3 +117,4 @@ function init() {
 }
 
 $(document).ready(init);
+$(document).ready(dateSetReport);

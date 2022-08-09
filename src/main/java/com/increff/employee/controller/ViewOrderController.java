@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Api
@@ -22,7 +24,7 @@ public class ViewOrderController {
 
     @ApiOperation(value = "Adds Place order")
     @RequestMapping(path = "/api/order/view_order", method = RequestMethod.POST)
-    public List<OrderData> search(@RequestBody ViewOrderForm form) throws ApiException {
+    public List<OrderData> search(@RequestBody ViewOrderForm form) throws ApiException, ParseException {
         return dto.search(form);
     }
 }

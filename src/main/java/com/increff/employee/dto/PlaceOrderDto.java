@@ -10,6 +10,7 @@ import com.increff.employee.service.ApiException;
 import com.increff.employee.service.InventoryService;
 import com.increff.employee.service.PlaceOrderService;
 import com.increff.employee.service.ProductService;
+import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +40,7 @@ public class PlaceOrderDto {
         normalize(pojo);
 
         if(form.getQuantity() == 0 || form.getSelling_price() == 0) {
-            throw new ApiException("Quantity or Selling price can't be zero/empty ");
+            throw new ApiException("Quantity or Selling price can't be zero or empty ");
         }
 
         // get inventory_id using barcode_id match ....
@@ -48,14 +49,14 @@ public class PlaceOrderDto {
 
         // check if there exists enough products in inventory to place order ....
         if(inventory_items < form.getQuantity()) {
-            throw new ApiException("There's only " + inventory_items + " items available in the Inventory ...");
+            throw new ApiException("There's only " + inventory_items + " items available in the Inventory");
         }
         else if(!isSellingPriceLessThanMRP(pojo)) {
-            throw new ApiException("Selling Price Can't be More Than MRP ...");
+            throw new ApiException("Selling Price Can't be More Than MRP");
         }
         else {
             if(alreadyAdded(form)) {
-                throw new ApiException("Order already exists, Please Update ...");
+                throw new ApiException("Order already exists, Please Update");
             }
             else {
                 return convertPojoToData(placeOrderService.add(pojo));
@@ -113,7 +114,7 @@ public class PlaceOrderDto {
 
         orderPojo.setTime(LocalDate.now());
 
-        int total_bill_amount = 0;
+        double total_bill_amount = 0.0;
         for(PlaceOrderForm form : orderFormList) {
             total_bill_amount += (form.getQuantity() * form.getSelling_price());
         }
@@ -150,10 +151,10 @@ public class PlaceOrderDto {
 
         System.out.println("UPDATE WORKING");
         if(inventory_items < form.getQuantity()) {
-            throw new ApiException("There's only " + inventory_items + " items available in the Inventory ...");
+            throw new ApiException("There's only " + inventory_items + " items available in the Inventory");
         }
         else if(!isSellingPriceLessThanMRP(pojo)) {
-            throw new ApiException("Selling Price Can't be More Than MRP ...");
+            throw new ApiException("Selling Price Can't be More Than MRP");
         }
         else {
             placeOrderService.update(place_order_id, pojo);
@@ -163,7 +164,7 @@ public class PlaceOrderDto {
     // CHECKS ....
 
     private void nullCheck(PlaceOrderForm form) throws ApiException {
-        if(form.getBarcode().isEmpty() || form.getBarcode() == null || form.getQuantity() == 0 || form.getSelling_price() == 0) {
+        if(form.getBarcode().isEmpty() || form.getBarcode() == null) {
             throw new ApiException("Order info can't be empty");
         }
     }
@@ -179,13 +180,13 @@ public class PlaceOrderDto {
     }
 
     boolean isSellingPriceLessThanMRP(PlaceOrderPojo pojo) throws ApiException {
-        ProductPojo productPojo = productService.get(pojo.getBarcode());
+        ProductPojo productPojo = productService.getWithBarcode(pojo.getBarcode());
 
         if(pojo.getSelling_price() > productPojo.getMrp()) {
             return false;
         }
         else {
-            pojo.setBarcode(productService.get(pojo.getBarcode()).getBarcode());
+            pojo.setBarcode(productService.getWithBarcode(pojo.getBarcode()).getBarcode());
             return true;
         }
     }
@@ -201,7 +202,7 @@ public class PlaceOrderDto {
         data.setOrder_id(pojo.getOrder_id());
         data.setBarcode(pojo.getBarcode());
         data.setQuantity(pojo.getQuantity());
-        data.setSelling_price(pojo.getSelling_price());
+        data.setSelling_price(Precision.round(pojo.getSelling_price(), 2));
         data.setId(pojo.getId());
         return data;
     }
@@ -212,7 +213,7 @@ public class PlaceOrderDto {
         pojo.setOrder_id(order_id);
         pojo.setBarcode(form.getBarcode());
         pojo.setQuantity(form.getQuantity());
-        pojo.setSelling_price(form.getSelling_price());
+        pojo.setSelling_price(Precision.round(form.getSelling_price(), 2));
         return pojo;
     }
 
@@ -226,7 +227,7 @@ public class PlaceOrderDto {
             }
         }
         if(inventory_id == -1) {
-            throw new ApiException("Inventory with barcode: " + pojo.getBarcode() + " doesn't exists ....");
+            throw new ApiException("Inventory with barcode: " + pojo.getBarcode() + " doesn't exists");
         }
         else {
             return inventory_id;
@@ -243,7 +244,7 @@ public class PlaceOrderDto {
             }
         }
         if(product_id == -1) {
-            throw new ApiException("Inventory with barcode: " + get(product_id).getBarcode() + " doesn't exists ....");
+            throw new ApiException("Inventory with barcode: " + get(product_id).getBarcode() + " doesn't exists");
         }
         else {
             return product_id;

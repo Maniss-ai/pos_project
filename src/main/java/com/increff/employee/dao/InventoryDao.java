@@ -1,6 +1,8 @@
 package com.increff.employee.dao;
 
+import com.increff.employee.model.data.InventoryData;
 import com.increff.employee.pojo.InventoryPojo;
+import com.increff.employee.service.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -52,13 +54,15 @@ public class InventoryDao extends AbstractDao {
         return query.getResultList();
     }
 
-    public void update(InventoryPojo p) {
-
-    }
-    public InventoryPojo selectBarcode(String barcode) {
-        TypedQuery<InventoryPojo> query = getQuery(select_barcode, InventoryPojo.class);
-        query.setParameter("barcode", barcode);
-        return query.getSingleResult();
+    public InventoryPojo selectBarcode(String barcode) throws ApiException {
+        try {
+            TypedQuery<InventoryPojo> query = getQuery(select_barcode, InventoryPojo.class);
+            query.setParameter("barcode", barcode);
+            return query.getSingleResult();
+        }
+        catch (Exception e) {
+            throw new ApiException("Barcode doesn't exists");
+        }
     }
 
 }

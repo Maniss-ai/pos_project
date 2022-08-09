@@ -29,14 +29,11 @@ public class BrandDto {
         nullCheck(form);
         BrandPojo pojo = convertFormToPojo(form);
         normalize(pojo);
-        if(isUnique(pojo) && isNotEmpty(pojo)) {
+        if(isUnique(pojo)) {
             return convertPojoToData(brandService.add(pojo));
         }
         else {
-            if(!isUnique(pojo))
-                throw new ApiException("Brand Category already exists...");
-            else
-                throw new ApiException("Brand or Category can't be empty ...");
+            throw new ApiException("Brand Category pair already exists");
         }
     }
 
@@ -52,7 +49,6 @@ public class BrandDto {
                 dataList.add(add(brandForm));
             }
             catch (Exception e) {
-                System.out.println("Working Catch");
                 error.append(row).append(": ").append(e.getMessage()).append("\n");
             }
 
@@ -60,7 +56,6 @@ public class BrandDto {
         }
 
         if(!error.toString().isEmpty()) {
-            System.out.println("Working IF");
             throw new ApiException(error.toString());
         }
 
@@ -117,7 +112,7 @@ public class BrandDto {
             return convertPojoToData(brandService.update(id, pojo));
         }
         else {
-            throw new ApiException("Unable to update, Brand already exists");
+            throw new ApiException("Unable to update, Brand Category pair already exists");
         }
     }
 
@@ -153,10 +148,6 @@ public class BrandDto {
         return true;
     }
 
-    public boolean isNotEmpty(BrandPojo pojo) {
-        return !pojo.getBrand().isEmpty() && !pojo.getCategory().isEmpty();
-    }
-
     // MODIFYING ....
     public static void normalize(BrandPojo p) {
         p.setBrand(p.getBrand().toLowerCase().trim());
@@ -164,8 +155,11 @@ public class BrandDto {
     }
 
     private void nullCheck(BrandForm form) throws ApiException {
-        if(form.getBrand() == null || form.getCategory() == null) {
-            throw new ApiException("Brand and Category can't be null");
+        if(form.getBrand() == null || form.getBrand().isEmpty()) {
+            throw new ApiException("Brand can't be null");
+        }
+        else if(form.getCategory() == null || form.getCategory().isEmpty()) {
+            throw new ApiException("Category can't be null");
         }
     }
 
