@@ -18,5 +18,5 @@ public class PlaceOrderPojo {
     private int order_id;
     private String barcode;
     private int quantity;
-    private Double selling_price;
+    private double selling_price;
 }

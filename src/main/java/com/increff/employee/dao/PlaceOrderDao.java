@@ -2,6 +2,7 @@ package com.increff.employee.dao;
 
 import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.pojo.PlaceOrderPojo;
+import com.increff.employee.service.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -43,10 +44,15 @@ public class PlaceOrderDao extends AbstractDao {
         query.executeUpdate();
     }
 
-    public PlaceOrderPojo select(int id) {
-        TypedQuery<PlaceOrderPojo> query = getQuery(select_id, PlaceOrderPojo.class);
-        query.setParameter("id", id);
-        return query.getSingleResult();
+    public PlaceOrderPojo select(int id) throws ApiException {
+        try {
+            TypedQuery<PlaceOrderPojo> query = getQuery(select_id, PlaceOrderPojo.class);
+            query.setParameter("id", id);
+            return query.getSingleResult();
+        }
+        catch (Exception e) {
+            throw new ApiException("Product with id: " + id + " does not exit");
+        }
     }
 
     public List<PlaceOrderPojo> selectSingleOrder(int order_id) {

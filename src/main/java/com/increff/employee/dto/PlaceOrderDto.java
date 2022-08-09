@@ -2,6 +2,7 @@ package com.increff.employee.dto;
 
 import com.increff.employee.model.data.PlaceOrderData;
 import com.increff.employee.model.form.PlaceOrderForm;
+import com.increff.employee.model.form.PlaceOrderUpdateForm;
 import com.increff.employee.pojo.InventoryPojo;
 import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.pojo.PlaceOrderPojo;
@@ -39,12 +40,8 @@ public class PlaceOrderDto {
         PlaceOrderPojo pojo = convertFormToPojo(form, 0);
         normalize(pojo);
 
-        if(form.getQuantity() == 0 || form.getSelling_price() == 0) {
-            throw new ApiException("Quantity or Selling price can't be zero or empty ");
-        }
-
         // get inventory_id using barcode_id match ....
-        int inventory_id = getInventoryIdMatchWithBarcode(pojo);
+        int inventory_id = getInventoryIdMatchWithBarcode(form.getBarcode());
         int inventory_items = inventoryService.get(inventory_id).getInventory();
 
         // check if there exists enough products in inventory to place order ....
@@ -59,6 +56,7 @@ public class PlaceOrderDto {
                 throw new ApiException("Order already exists, Please Update");
             }
             else {
+                System.out.println("NOW");
                 return convertPojoToData(placeOrderService.add(pojo));
             }
         }
@@ -141,12 +139,13 @@ public class PlaceOrderDto {
         }
     }
 
-    public void update(int place_order_id, PlaceOrderForm form) throws ApiException {
-        nullCheck(form);
-        PlaceOrderPojo pojo = convertFormToPojo(form, 0);
+    public void update(int place_order_id, PlaceOrderUpdateForm form) throws ApiException {
+        nullCheckForUpdate(form);
+        String barcode = get(place_order_id).getBarcode();
+        PlaceOrderPojo pojo = convertFormToPojoForUpdate(form, 0, barcode);
 
         // get inventory_id using barcode_id match ....
-        int inventory_id = getInventoryIdMatchWithBarcode(pojo);
+        int inventory_id = getInventoryIdMatchWithBarcode(barcode);
         int inventory_items = inventoryService.get(inventory_id).getInventory();
 
         System.out.println("UPDATE WORKING");
@@ -154,7 +153,7 @@ public class PlaceOrderDto {
             throw new ApiException("There's only " + inventory_items + " items available in the Inventory");
         }
         else if(!isSellingPriceLessThanMRP(pojo)) {
-            throw new ApiException("Selling Price Can't be More Than MRP");
+            throw new ApiException("Selling Price can't be more than MRP");
         }
         else {
             placeOrderService.update(place_order_id, pojo);
@@ -165,7 +164,16 @@ public class PlaceOrderDto {
 
     private void nullCheck(PlaceOrderForm form) throws ApiException {
         if(form.getBarcode().isEmpty() || form.getBarcode() == null) {
-            throw new ApiException("Order info can't be empty");
+            throw new ApiException("Barcode can't be empty");
+        }
+        else if(form.getQuantity() == 0) {
+            throw new ApiException("Quantity can't be empty");
+        }
+    }
+
+    private void nullCheckForUpdate(PlaceOrderUpdateForm form) throws ApiException {
+        if(form.getQuantity() == 0) {
+            throw new ApiException("Quantity can't be empty");
         }
     }
 
@@ -202,6 +210,8 @@ public class PlaceOrderDto {
         data.setOrder_id(pojo.getOrder_id());
         data.setBarcode(pojo.getBarcode());
         data.setQuantity(pojo.getQuantity());
+        System.out.println("PRECISION DATA" + (Precision.round(pojo.getSelling_price(), 2)));
+        System.out.println("DATA" + pojo.getSelling_price());
         data.setSelling_price(Precision.round(pojo.getSelling_price(), 2));
         data.setId(pojo.getId());
         return data;
@@ -209,7 +219,6 @@ public class PlaceOrderDto {
 
     protected static PlaceOrderPojo convertFormToPojo(PlaceOrderForm form, int order_id) {
         PlaceOrderPojo pojo = new PlaceOrderPojo();
-//        pojo.setOrder_id(form.getOrder_id());
         pojo.setOrder_id(order_id);
         pojo.setBarcode(form.getBarcode());
         pojo.setQuantity(form.getQuantity());
@@ -217,17 +226,29 @@ public class PlaceOrderDto {
         return pojo;
     }
 
-    private int getInventoryIdMatchWithBarcode(PlaceOrderPojo pojo) throws ApiException {
+    protected static PlaceOrderPojo convertFormToPojoForUpdate(PlaceOrderUpdateForm form, int order_id, String barcode) {
+        PlaceOrderPojo pojo = new PlaceOrderPojo();
+        pojo.setBarcode(barcode);
+        pojo.setOrder_id(order_id);
+        pojo.setQuantity(form.getQuantity());
+        System.out.println("SELLING PRICE : " + form.getSelling_price());
+        System.out.println("SELLING PRICE : " + Precision.round(form.getSelling_price(), 2));
+        pojo.setSelling_price(Precision.round(form.getSelling_price(), 2));
+        return pojo;
+    }
+
+    private int getInventoryIdMatchWithBarcode(String barcode) throws ApiException {
         int inventory_id = -1;
         List<InventoryPojo> list = inventoryService.getAll();
         for(InventoryPojo inventoryPojo : list) {
-            if(Objects.equals(inventoryPojo.getBarcode(), pojo.getBarcode())) {
+            if(Objects.equals(inventoryPojo.getBarcode(), barcode)) {
                 inventory_id = inventoryPojo.getId();
                 break;
             }
         }
+
         if(inventory_id == -1) {
-            throw new ApiException("Inventory with barcode: " + pojo.getBarcode() + " doesn't exists");
+            throw new ApiException("Inventory with barcode: " + barcode + " doesn't exists");
         }
         else {
             return inventory_id;

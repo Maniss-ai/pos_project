@@ -41,7 +41,6 @@ public class PlaceOrderService {
 
     @Transactional(rollbackOn  = ApiException.class)
     public void update(int place_order_id, PlaceOrderPojo p) throws ApiException {
-        System.out.println("BARCODE ::: " + place_order_id + " :::: " + p.getBarcode());
         PlaceOrderPojo pojo = getCheck(place_order_id);
         pojo.setOrder_id(p.getOrder_id());
         pojo.setBarcode(p.getBarcode());
@@ -71,7 +70,7 @@ public class PlaceOrderService {
     public PlaceOrderPojo getCheck(int place_order_id) throws ApiException {
         PlaceOrderPojo p = dao.select(place_order_id);
         if (p == null) {
-            throw new ApiException("Product with barcode: " + place_order_id + " does not exit");
+            throw new ApiException("Product with id: " + place_order_id + " does not exit");
         }
         return p;
     }

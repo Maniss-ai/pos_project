@@ -122,7 +122,6 @@ public class ProductDto {
         }
     }
 
-
     // CHECKS ....
     boolean isUnique(ProductPojo pojo) throws ApiException {
         List<ProductData> dataList = getAll();

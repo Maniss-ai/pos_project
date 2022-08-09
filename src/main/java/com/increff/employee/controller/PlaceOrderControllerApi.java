@@ -5,6 +5,7 @@ import com.increff.employee.dto.ViewOrderDto;
 import com.increff.employee.generatepdf.ObjectToXml;
 import com.increff.employee.model.data.PlaceOrderData;
 import com.increff.employee.model.form.PlaceOrderForm;
+import com.increff.employee.model.form.PlaceOrderUpdateForm;
 import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.service.ApiException;
 import io.swagger.annotations.Api;
@@ -59,13 +60,13 @@ public class PlaceOrderControllerApi extends javax.servlet.http.HttpServlet impl
 
     @ApiOperation(value = "Gets list of all Place order")
     @RequestMapping(path = "/api/order/place_order", method = RequestMethod.GET)
-    public List<PlaceOrderData> getAllFromPage() {
+    public List<PlaceOrderData> getAll() {
         return dto.getAll();
     }
 
     @ApiOperation(value = "Updates Place order")
     @RequestMapping(path = "/api/order/place_order/{place_order_id}", method = RequestMethod.PUT)
-    public void update(@PathVariable int place_order_id, @RequestBody PlaceOrderForm form) throws ApiException {
+    public void update(@PathVariable int place_order_id, @RequestBody PlaceOrderUpdateForm form) throws ApiException {
         dto.update(place_order_id, form);
     }
 

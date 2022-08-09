@@ -19,5 +19,5 @@ public class ProductPojo {
     private String brand;
     private String category;
     private String product;
-    private double mrp;
+    private Double mrp;
 }
