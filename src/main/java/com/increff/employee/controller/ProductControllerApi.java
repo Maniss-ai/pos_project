@@ -56,7 +56,7 @@ public class ProductControllerApi {
 
     @ApiOperation(value = "Updates an Product")
     @RequestMapping(path = "/api/product/{id}", method = RequestMethod.PUT)
-    public void update(@PathVariable int id, @RequestBody ProductUpdateForm form) throws ApiException {
-        dto.update(id, form);
+    public ProductData update(@PathVariable int id, @RequestBody ProductUpdateForm form) throws ApiException {
+        return dto.update(id, form);
     }
 }

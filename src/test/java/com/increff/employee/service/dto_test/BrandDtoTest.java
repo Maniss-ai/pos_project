@@ -55,6 +55,25 @@ public class BrandDtoTest extends AbstractUnitTest {
     }
 
     @Test(expected = ApiException.class)
+    public void testBulkAddRollback() throws ApiException {
+        BrandForm brandForm = new BrandForm();
+        brandForm.setBrand("Brand" + 5);
+        brandForm.setCategory("Category" + 5);
+        brandDto.add(brandForm);
+
+        List<BrandForm> formList = new ArrayList<>();
+        for(int i = 0; i < 5; i++) {
+            brandForm.setBrand("Brand" + i+1);
+            brandForm.setCategory("Category" + i+1);
+            formList.add(brandForm);
+        }
+
+        List<BrandData> brandDataList = brandDto.bulkAddBrand(formList);
+
+        Assert.assertEquals(0, brandDataList.size());
+    }
+
+    @Test(expected = ApiException.class)
     public void testGetWhenIdNotExists() throws ApiException {
         int id = 0;
         brandDto.get(id);

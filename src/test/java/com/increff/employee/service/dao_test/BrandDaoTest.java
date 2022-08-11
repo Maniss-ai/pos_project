@@ -62,5 +62,4 @@ public class BrandDaoTest extends AbstractUnitTest {
         Assert.assertEquals(5, brandPojoList.size());
     }
 
-
 }

@@ -41,12 +41,13 @@ public class ProductService {
     }
 
     @Transactional(rollbackOn  = ApiException.class)
-    public void update(int id, ProductPojo p) throws ApiException {
+    public ProductPojo update(int id, ProductPojo p) throws ApiException {
         ProductPojo pojo = getCheck(id);
         pojo.setBarcode(p.getBarcode());
         pojo.setProduct(p.getProduct());
         pojo.setMrp(p.getMrp());
         dao.update(p);
+        return pojo;
     }
 
     @Transactional

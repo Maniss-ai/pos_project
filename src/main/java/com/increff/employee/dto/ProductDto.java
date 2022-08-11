@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,8 +26,6 @@ public class ProductDto {
     private ProductService productService;
     @Autowired
     private InventoryService inventoryService;
-
-    static DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     // CRUD ....
     public ProductData add(ProductForm form) throws ApiException {
@@ -110,13 +107,14 @@ public class ProductDto {
         return dataList;
     }
 
-    public void update(int id, ProductUpdateForm form) throws ApiException {
+    public ProductData update(int id, ProductUpdateForm form) throws ApiException {
         nullCheckForUpdate(form);
         ProductPojo pojo = convertFormToPojoUpdate(form);
+        normalizeForUpdate(pojo);
         checkIfBarcodeExistsInProduct(id);
 
         if(isUnique(id, pojo)) {
-            productService.update(id, pojo);
+            return convertPojoToData(productService.update(id, pojo));
         } else {
             throw new ApiException("Barcode should be Unique");
         }
@@ -161,6 +159,11 @@ public class ProductDto {
         p.setProduct(p.getProduct().toLowerCase().trim());
         p.setBrand(p.getBrand().toLowerCase().trim());
         p.setCategory(p.getCategory().toLowerCase().trim());
+    }
+
+    public static void normalizeForUpdate(ProductPojo p) {
+        p.setBarcode(p.getBarcode().toLowerCase().trim());
+        p.setProduct(p.getProduct().toLowerCase().trim());
     }
 
     // CONVERSION ....
