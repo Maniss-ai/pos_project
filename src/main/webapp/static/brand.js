@@ -20,7 +20,7 @@ function addBrand(event){
 	   success: function(response) {
 	   		console.log("Brand created");
 	   		getBrandList();
-			toastr.success("Brand added successfully", "Success");
+			$.notify("Brand added successfully", "success");
 	   },
 	   error: handleAjaxError
 	});
@@ -51,7 +51,7 @@ function updateBrand(event){
 	   success: function(response) {
 	   		console.log("Brand update");
 	   		getBrandList();
-			toastr.success("Brand updated successfully", "Success");
+			$.notify("Brand updated successfully", "success");
 	   },
 	   error: handleAjaxError
 	});
@@ -102,12 +102,12 @@ function processDataBrand() {
 
 	// check for TSV extension ...
 	if(fileName.substring(fileName.length-3, fileName.length) != "tsv") {
-		toastr.warning("Please select TSV file", "Warning");
+		$.notify("Please select TSV file", "warn");
 		return;
 	}
 
 	if(document.getElementById("brandFile").files.length == 0) {
-		toastr.warning("Please select TSV file", "Warning");
+		$.notify("Please select TSV file", "warn");
 		resetUploadDialogBrand();
 		return;
 	}
@@ -162,7 +162,7 @@ function bulkAddBrand() {
        },	   
 	   success: function(response) {
 	   		getBrandList();
-			toastr.success("Bulk Brands added successfully", "Success");
+			$.notify("Bulk Brands added successfully", "success");
 	   },
 	   error: function(response) {
 			var lines = response.responseJSON.message.split("\n");
@@ -233,7 +233,7 @@ function updateFileNameBrand(){
 /*************************************  UPLOAD DATA: END  *************************************/
 
 function refreshData() {
-	toastr.success("Refreshed successfully", "Success");
+	$.notify("Refreshed successfully", "success");
 	getBrandList();
 }
 
@@ -294,7 +294,7 @@ function toJson($form) {
 
 function handleAjaxError(response){
 	var response = JSON.parse(response.responseText);
-	toastr.error(response.message, "Error");
+	$.notify(response.message, {autoHide : false});
 }
 
 

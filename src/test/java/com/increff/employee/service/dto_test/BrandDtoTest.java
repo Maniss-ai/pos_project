@@ -4,26 +4,16 @@ package com.increff.employee.service.dto_test;
 import com.increff.employee.dto.BrandDto;
 import com.increff.employee.model.data.BrandData;
 import com.increff.employee.model.form.BrandForm;
+import com.increff.employee.service.AbstractUnitTest;
 import com.increff.employee.service.ApiException;
-import com.increff.employee.service.QaConfig;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
-import org.springframework.test.context.web.WebAppConfiguration;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = QaConfig.class, loader = AnnotationConfigWebContextLoader.class)
-@WebAppConfiguration("src/test/webapp")
-@Transactional
-public class BrandDtoTest {
+public class BrandDtoTest extends AbstractUnitTest {
     @Autowired
     BrandDto brandDto;
 

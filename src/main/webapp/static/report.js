@@ -32,11 +32,11 @@ function generateSalesReport(event) {
             console.log("Getting Sales Reports ...." + data.split("\n").length);
             console.log(data);
 			if(data.split("\n").length <= 2) {
-				toastr.info("Empty sales report for selected date", "info");
+				$.notify("Empty sales report for selected date", "info");
 				return;
 			}
 			writeFileDataReport(data);
-			toastr.success("Sales Report generated successfully", "success");
+			$.notify("Sales Report generated successfully", "success");
         },
         error: handleAjaxErrorReport
     });
@@ -51,7 +51,7 @@ function generateBrandReport(event) {
 	   		console.log("Brand Report fetched");
 			console.log(data);
 	   		writeFileDataReport(data);
-			toastr.success("Brand Report generated successfully", "success");
+			$.notify("Brand Report generated successfully", "success");
 	   },
 	   error: handleAjaxErrorReport
 	});
@@ -66,7 +66,7 @@ function generateInventoryReport(event) {
 	   		console.log("Inventory Report fetched");
 	   		console.log(data);
 			writeFileDataReport(data);
-			toastr.success("Inventory Report generated successfully", "success");
+			$.notify("Inventory Report generated successfully", "success");
 	   },
 	   error: handleAjaxErrorReport
 	});
@@ -92,7 +92,7 @@ function writeFileDataReport(data) {
 
 function handleAjaxErrorReport(response){
 	var response = JSON.parse(response.responseText);
-	toastr.error(response.message, "Error");
+	$.notify(response.message, {autoHide : false});
 }
 
 function dateSetReport() {

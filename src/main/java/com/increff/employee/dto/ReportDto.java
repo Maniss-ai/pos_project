@@ -6,12 +6,15 @@ import com.increff.employee.model.form.ReportForm;
 import com.increff.employee.pojo.*;
 import com.increff.employee.service.*;
 import com.mysql.cj.conf.ConnectionUrlParser;
+import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -30,8 +33,12 @@ public class ReportDto {
     @Autowired
     private ViewOrderService viewOrderService;
 
-    public StringBuilder getAllSales(ReportForm form) throws ApiException {
+    public StringBuilder getAllSales(ReportForm form) throws ApiException, ParseException {
         if(form.getStart_date() != null && form.getEnd_date() != null && !form.getStart_date().isEmpty() && !form.getEnd_date().isEmpty()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            if(sdf.parse(form.getStart_date()).compareTo(sdf.parse(form.getEnd_date())) > 0) {
+                throw new ApiException("Start Date should come before End Date");
+            }
 
             // check weather brand or category exists ...
             if(!form.getBrand().isEmpty() && !form.getCategory().isEmpty() && form.getBrand() != null && form.getCategory() != null && !checkBrandCategoryExists(form.getBrand(), form.getCategory())) {
@@ -162,7 +169,7 @@ public class ReportDto {
             totalRevenue += pojo.getQuantity() * pojo.getSelling_price();
         }
 
-        salesData.append(totalQuantity).append("\t").append(totalRevenue);
+        salesData.append(totalQuantity).append("\t").append(Precision.round(totalRevenue, 2));
     }
 
     private void getReportWithBrand(LocalDate start_date, LocalDate end_date, StringBuilder salesData, List<ProductPojo> productPojoList, String brand) throws ApiException {
@@ -203,7 +210,7 @@ public class ReportDto {
                 totalRevenue += revenueQuantityMap.get(productService.getWithBarcode(placeOrderPojo.getBarcode()).getCategory()).right;
             }
 
-            ConnectionUrlParser.Pair<Integer, Double> pair = new ConnectionUrlParser.Pair<>(totalQuantity, totalRevenue);
+            ConnectionUrlParser.Pair<Integer, Double> pair = new ConnectionUrlParser.Pair<>(totalQuantity, Precision.round(totalRevenue, 2));
             revenueQuantityMap.put(
                     productService.getWithBarcode(placeOrderPojo.getBarcode()).getCategory(),
                     pair
@@ -261,7 +268,7 @@ public class ReportDto {
                 totalRevenue += revenueQuantityMap.get(productService.getWithBarcode(placeOrderPojo.getBarcode()).getBrand()).right;
             }
 
-            ConnectionUrlParser.Pair<Integer, Double> pair = new ConnectionUrlParser.Pair<>(totalQuantity, totalRevenue);
+            ConnectionUrlParser.Pair<Integer, Double> pair = new ConnectionUrlParser.Pair<>(totalQuantity, Precision.round(totalRevenue, 2));
             revenueQuantityMap.put(
                     productService.getWithBarcode(placeOrderPojo.getBarcode()).getBrand(),
                     pair

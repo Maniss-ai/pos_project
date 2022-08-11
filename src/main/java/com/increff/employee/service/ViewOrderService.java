@@ -20,8 +20,12 @@ public class ViewOrderService {
     }
 
     @Transactional
-    public List<OrderPojo> getSelectedOrdersWithId(LocalDate start_date, LocalDate end_date, int order_id) {
-        return dao.selectAllWithId(start_date, end_date, order_id);
+    public List<OrderPojo> getSelectedOrdersWithIdAndDate(LocalDate start_date, LocalDate end_date, int order_id) {
+        return dao.selectAllWithIdAndDate(start_date, end_date, order_id);
+    }
+    @Transactional
+    public List<OrderPojo> getSelectedOrdersWithId(int order_id) {
+        return dao.selectAllWithId(order_id);
     }
 
     @Transactional

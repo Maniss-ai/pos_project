@@ -27,34 +27,44 @@ public class ViewOrderDto {
     private InventoryService inventoryService;
 
     public List<OrderData> search(ViewOrderForm form) throws ApiException, ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        if(sdf.parse(form.getStart_date()).compareTo(sdf.parse(form.getEnd_date())) > 0) {
-            throw new ApiException("Start Date should come before End Date");
-        }
+        List<OrderPojo> pojoList;
+        List<OrderData> dataList = new ArrayList<>();
 
-        if(form.getStart_date() != null && form.getEnd_date() != null && !form.getStart_date().isEmpty() && !form.getEnd_date().isEmpty()) {
-            List<OrderPojo> pojoList;
-            List<OrderData> dataList = new ArrayList<>();
+        if(form.getOrder_id() != 0) {
+            checkOrderIdExists(form.getOrder_id());
+            pojoList = viewOrderService.getSelectedOrdersWithId(form.getOrder_id());
+        }
+        else if(form.getStart_date() != null && form.getEnd_date() != null && !form.getStart_date().isEmpty() && !form.getEnd_date().isEmpty()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            if(sdf.parse(form.getStart_date()).compareTo(sdf.parse(form.getEnd_date())) > 0) {
+                throw new ApiException("Start Date should come before End Date");
+            }
+
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate start_date = LocalDate.parse(form.getStart_date(), formatter);
             LocalDate end_date = LocalDate.parse(form.getEnd_date(), formatter);
 
-            if(form.getOrder_id() == 0) {
-                pojoList = viewOrderService.getSelectedOrdersWithoutId(start_date, end_date);
-            }
-            else {
-                pojoList = viewOrderService.getSelectedOrdersWithId(start_date, end_date, form.getOrder_id());
-            }
-
-            for (OrderPojo pojo : pojoList) {
-                dataList.add(convertPojoToData(pojo));
-            }
-
-            return dataList;
+            pojoList = viewOrderService.getSelectedOrdersWithoutId(start_date, end_date);
         }
         else {
-            throw new ApiException("Date can't be empty");
+            throw new ApiException("Please provide either Order_Id or Date range");
         }
+
+        for (OrderPojo pojo : pojoList) {
+            dataList.add(convertPojoToData(pojo));
+        }
+        return dataList;
+    }
+
+    private void checkOrderIdExists(int order_id) throws ApiException {
+        List<OrderPojo> orderPojoList = viewOrderService.getSelectedOrdersWithId(order_id);
+        for(OrderPojo orderPojo : orderPojoList) {
+            if(orderPojo.getOrder_id() == order_id) {
+               return;
+            }
+        }
+
+        throw new ApiException("Order Id doesn't exists");
     }
 
     protected static OrderData convertPojoToData(OrderPojo pojo) {

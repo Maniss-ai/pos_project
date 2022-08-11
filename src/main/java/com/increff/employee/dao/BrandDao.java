@@ -3,7 +3,6 @@ package com.increff.employee.dao;
 import com.increff.employee.pojo.BrandPojo;
 import com.increff.employee.pojo.ProductPojo;
 import com.increff.employee.service.ApiException;
-import jdk.nashorn.internal.ir.BreakableNode;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -24,8 +23,9 @@ public class BrandDao extends AbstractDao {
     private final EntityManager em = getEntityManager();
 
     @Transactional
-    public void insert(BrandPojo p) {
+    public BrandPojo insert(BrandPojo p) {
         em.persist(p);
+        return p;
     }
 
     public void delete(int id) {
@@ -35,9 +35,14 @@ public class BrandDao extends AbstractDao {
     }
 
     public BrandPojo select(int id) throws ApiException {
-        TypedQuery<BrandPojo> query = getQuery(select_id, BrandPojo.class);
-        query.setParameter("id", id);
-        return query.getSingleResult();
+        try {
+            TypedQuery<BrandPojo> query = getQuery(select_id, BrandPojo.class);
+            query.setParameter("id", id);
+            return query.getSingleResult();
+        }
+        catch (Exception e) {
+            throw new ApiException("Id doesn't exists");
+        }
     }
 
     public List<BrandPojo> selectAll() {

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
+
 @Api
 @RestController
 public class ReportController {
@@ -19,7 +21,7 @@ public class ReportController {
 
     @ApiOperation(value = "Generate Sales Report")
     @RequestMapping(path = "/api/report/sales", method = RequestMethod.POST)
-    public StringBuilder salesReport(@RequestBody ReportForm form) throws ApiException {
+    public StringBuilder salesReport(@RequestBody ReportForm form) throws ApiException, ParseException {
         System.out.println(form.getStart_date());
         return dto.getAllSales(form);
     }

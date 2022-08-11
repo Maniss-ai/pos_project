@@ -13,7 +13,6 @@ function getPlaceOrderUrl() {
 	return baseUrl + "/api/order/place_order";	
 }
 
-
 // BUTTON ACTIONS
 function getViewOrderList(event) {
     var $form = $("#view_order-form");
@@ -29,7 +28,10 @@ function getViewOrderList(event) {
             'Content-Type': 'application/json'
         },
         success: function(view_order_data) {
-            console.log("Getting Placed Orders ....");
+            if(!$.trim(view_order_data)) {
+				$.notify("No Orders on selected date", "info");
+			}
+	
             displaySelectedOrders(view_order_data);
         },
         error: handleAjaxErrorViewOrder
@@ -87,7 +89,7 @@ function generateInvoice(order_id) {
 		})
 		console.log(fileURL);
 
-		toastr.success("Invoice generated successfully", "success");
+		$.notify("Invoice generated successfully", "success");
     },
 	   error: handleAjaxErrorViewOrder
 	});
@@ -150,7 +152,7 @@ function toJson($form) {
 
 function handleAjaxErrorViewOrder(response){
 	var response = JSON.parse(response.responseText);
-	toastr.error(response.message, "Error");
+	$.notify(response.message, {autoHide : false});
 }
 
 function dateSet() {

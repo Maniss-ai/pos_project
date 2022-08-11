@@ -25,7 +25,7 @@ function addProduct(event) {
 		success: function (response) {
 			console.log("Product created");
 			getProductList();
-			toastr.success("Product added successfully", "Success");
+			$.notify("Product added successfully", "success");
 		},
 		error: handleAjaxErrorProduct
 	});
@@ -55,7 +55,7 @@ function updateProduct(event) {
 		success: function (response) {
 			console.log("Product update");
 			getProductList();
-			toastr.success("Product updated successfully", "Success");
+			$.notify("Product updated successfully", "success");
 		},
 		error: handleAjaxErrorProduct
 	});
@@ -177,7 +177,7 @@ function bulkAddProduct() {
        },	   
 	   success: function(response) {
 	   		getProductList();
-			toastr.success("Bulk Products added successfully", "success");
+			$.notify("Bulk Products added successfully", "success");
 	   },
 	   error: function(response) {
 			var lines = response.responseJSON.message.split("\n");
@@ -325,10 +325,10 @@ function displayBrandCategoryList(data) {
 function handleAjaxErrorProduct(response){
 	try {
 		var response = JSON.parse(response.responseText);
-		toastr.error(response.message, "Error");
+		$.notify(response.message, {autoHide : false});
 	}
 	catch(e) {
-		toastr.error("MRP should be a Number", "Error");
+		$.notify("MRP should be a Number", {autoHide : false});
 	}
 }
 

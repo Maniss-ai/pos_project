@@ -26,7 +26,7 @@ function addInventory(event) {
 	   success: function(response) {
 	   		console.log("inventory created :: " + response[0]);
 	   		getInventoryList();
-			toastr.success("Inventory added successfully", "success");
+			$.notify("Inventory added successfully", "success");
 	   },
 	   error: handleAjaxErrorInventory
 	});
@@ -55,7 +55,7 @@ function updateInventory(event) {
 	   success: function(response) {
 	   		console.log("inventory update");
 	   		getInventoryList();
-			toastr.success("Inventory updated successfully", "success");
+			$.notify("Inventory updated successfully", "success");
 	   },
 	   error: handleAjaxErrorInventory
 	});
@@ -197,7 +197,7 @@ function bulkAddInventory() {
        },	   
 	   success: function(response) {
 	   		getInventoryList();
-			toastr.success("Bulk Inventory added successfully", "success");
+			$.notify("Bulk Inventory added successfully", "success");
 	   },
 	   error: function(response) {
 			console.log(response);
@@ -392,10 +392,10 @@ function writeFileDataInventory(arr){
 function handleAjaxErrorInventory(response) {
 	try {
 		var response = JSON.parse(response.responseText);
-		toastr.error(response.message, "Error");
+		$.notify(response.message, {autoHide : false});
 	}
 	catch(e) {
-		toastr.error("Quantity should be an Integer", "Error");
+		$.notify("Quantity should be an Integer", {autoHide : false});
 	}
 }
 

@@ -34,7 +34,7 @@ function addPlaceOrder(event) {
 	   		console.log("place order created");
 			console.log(response);
 	   		getPlaceOrderList();
-			toastr.success("Order added successfully", "success");
+			$.notify("Order added successfully", "success");
 	   },
 	   error: handleAjaxErrorPlaceOrder
 	});
@@ -70,7 +70,7 @@ function updatePlaceOrder(event) {
 	   success: function(response) {
 	   		console.log("place order update");
 	   		getPlaceOrderList();
-			toastr.success("Order updated successfully", "success");
+			$.notify("Order updated successfully", "success");
 	   },
 	   error: handleAjaxErrorPlaceOrder
 	});
@@ -164,7 +164,7 @@ function submitPlaceOrder(event) {
 	   success: function(response) {
 	   		console.log("submit place order created");
 	   		getPlaceOrderList();
-			toastr.success("Order placed successfully", "success");
+			$.notify("Order placed successfully", "success");
 	   },
 	   error: handleAjaxErrorPlaceOrder
 	});
@@ -256,7 +256,7 @@ function toJsonPO($form) {
 
 function handleAjaxErrorPlaceOrder(response){
 	var response = JSON.parse(response.responseText);
-	toastr.error(response.message, "Error");
+	$.notify(response.message, {autoHide : false});
 }
 
 function onlyNumberKey(evt) {

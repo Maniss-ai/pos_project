@@ -16,8 +16,7 @@ public class BrandService {
 
     @Transactional
     public BrandPojo add(BrandPojo p) {
-        dao.insert(p);
-        return p;
+        return dao.insert(p);
     }
 
     @Transactional
