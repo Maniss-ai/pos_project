@@ -25,7 +25,7 @@ public class InventoryControllerApi {
     }
 
     @ApiOperation(value = "Add Inventory in Bulk")
-    @RequestMapping(path = "/api/inventory/bulkAddInventory", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/inventory/bulk-add-inventory", method = RequestMethod.POST)
     public List<InventoryData> addBulkInventory(@RequestBody List<InventoryForm> formList) throws ApiException {
         System.out.println("WORKING FINE JAVA CODE::::");
         return dto.bulkAddInventory(formList);
@@ -50,7 +50,7 @@ public class InventoryControllerApi {
         return dto.getAll();
     }
 
-    @ApiOperation(value = "Update an Inventory")
+    @ApiOperation(value = "Updates an Inventory")
     @RequestMapping(path = "/api/inventory/{barcode}", method = RequestMethod.PUT)
     public void update(@PathVariable String barcode, @RequestBody InventoryUpdateForm form) throws ApiException {
         System.out.println("1. Controller");

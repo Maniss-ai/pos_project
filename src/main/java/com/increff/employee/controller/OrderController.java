@@ -22,7 +22,7 @@ public class OrderController {
     private OrderDto dto;
 
     @ApiOperation(value = "Adds Place order")
-    @RequestMapping(path = "/api/order/view_order", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/order/view-order", method = RequestMethod.POST)
     public List<OrderData> search(@RequestBody ViewOrderForm form) throws ApiException, ParseException {
         return dto.search(form);
     }

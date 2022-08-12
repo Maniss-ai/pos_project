@@ -25,7 +25,7 @@ public class ProductControllerApi {
     }
 
     @ApiOperation(value = "Adds an Brand")
-    @RequestMapping(path = "/api/product/bulkAddProduct", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/product/bulk-add-product", method = RequestMethod.POST)
     public List<ProductData> bulkAddProduct(@RequestBody List<ProductForm> formList) throws ApiException {
         return dto.bulkAddProduct(formList);
     }

@@ -28,20 +28,20 @@ public class OrderItemControllerApi extends javax.servlet.http.HttpServlet imple
     private OrderDto orderDto;
 
     @ApiOperation(value = "Adds Place order")
-    @RequestMapping(path = "/api/order/place_order", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/order/place-order", method = RequestMethod.POST)
     public OrderItemData add(@RequestBody OrderItemForm form) throws ApiException {
         return dto.add(form);
     }
 
     @ApiOperation(value = "Submit Place order")
-    @RequestMapping(path = "/api/order/submit_order", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/order/submit-order", method = RequestMethod.POST)
     public void submit(@RequestBody List<OrderItemForm> orderFormList) throws ApiException {
         dto.submit(orderFormList);
     }
 
 
     @ApiOperation(value = "Deletes Place order")
-    @RequestMapping(path = "/api/order/place_order/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(path = "/api/order/place-order/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable int id) throws ApiException {
         dto.delete(id);
     }

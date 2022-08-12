@@ -18,16 +18,16 @@ public class BrandControllerApi {
     @Autowired
     private BrandDto dto;
 
-    @ApiOperation(value = "Adds an Brand")
+    @ApiOperation(value = "Adds a Brand")
     @RequestMapping(path = "/api/brand", method = RequestMethod.POST)
     public BrandData add(@RequestBody BrandForm form) throws ApiException {
         return dto.add(form);
     }
 
-    @ApiOperation(value = "Adds an Brand")
-    @RequestMapping(path = "/api/brand/bulkAddBrand", method = RequestMethod.POST)
-    public List<BrandData> bulkAddBrand(@RequestBody List<BrandForm> formList) throws ApiException {
-        return dto.bulkAddBrand(formList);
+    @ApiOperation(value = "Add Brands in bulk")
+    @RequestMapping(path = "/api/brand/bulk-add-brand", method = RequestMethod.POST)
+    public List<BrandData> bulkAddBrand(@RequestBody List<BrandForm> brandFormList) throws ApiException {
+        return dto.bulkAddBrand(brandFormList);
     }
 
     @ApiOperation(value = "Deletes an Brand")
@@ -36,19 +36,19 @@ public class BrandControllerApi {
         dto.delete(id);
     }
 
-    @ApiOperation(value = "Gets an Brand by ID")
+    @ApiOperation(value = "Gets a Brand by ID")
     @RequestMapping(path = "/api/brand/{id}", method = RequestMethod.GET)
     public BrandData get(@PathVariable int id) throws ApiException {
         return dto.get(id);
     }
 
-    @ApiOperation(value = "Gets list of all Brand")
+    @ApiOperation(value = "Get list of all Brands")
     @RequestMapping(path = "/api/brand", method = RequestMethod.GET)
     public List<BrandData> getAllFromPage() {
         return dto.getAll();
     }
 
-    @ApiOperation(value = "Updates an Brand")
+    @ApiOperation(value = "Update a Brand")
     @RequestMapping(path = "/api/brand/{id}", method = RequestMethod.PUT)
     public BrandData update(@PathVariable int id, @RequestBody BrandForm form) throws ApiException {
         return dto.update(id, form);
