@@ -11,7 +11,7 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @Setter
-public class PlaceOrderPojo {
+public class OrderItemPojo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

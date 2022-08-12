@@ -29,9 +29,9 @@ public class ReportDto {
     @Autowired
     private InventoryService inventoryService;
     @Autowired
-    private PlaceOrderService placeOrderService;
+    private OrderItemService orderItemService;
     @Autowired
-    private ViewOrderService viewOrderService;
+    private OrderService orderService;
 
     public StringBuilder getAllSales(ReportForm form) throws ApiException, ParseException {
         if(form.getStart_date() != null && form.getEnd_date() != null && !form.getStart_date().isEmpty() && !form.getEnd_date().isEmpty()) {
@@ -107,7 +107,7 @@ public class ReportDto {
         dataListString.append("Brand").append("\t").append("Category").append("\n");
 
         for (BrandPojo pojo : pojoList) {
-            dataList.add(BrandDto.convertPojoToData(pojo));
+            dataList.add(DtoHelper.convertPojoToDataBrand(pojo));
             dataListString.append(pojo.getBrand()).append("\t").append(pojo.getCategory()).append("\n");
         }
 
@@ -123,7 +123,7 @@ public class ReportDto {
         dataListString.append("Barcode").append("\t").append("Inventory").append("\t").append("Brand").append("\t").append("Category").append("\n");
 
         for (InventoryPojo pojo : pojoList) {
-            dataList.add(InventoryDto.convertPojoToData(pojo));
+            dataList.add(DtoHelper.convertPojoToDataInventory(pojo));
             String brand = productService.getWithBarcode(pojo.getBarcode()).getBrand();
             String category = productService.getWithBarcode(pojo.getBarcode()).getCategory();
 
@@ -137,19 +137,19 @@ public class ReportDto {
 
     private void getReportWithBrandCategory(LocalDate start_date, LocalDate end_date, StringBuilder salesData, List<ProductPojo> productPojoList) throws ApiException {
         // GET PlaceOrderPojo using Barcode and Add to DATA LIST .... ....
-        List<PlaceOrderPojo> placeOrderPojoList = new ArrayList<>();
+        List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
         for (ProductPojo pojo : productPojoList) {
-            placeOrderPojoList.addAll(placeOrderService.getCheckWithBarcode(pojo.getBarcode()));
+            orderItemPojoList.addAll(orderItemService.getCheckWithBarcode(pojo.getBarcode()));
         }
 
         // Get Order Ids
-        List<OrderPojo> orderPojoList = viewOrderService.getSelectedOrdersWithoutId(start_date, end_date);
+        List<OrderPojo> orderPojoList = orderService.getSelectedOrdersWithoutId(start_date, end_date);
 
         // Match Order Ids according to the given Time Range ....
-        for(int i = 0; i < placeOrderPojoList.size(); i++) {
+        for(int i = 0; i < orderItemPojoList.size(); i++) {
             boolean equalIds = false;
             for(OrderPojo orderPojo : orderPojoList) {
-                if(placeOrderPojoList.get(i).getOrder_id() == orderPojo.getOrder_id()) {
+                if(orderItemPojoList.get(i).getOrder_id() == orderPojo.getOrder_id()) {
                     equalIds = true;
                     System.out.println(orderPojo.getTime());
                     break;
@@ -157,14 +157,14 @@ public class ReportDto {
             }
 
             if(!equalIds) {
-                placeOrderPojoList.remove(i);
+                orderItemPojoList.remove(i);
                 i--;
             }
         }
 
         int totalRevenue = 0;
         int totalQuantity = 0;
-        for(PlaceOrderPojo pojo : placeOrderPojoList) {
+        for(OrderItemPojo pojo : orderItemPojoList) {
             totalQuantity += pojo.getQuantity();
             totalRevenue += pojo.getQuantity() * pojo.getSelling_price();
         }
@@ -173,26 +173,26 @@ public class ReportDto {
     }
 
     private void getReportWithBrand(LocalDate start_date, LocalDate end_date, StringBuilder salesData, List<ProductPojo> productPojoList, String brand) throws ApiException {
-        List<PlaceOrderPojo> placeOrderPojoList = new ArrayList<>();
+        List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
         for (ProductPojo pojo : productPojoList) {
-            placeOrderPojoList.addAll(placeOrderService.getCheckWithBarcode(pojo.getBarcode()));
+            orderItemPojoList.addAll(orderItemService.getCheckWithBarcode(pojo.getBarcode()));
         }
 
         // Get Order Ids
-        List<OrderPojo> orderPojoList = viewOrderService.getSelectedOrdersWithoutId(start_date, end_date);
+        List<OrderPojo> orderPojoList = orderService.getSelectedOrdersWithoutId(start_date, end_date);
 
         // Match Order Ids according to the given Time Range ....
-        for(int i = 0; i < placeOrderPojoList.size(); i++) {
+        for(int i = 0; i < orderItemPojoList.size(); i++) {
             boolean equalIds = false;
             for(OrderPojo orderPojo : orderPojoList) {
-                if(placeOrderPojoList.get(i).getOrder_id() == orderPojo.getOrder_id()) {
+                if(orderItemPojoList.get(i).getOrder_id() == orderPojo.getOrder_id()) {
                     equalIds = true;
                     break;
                 }
             }
 
             if(!equalIds) {
-                placeOrderPojoList.remove(i);
+                orderItemPojoList.remove(i);
                 i--;
             }
         }
@@ -201,18 +201,18 @@ public class ReportDto {
         int totalQuantity;
         Double totalRevenue;
 
-        for (PlaceOrderPojo placeOrderPojo : placeOrderPojoList) {
-            totalQuantity = placeOrderPojo.getQuantity();
-            totalRevenue = placeOrderPojo.getQuantity() * placeOrderPojo.getSelling_price();
+        for (OrderItemPojo orderItemPojo : orderItemPojoList) {
+            totalQuantity = orderItemPojo.getQuantity();
+            totalRevenue = orderItemPojo.getQuantity() * orderItemPojo.getSelling_price();
 
-            if (revenueQuantityMap.containsKey(productService.getWithBarcode(placeOrderPojo.getBarcode()).getCategory())) {
-                totalQuantity += revenueQuantityMap.get(productService.getWithBarcode(placeOrderPojo.getBarcode()).getCategory()).left;
-                totalRevenue += revenueQuantityMap.get(productService.getWithBarcode(placeOrderPojo.getBarcode()).getCategory()).right;
+            if (revenueQuantityMap.containsKey(productService.getWithBarcode(orderItemPojo.getBarcode()).getCategory())) {
+                totalQuantity += revenueQuantityMap.get(productService.getWithBarcode(orderItemPojo.getBarcode()).getCategory()).left;
+                totalRevenue += revenueQuantityMap.get(productService.getWithBarcode(orderItemPojo.getBarcode()).getCategory()).right;
             }
 
             ConnectionUrlParser.Pair<Integer, Double> pair = new ConnectionUrlParser.Pair<>(totalQuantity, Precision.round(totalRevenue, 2));
             revenueQuantityMap.put(
-                    productService.getWithBarcode(placeOrderPojo.getBarcode()).getCategory(),
+                    productService.getWithBarcode(orderItemPojo.getBarcode()).getCategory(),
                     pair
             );
 
@@ -231,26 +231,26 @@ public class ReportDto {
     }
 
     private void getReportWithCategory(LocalDate start_date, LocalDate end_date, StringBuilder salesData, List<ProductPojo> productPojoList, ReportForm form) throws ApiException {
-        List<PlaceOrderPojo> placeOrderPojoList = new ArrayList<>();
+        List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
         for (ProductPojo pojo : productPojoList) {
-            placeOrderPojoList.addAll(placeOrderService.getCheckWithBarcode(pojo.getBarcode()));
+            orderItemPojoList.addAll(orderItemService.getCheckWithBarcode(pojo.getBarcode()));
         }
 
         // Get Order Ids
-        List<OrderPojo> orderPojoList = viewOrderService.getSelectedOrdersWithoutId(start_date, end_date);
+        List<OrderPojo> orderPojoList = orderService.getSelectedOrdersWithoutId(start_date, end_date);
 
         // Match Order Ids according to the given Time Range ....
-        for(int i = 0; i < placeOrderPojoList.size(); i++) {
+        for(int i = 0; i < orderItemPojoList.size(); i++) {
             boolean equalIds = false;
             for(OrderPojo orderPojo : orderPojoList) {
-                if(placeOrderPojoList.get(i).getOrder_id() == orderPojo.getOrder_id()) {
+                if(orderItemPojoList.get(i).getOrder_id() == orderPojo.getOrder_id()) {
                     equalIds = true;
                     break;
                 }
             }
 
             if(!equalIds) {
-                placeOrderPojoList.remove(i);
+                orderItemPojoList.remove(i);
                 i--;
             }
         }
@@ -259,18 +259,18 @@ public class ReportDto {
         int totalQuantity;
         Double totalRevenue;
 
-        for (PlaceOrderPojo placeOrderPojo : placeOrderPojoList) {
-            totalQuantity = placeOrderPojo.getQuantity();
-            totalRevenue = placeOrderPojo.getQuantity() * placeOrderPojo.getSelling_price();
+        for (OrderItemPojo orderItemPojo : orderItemPojoList) {
+            totalQuantity = orderItemPojo.getQuantity();
+            totalRevenue = orderItemPojo.getQuantity() * orderItemPojo.getSelling_price();
 
-            if (revenueQuantityMap.containsKey(productService.getWithBarcode(placeOrderPojo.getBarcode()).getBrand())) {
-                totalQuantity += revenueQuantityMap.get(productService.getWithBarcode(placeOrderPojo.getBarcode()).getBrand()).left;
-                totalRevenue += revenueQuantityMap.get(productService.getWithBarcode(placeOrderPojo.getBarcode()).getBrand()).right;
+            if (revenueQuantityMap.containsKey(productService.getWithBarcode(orderItemPojo.getBarcode()).getBrand())) {
+                totalQuantity += revenueQuantityMap.get(productService.getWithBarcode(orderItemPojo.getBarcode()).getBrand()).left;
+                totalRevenue += revenueQuantityMap.get(productService.getWithBarcode(orderItemPojo.getBarcode()).getBrand()).right;
             }
 
             ConnectionUrlParser.Pair<Integer, Double> pair = new ConnectionUrlParser.Pair<>(totalQuantity, Precision.round(totalRevenue, 2));
             revenueQuantityMap.put(
-                    productService.getWithBarcode(placeOrderPojo.getBarcode()).getBrand(),
+                    productService.getWithBarcode(orderItemPojo.getBarcode()).getBrand(),
                     pair
             );
 

@@ -27,10 +27,10 @@ public class BrandDto {
     // CRUD....
     public BrandData add(BrandForm form) throws ApiException {
         nullCheck(form);
-        BrandPojo pojo = convertFormToPojo(form);
+        BrandPojo pojo = DtoHelper.convertFormToPojoBrand(form);
         normalize(pojo);
         if(isUnique(pojo)) {
-            return convertPojoToData(brandService.add(pojo));
+            return DtoHelper.convertPojoToDataBrand(brandService.add(pojo));
         }
         else {
             throw new ApiException("Brand Category pair already exists");
@@ -85,21 +85,21 @@ public class BrandDto {
 
     public BrandData get(int id) throws ApiException {
         BrandPojo pojo = brandService.get(id);
-        return convertPojoToData(pojo);
+        return DtoHelper.convertPojoToDataBrand(pojo);
     }
 
     public List<BrandData> getAll() {
         List<BrandPojo> pojoList = brandService.getAll();
         List<BrandData> dataList = new ArrayList<>();
         for (BrandPojo pojo : pojoList) {
-            dataList.add(convertPojoToData(pojo));
+            dataList.add(DtoHelper.convertPojoToDataBrand(pojo));
         }
         return dataList;
     }
 
     public BrandData update(int id, BrandForm form) throws ApiException {
         nullCheck(form);
-        BrandPojo pojo = convertFormToPojo(form);
+        BrandPojo pojo = DtoHelper.convertFormToPojoBrand(form);
         normalize(pojo);
         try {
             brandService.getCheck(id);
@@ -109,7 +109,7 @@ public class BrandDto {
         }
 
         if(isUnique(id, pojo)) {
-            return convertPojoToData(brandService.update(id, pojo));
+            return DtoHelper.convertPojoToDataBrand(brandService.update(id, pojo));
         }
         else {
             throw new ApiException("Unable to update, Brand Category pair already exists");
@@ -162,21 +162,4 @@ public class BrandDto {
             throw new ApiException("Category can't be null");
         }
     }
-
-    // CONVERSION ....
-    protected static BrandData convertPojoToData(BrandPojo pojo) {
-        BrandData data = new BrandData();
-        data.setCategory(pojo.getCategory());
-        data.setBrand(pojo.getBrand());
-        data.setId(pojo.getId());
-        return data;
-    }
-
-    protected static BrandPojo convertFormToPojo(BrandForm form) {
-        BrandPojo pojo = new BrandPojo();
-        pojo.setCategory(form.getCategory());
-        pojo.setBrand(form.getBrand());
-        return pojo;
-    }
-
 }

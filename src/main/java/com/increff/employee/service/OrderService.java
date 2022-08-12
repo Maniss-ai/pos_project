@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class ViewOrderService {
+public class OrderService {
     @Autowired
     private ViewOrderDao dao;
 

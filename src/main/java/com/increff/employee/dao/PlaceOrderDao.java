@@ -1,7 +1,7 @@
 package com.increff.employee.dao;
 
 import com.increff.employee.pojo.OrderPojo;
-import com.increff.employee.pojo.PlaceOrderPojo;
+import com.increff.employee.pojo.OrderItemPojo;
 import com.increff.employee.service.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -28,7 +28,7 @@ public class PlaceOrderDao extends AbstractDao {
     private final EntityManager em = getEntityManager();
 
     @Transactional
-    public PlaceOrderPojo insert(PlaceOrderPojo p) {
+    public OrderItemPojo insert(OrderItemPojo p) {
         em.persist(p);
         return p;
     }
@@ -44,9 +44,9 @@ public class PlaceOrderDao extends AbstractDao {
         query.executeUpdate();
     }
 
-    public PlaceOrderPojo select(int id) throws ApiException {
+    public OrderItemPojo select(int id) throws ApiException {
         try {
-            TypedQuery<PlaceOrderPojo> query = getQuery(select_id, PlaceOrderPojo.class);
+            TypedQuery<OrderItemPojo> query = getQuery(select_id, OrderItemPojo.class);
             query.setParameter("id", id);
             return query.getSingleResult();
         }
@@ -55,30 +55,30 @@ public class PlaceOrderDao extends AbstractDao {
         }
     }
 
-    public List<PlaceOrderPojo> selectSingleOrder(int order_id) {
-        TypedQuery<PlaceOrderPojo> query = getQuery(select_with_order_id, PlaceOrderPojo.class);
+    public List<OrderItemPojo> selectSingleOrder(int order_id) {
+        TypedQuery<OrderItemPojo> query = getQuery(select_with_order_id, OrderItemPojo.class);
         query.setParameter("order_id", order_id);
         return query.getResultList();
     }
 
-    public List<PlaceOrderPojo> select1(String barcode) {
-        TypedQuery<PlaceOrderPojo> query = getQuery(select_barcode, PlaceOrderPojo.class);
+    public List<OrderItemPojo> select1(String barcode) {
+        TypedQuery<OrderItemPojo> query = getQuery(select_barcode, OrderItemPojo.class);
         query.setParameter("barcode", barcode);
         return query.getResultList();
     }
 
-    public PlaceOrderPojo selectOrderId(String barcode) {
-        TypedQuery<PlaceOrderPojo> query = getQuery(select_order_id, PlaceOrderPojo.class);
+    public OrderItemPojo selectOrderId(String barcode) {
+        TypedQuery<OrderItemPojo> query = getQuery(select_order_id, OrderItemPojo.class);
         query.setParameter("barcode", barcode);
         return query.getSingleResult();
     }
 
-    public List<PlaceOrderPojo> selectAll() {
-        TypedQuery<PlaceOrderPojo> query = getQuery(select_all, PlaceOrderPojo.class);
+    public List<OrderItemPojo> selectAll() {
+        TypedQuery<OrderItemPojo> query = getQuery(select_all, OrderItemPojo.class);
         return query.getResultList();
     }
 
-    public void update(PlaceOrderPojo p) {
+    public void update(OrderItemPojo p) {
 
     }
 }

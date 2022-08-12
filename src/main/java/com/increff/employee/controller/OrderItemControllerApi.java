@@ -1,11 +1,11 @@
 package com.increff.employee.controller;
 
-import com.increff.employee.dto.PlaceOrderDto;
-import com.increff.employee.dto.ViewOrderDto;
+import com.increff.employee.dto.OrderItemDto;
+import com.increff.employee.dto.OrderDto;
 import com.increff.employee.generatepdf.ObjectToXml;
-import com.increff.employee.model.data.PlaceOrderData;
-import com.increff.employee.model.form.PlaceOrderForm;
-import com.increff.employee.model.form.PlaceOrderUpdateForm;
+import com.increff.employee.model.data.OrderItemData;
+import com.increff.employee.model.form.OrderItemForm;
+import com.increff.employee.model.form.OrderItemUpdateForm;
 import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.service.ApiException;
 import io.swagger.annotations.Api;
@@ -21,21 +21,21 @@ import java.util.List;
 
 @Api
 @RestController
-public class PlaceOrderControllerApi extends javax.servlet.http.HttpServlet implements javax.servlet.Servlet {
+public class OrderItemControllerApi extends javax.servlet.http.HttpServlet implements javax.servlet.Servlet {
     @Autowired
-    private PlaceOrderDto dto;
+    private OrderItemDto dto;
     @Autowired
-    private ViewOrderDto viewOrderDto;
+    private OrderDto orderDto;
 
     @ApiOperation(value = "Adds Place order")
     @RequestMapping(path = "/api/order/place_order", method = RequestMethod.POST)
-    public PlaceOrderData add(@RequestBody PlaceOrderForm form) throws ApiException {
+    public OrderItemData add(@RequestBody OrderItemForm form) throws ApiException {
         return dto.add(form);
     }
 
     @ApiOperation(value = "Submit Place order")
     @RequestMapping(path = "/api/order/submit_order", method = RequestMethod.POST)
-    public void submit(@RequestBody List<PlaceOrderForm> orderFormList) throws ApiException {
+    public void submit(@RequestBody List<OrderItemForm> orderFormList) throws ApiException {
         dto.submit(orderFormList);
     }
 
@@ -48,33 +48,33 @@ public class PlaceOrderControllerApi extends javax.servlet.http.HttpServlet impl
 
     @ApiOperation(value = "Gets Place order by ID")
     @RequestMapping(path = "/api/order/place_order/{id}", method = RequestMethod.GET)
-    public PlaceOrderData get(@PathVariable int id) throws ApiException {
+    public OrderItemData get(@PathVariable int id) throws ApiException {
         return dto.get(id);
     }
 
     @ApiOperation(value = "Gets Place order by ID")
     @RequestMapping(path = "/api/order/place_order/placed/{order_id}", method = RequestMethod.GET)
-    public List<PlaceOrderData> getSingleOrder(@PathVariable int order_id) throws ApiException {
+    public List<OrderItemData> getSingleOrder(@PathVariable int order_id) throws ApiException {
         return dto.getSingleOrder(order_id);
     }
 
     @ApiOperation(value = "Gets list of all Place order")
     @RequestMapping(path = "/api/order/place_order", method = RequestMethod.GET)
-    public List<PlaceOrderData> getAll() {
+    public List<OrderItemData> getAll() {
         return dto.getAll();
     }
 
     @ApiOperation(value = "Updates Place order")
     @RequestMapping(path = "/api/order/place_order/{place_order_id}", method = RequestMethod.PUT)
-    public void update(@PathVariable int place_order_id, @RequestBody PlaceOrderUpdateForm form) throws ApiException {
+    public void update(@PathVariable int place_order_id, @RequestBody OrderItemUpdateForm form) throws ApiException {
         dto.update(place_order_id, form);
     }
 
     @ApiOperation(value = "Generate XML String")
     @RequestMapping(path = "/api/order/place_order/invoice/{order_id}", method = RequestMethod.GET)
     public void generateXmlString(HttpServletResponse response, @PathVariable int order_id) throws Exception {
-        List<PlaceOrderData> placeOrderDataList = getSingleOrder(order_id);
-        OrderPojo orderPojo = viewOrderDto.getOrder(order_id);
+        List<OrderItemData> placeOrderDataList = getSingleOrder(order_id);
+        OrderPojo orderPojo = orderDto.getOrder(order_id);
         ObjectToXml.generateXmlString(placeOrderDataList, orderPojo);
 
 

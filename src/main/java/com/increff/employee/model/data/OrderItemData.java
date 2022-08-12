@@ -1,12 +1,12 @@
 package com.increff.employee.model.data;
 
-import com.increff.employee.model.form.PlaceOrderForm;
+import com.increff.employee.model.form.OrderItemForm;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class PlaceOrderData extends PlaceOrderForm {
+public class OrderItemData extends OrderItemForm {
     private int id;
     private int order_id;
 }

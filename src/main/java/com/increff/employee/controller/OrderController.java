@@ -1,6 +1,6 @@
 package com.increff.employee.controller;
 
-import com.increff.employee.dto.ViewOrderDto;
+import com.increff.employee.dto.OrderDto;
 import com.increff.employee.model.data.OrderData;
 import com.increff.employee.model.form.ViewOrderForm;
 import com.increff.employee.service.ApiException;
@@ -13,14 +13,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Api
 @RestController
-public class ViewOrderController {
+public class OrderController {
     @Autowired
-    private ViewOrderDto dto;
+    private OrderDto dto;
 
     @ApiOperation(value = "Adds Place order")
     @RequestMapping(path = "/api/order/view_order", method = RequestMethod.POST)

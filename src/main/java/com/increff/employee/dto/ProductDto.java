@@ -30,13 +30,13 @@ public class ProductDto {
     // CRUD ....
     public ProductData add(ProductForm form) throws ApiException {
         nullCheck(form);
-        ProductPojo pojo = convertFormToPojo(form);
+        ProductPojo pojo = DtoHelper.convertFormToPojoProduct(form);
         normalize(pojo);
         boolean unique = isUnique(pojo);
         boolean brand_category_exists = isBrandCategoryExists(pojo);
 
         if(unique && brand_category_exists) {
-            return convertPojoToData(productService.add(pojo));
+            return DtoHelper.convertPojoToDataProduct(productService.add(pojo));
         } else {
             if(!unique) {
                 throw new ApiException("Barcode should be unique");
@@ -90,31 +90,31 @@ public class ProductDto {
 
     public ProductData getWithId(int id) throws ApiException {
         ProductPojo pojo = productService.getWithId(id);
-        return convertPojoToData(pojo);
+        return DtoHelper.convertPojoToDataProduct(pojo);
     }
 
     public ProductData get(String barcode) throws ApiException {
         ProductPojo pojo = productService.getWithBarcode(barcode);
-        return convertPojoToData(pojo);
+        return DtoHelper.convertPojoToDataProduct(pojo);
     }
 
     public List<ProductData> getAll() throws ApiException {
         List<ProductPojo> pojoList = productService.getAll();
         List<ProductData> dataList = new ArrayList<>();
         for (ProductPojo pojo : pojoList) {
-            dataList.add(convertPojoToData(pojo));
+            dataList.add(DtoHelper.convertPojoToDataProduct(pojo));
         }
         return dataList;
     }
 
     public ProductData update(int id, ProductUpdateForm form) throws ApiException {
         nullCheckForUpdate(form);
-        ProductPojo pojo = convertFormToPojoUpdate(form);
+        ProductPojo pojo = DtoHelper.convertFormToPojoUpdateProduct(form);
         normalizeForUpdate(pojo);
         checkIfBarcodeExistsInProduct(id);
 
         if(isUnique(id, pojo)) {
-            return convertPojoToData(productService.update(id, pojo));
+            return DtoHelper.convertPojoToDataProduct(productService.update(id, pojo));
         } else {
             throw new ApiException("Barcode should be Unique");
         }
@@ -166,34 +166,6 @@ public class ProductDto {
         p.setProduct(p.getProduct().toLowerCase().trim());
     }
 
-    // CONVERSION ....
-    protected static ProductData convertPojoToData(ProductPojo pojo) {
-        ProductData data = new ProductData();
-        data.setBarcode(pojo.getBarcode());
-        data.setBrand(pojo.getBrand());
-        data.setCategory(pojo.getCategory());
-        data.setProduct(pojo.getProduct());
-        data.setMrp(Precision.round(pojo.getMrp(), 2));
-        data.setId(pojo.getId());
-        return data;
-    }
-    protected static ProductPojo convertFormToPojo(ProductForm form) {
-        ProductPojo pojo = new ProductPojo();
-        pojo.setBrand(form.getBrand());
-        pojo.setCategory(form.getCategory());
-        pojo.setBarcode(form.getBarcode());
-        pojo.setProduct(form.getProduct());
-        pojo.setMrp(Precision.round(form.getMrp(), 2));
-        return pojo;
-    }
-
-    protected static ProductPojo convertFormToPojoUpdate(ProductUpdateForm form) {
-        ProductPojo pojo = new ProductPojo();
-        pojo.setBarcode(form.getBarcode());
-        pojo.setProduct(form.getProduct());
-        pojo.setMrp(Precision.round(form.getMrp(), 2));
-        return pojo;
-    }
 
     private void nullCheckForUpdate(ProductUpdateForm form) throws ApiException {
         if(form.getBarcode().isEmpty() || form.getBarcode() == null) {
@@ -207,9 +179,7 @@ public class ProductDto {
         }
     }
     private void nullCheck(ProductForm form) throws ApiException {
-        System.out.println("VALUE : " + form.getBarcode());
         if(form.getBarcode().isEmpty() || form.getBarcode() == null) {
-            System.out.println("NULL CHECK Wokring!!!");
             throw new ApiException("Barcode can't be empty");
         }
         else if(form.getProduct().isEmpty() || form.getProduct() == null) {

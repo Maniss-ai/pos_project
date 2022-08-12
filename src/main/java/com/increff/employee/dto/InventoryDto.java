@@ -25,12 +25,12 @@ public class InventoryDto {
     // CRUD ....
     public InventoryData add(InventoryForm form) throws ApiException {
         nullCheck(form);
-        InventoryPojo pojo = convertFormToPojo(form);
+        InventoryPojo pojo = DtoHelper.convertFormToPojoInventory(form);
         normalize(pojo);
         boolean barcode_exists = isBarcodeExists(pojo);
 
         if (doesNotExist(form) && barcode_exists) {
-            return convertPojoToData(inventoryService.add(pojo));
+            return DtoHelper.convertPojoToDataInventory(inventoryService.add(pojo));
         } else {
             if (!barcode_exists) {
                 throw new ApiException("Barcode doesn't exists  ");
@@ -86,26 +86,23 @@ public class InventoryDto {
 
     public InventoryData get(int id) throws ApiException {
         InventoryPojo pojo = inventoryService.get(id);
-        return convertPojoToData(pojo);
+        return DtoHelper.convertPojoToDataInventory(pojo);
     }
 
     public List<InventoryData> getAll() {
         List<InventoryPojo> pojoList = inventoryService.getAll();
         List<InventoryData> dataList = new ArrayList<>();
         for (InventoryPojo pojo : pojoList) {
-            dataList.add(convertPojoToData(pojo));
+            dataList.add(DtoHelper.convertPojoToDataInventory(pojo));
             System.out.println(pojo.getBarcode());
         }
         return dataList;
     }
 
     public InventoryData update(String barcode, InventoryUpdateForm form) throws ApiException {
-        System.out.println("1. DTO");
         nullCheckForUpdate(form);
-        System.out.println("2. DTO");
-        InventoryPojo pojo = convertFormToPojoForUpdate(form);
-        System.out.println("3. DTO");
-        return convertPojoToData(inventoryService.update(barcode, pojo));
+        InventoryPojo pojo = DtoHelper.convertFormToPojoForUpdateInventory(form);
+        return DtoHelper.convertPojoToDataInventory(inventoryService.update(barcode, pojo));
     }
 
     // CHECKS ....
@@ -130,28 +127,5 @@ public class InventoryDto {
     public static void normalize(InventoryPojo p) {
         p.setBarcode(p.getBarcode().toLowerCase().trim());
     }
-
-    // CONVERSION ....
-    protected static InventoryData convertPojoToData(InventoryPojo pojo) {
-        InventoryData data = new InventoryData();
-        data.setBarcode(pojo.getBarcode());
-        data.setInventory(pojo.getInventory());
-        data.setId(pojo.getId());
-        return data;
-    }
-
-    protected static InventoryPojo convertFormToPojo(InventoryForm form) {
-        InventoryPojo pojo = new InventoryPojo();
-        pojo.setBarcode(form.getBarcode());
-        pojo.setInventory(form.getInventory());
-        return pojo;
-    }
-
-    protected static InventoryPojo convertFormToPojoForUpdate(InventoryUpdateForm form) {
-        InventoryPojo pojo = new InventoryPojo();
-        pojo.setInventory(form.getInventory());
-        return pojo;
-    }
-
 
 }

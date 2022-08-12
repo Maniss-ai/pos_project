@@ -1,8 +1,8 @@
 package com.increff.employee.generatepdf;
 
-import com.increff.employee.model.data.PlaceOrderData;
+import com.increff.employee.model.data.OrderItemData;
 import com.increff.employee.pojo.OrderPojo;
-import com.increff.employee.service.PlaceOrderService;
+import com.increff.employee.service.OrderItemService;
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,15 +16,15 @@ import java.util.List;
 
 public class ObjectToXml {
     @Autowired
-    private static PlaceOrderService placeOrderService;
+    private static OrderItemService orderItemService;
 
-    public static void generateXmlString(List<PlaceOrderData> placeOrderDataList, OrderPojo orderPojo) throws Exception {
+    public static void generateXmlString(List<OrderItemData> placeOrderDataList, OrderPojo orderPojo) throws Exception {
         // convert placeOrderPojoList -> OrderInvoicePojoList
         ArrayList<OrderInvoicePojo> orderInvoicePojoList = new ArrayList<>();
 
         Double total_amount = 0.0;
         int number = 1;
-        for(PlaceOrderData placeOrderData : placeOrderDataList) {
+        for(OrderItemData placeOrderData : placeOrderDataList) {
             OrderInvoicePojo orderInvoicePojo = new OrderInvoicePojo();
 
             orderInvoicePojo.setSNo(number++);
