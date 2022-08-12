@@ -1,11 +1,11 @@
 function getPlaceOrderUrl() {
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	return baseUrl + "/api/order/place_order";
+	return baseUrl + "/api/order/place-order";
 }
 
 function getSubmitOrderUrl() {
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	return baseUrl + "/api/order/submit_order";
+	return baseUrl + "/api/order/submit-order";
 }
 
 function getProductUrl() {

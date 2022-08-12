@@ -20,8 +20,8 @@ public class BrandControllerApi {
 
     @ApiOperation(value = "Adds a Brand")
     @RequestMapping(path = "/api/brand", method = RequestMethod.POST)
-    public BrandData add(@RequestBody BrandForm form) throws ApiException {
-        return dto.add(form);
+    public BrandData add(@RequestBody BrandForm brandForm) throws ApiException {
+        return dto.add(brandForm);
     }
 
     @ApiOperation(value = "Add Brands in bulk")
@@ -44,7 +44,7 @@ public class BrandControllerApi {
 
     @ApiOperation(value = "Get list of all Brands")
     @RequestMapping(path = "/api/brand", method = RequestMethod.GET)
-    public List<BrandData> getAllFromPage() {
+    public List<BrandData> getAll() {
         return dto.getAll();
     }
 

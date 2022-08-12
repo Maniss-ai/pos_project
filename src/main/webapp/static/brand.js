@@ -150,7 +150,7 @@ function uploadRowsBrand() {
 /****************************************** BULK ADD BRAND : TODO ******************************************/
 function bulkAddBrand() {
 	console.log("8. WORKING FINE!!!");
-	var url = getBrandUrl() + "/bulkAddBrand";
+	var url = getBrandUrl() + "/bulk-add-brand";
 	console.log(jsonArray);
 	// Make ajax call
 	$.ajax({

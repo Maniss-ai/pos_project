@@ -21,9 +21,9 @@ public class OrderController {
     @Autowired
     private OrderDto dto;
 
-    @ApiOperation(value = "Adds Place order")
+    @ApiOperation(value = "Get Placed order")
     @RequestMapping(path = "/api/order/view-order", method = RequestMethod.POST)
-    public List<OrderData> search(@RequestBody ViewOrderForm form) throws ApiException, ParseException {
-        return dto.search(form);
+    public List<OrderData> search(@RequestBody ViewOrderForm viewOrderForm) throws ApiException, ParseException {
+        return dto.search(viewOrderForm);
     }
 }

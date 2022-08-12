@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public class ViewOrderDao extends AbstractDao {
+public class OrderDao extends AbstractDao {
     private static final String select_all_without_id = "select p from OrderPojo p where time between :start_date and :end_date";
     private static final String select_all_with_id_date = "select p from OrderPojo p where (time between :start_date and :end_date) and order_id=:order_id";
     private static final String select_all_with_id = "select p from OrderPojo p where order_id=:order_id";

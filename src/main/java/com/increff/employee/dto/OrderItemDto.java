@@ -1,5 +1,6 @@
 package com.increff.employee.dto;
 
+import com.increff.employee.generatepdf.ObjectToXml;
 import com.increff.employee.model.data.OrderItemData;
 import com.increff.employee.model.form.OrderItemForm;
 import com.increff.employee.model.form.OrderItemUpdateForm;
@@ -14,8 +15,15 @@ import com.increff.employee.service.ProductService;
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +37,8 @@ public class OrderItemDto {
     private ProductService productService;
     @Autowired
     private InventoryService inventoryService;
+    @Autowired
+    private OrderDto orderDto;
 
     public OrderItemDto() {
 
@@ -235,6 +245,23 @@ public class OrderItemDto {
         }
         else {
             return product_id;
+        }
+    }
+
+    public void generatePdfForOrder(HttpServletResponse response, int orderId) throws Exception {
+        List<OrderItemData> placeOrderDataList = getSingleOrder(orderId);
+        OrderPojo orderPojo = orderDto.getOrder(orderId);
+        ObjectToXml.generateXmlString(placeOrderDataList, orderPojo);
+
+
+        File file = new File("src/main/resources/pdf/invoice.pdf");
+
+        if (file.exists()) {
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
+            response.setContentLength((int) file.length());
+            InputStream inputStream = new BufferedInputStream(Files.newInputStream(file.toPath()));
+            FileCopyUtils.copy(inputStream, response.getOutputStream());
         }
     }
 }

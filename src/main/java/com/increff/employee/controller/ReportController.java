@@ -37,4 +37,5 @@ public class ReportController {
     public StringBuilder inventoryReport() throws ApiException {
         return dto.getAllInventory();
     }
+
 }

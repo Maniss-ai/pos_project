@@ -33,12 +33,12 @@ public class UIController {
 		return mav("inventory.html");
 	}
 
-	@RequestMapping(value = "/ui/order/place_order")
+	@RequestMapping(value = "/ui/order/place-order")
 	public ModelAndView placeOrder() {
 		return mav("place_order.html");
 	}
 
-	@RequestMapping(value = "/ui/order/view_order")
+	@RequestMapping(value = "/ui/order/view-order")
 	public ModelAndView viewOrder() {
 		return mav("view_order.html");
 	}

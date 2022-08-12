@@ -165,7 +165,7 @@ function uploadRowsProduct() {
 
 /****************************************** BULK ADD BRAND : TODO ******************************************/
 function bulkAddProduct() {
-	var url = getProductUrl() + "/bulkAddProduct";
+	var url = getProductUrl() + "/bulk-add-product";
 	console.log(jsonArrayProduct);
 	// Make ajax call
 	$.ajax({

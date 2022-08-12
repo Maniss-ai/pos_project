@@ -14,13 +14,13 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-public class PlaceOrderDao extends AbstractDao {
-    private static final String delete_id = "delete from PlaceOrderPojo p where id=:id";
-    private static final String select_id = "select p from PlaceOrderPojo p where id=:id";
-    private static final String select_barcode = "select p from PlaceOrderPojo p where barcode=:barcode and order_id!=0";
-    private static final String select_all = "select p from PlaceOrderPojo p";
-    private static final String select_order_id = "select p from PlaceOrderPojo p where barcode=:barcode and order_id=0";
-    private static final String select_with_order_id = "select p from PlaceOrderPojo p where order_id=:order_id";
+public class OrderItemDao extends AbstractDao {
+    private static final String delete_id = "delete from OrderItemPojo p where id=:id";
+    private static final String select_id = "select p from OrderItemPojo p where id=:id";
+    private static final String select_barcode = "select p from OrderItemPojo p where barcode=:barcode and order_id!=0";
+    private static final String select_all = "select p from OrderItemPojo p";
+    private static final String select_order_id = "select p from OrderItemPojo p where barcode=:barcode and order_id=0";
+    private static final String select_with_order_id = "select p from OrderItemPojo p where order_id=:order_id";
 
 
     @PersistenceContext

@@ -185,7 +185,7 @@ function uploadRowsInventory() {
 
 /****************************************** BULK ADD INVENTORY : TODO ******************************************/
 function bulkAddInventory() {
-	var url = getInventoryUrl() + "/bulkAddInventory";
+	var url = getInventoryUrl() + "/bulk-add-inventory";
 	console.log(jsonArrayInventory);
 	// Make ajax call
 	$.ajax({

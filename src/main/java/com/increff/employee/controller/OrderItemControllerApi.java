@@ -27,66 +27,52 @@ public class OrderItemControllerApi extends javax.servlet.http.HttpServlet imple
     @Autowired
     private OrderDto orderDto;
 
-    @ApiOperation(value = "Adds Place order")
+    @ApiOperation(value = "Add order item")
     @RequestMapping(path = "/api/order/place-order", method = RequestMethod.POST)
-    public OrderItemData add(@RequestBody OrderItemForm form) throws ApiException {
-        return dto.add(form);
+    public OrderItemData add(@RequestBody OrderItemForm orderItemForm) throws ApiException {
+        return dto.add(orderItemForm);
     }
 
-    @ApiOperation(value = "Submit Place order")
+    @ApiOperation(value = "Submit (place) order")
     @RequestMapping(path = "/api/order/submit-order", method = RequestMethod.POST)
     public void submit(@RequestBody List<OrderItemForm> orderFormList) throws ApiException {
         dto.submit(orderFormList);
     }
 
 
-    @ApiOperation(value = "Deletes Place order")
+    @ApiOperation(value = "Delete order item")
     @RequestMapping(path = "/api/order/place-order/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable int id) throws ApiException {
         dto.delete(id);
     }
 
-    @ApiOperation(value = "Gets Place order by ID")
-    @RequestMapping(path = "/api/order/place_order/{id}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get order item by Id")
+    @RequestMapping(path = "/api/order/place-order/{id}", method = RequestMethod.GET)
     public OrderItemData get(@PathVariable int id) throws ApiException {
         return dto.get(id);
     }
 
-    @ApiOperation(value = "Gets Place order by ID")
-    @RequestMapping(path = "/api/order/place_order/placed/{order_id}", method = RequestMethod.GET)
-    public List<OrderItemData> getSingleOrder(@PathVariable int order_id) throws ApiException {
-        return dto.getSingleOrder(order_id);
+    @ApiOperation(value = "Get order by Id")
+    @RequestMapping(path = "/api/order/place-order/placed/{order-id}", method = RequestMethod.GET)
+    public List<OrderItemData> getSingleOrder(@PathVariable int orderId) {
+        return dto.getSingleOrder(orderId);
     }
 
-    @ApiOperation(value = "Gets list of all Place order")
-    @RequestMapping(path = "/api/order/place_order", method = RequestMethod.GET)
+    @ApiOperation(value = "Get list of all order items")
+    @RequestMapping(path = "/api/order/place-order", method = RequestMethod.GET)
     public List<OrderItemData> getAll() {
         return dto.getAll();
     }
 
-    @ApiOperation(value = "Updates Place order")
-    @RequestMapping(path = "/api/order/place_order/{place_order_id}", method = RequestMethod.PUT)
-    public void update(@PathVariable int place_order_id, @RequestBody OrderItemUpdateForm form) throws ApiException {
-        dto.update(place_order_id, form);
+    @ApiOperation(value = "Updates order items")
+    @RequestMapping(path = "/api/order/place-order/{place-order-id}", method = RequestMethod.PUT)
+    public void update(@PathVariable int placeOrderId, @RequestBody OrderItemUpdateForm form) throws ApiException {
+        dto.update(placeOrderId, form);
     }
 
-    @ApiOperation(value = "Generate XML String")
-    @RequestMapping(path = "/api/order/place_order/invoice/{order_id}", method = RequestMethod.GET)
-    public void generateXmlString(HttpServletResponse response, @PathVariable int order_id) throws Exception {
-        List<OrderItemData> placeOrderDataList = getSingleOrder(order_id);
-        OrderPojo orderPojo = orderDto.getOrder(order_id);
-        ObjectToXml.generateXmlString(placeOrderDataList, orderPojo);
-
-
-        File file = new File("src/main/resources/pdf/invoice.pdf");
-
-        if (file.exists()) {
-            response.setContentType("application/pdf");
-            response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
-            response.setContentLength((int) file.length());
-            InputStream inputStream = new BufferedInputStream(Files.newInputStream(file.toPath()));
-            FileCopyUtils.copy(inputStream, response.getOutputStream());
-        }
-
+    @ApiOperation(value = "Generate Invoice for order")
+    @RequestMapping(path = "/api/order/place-order/invoice/{order-id}", method = RequestMethod.GET)
+    public void generateXmlString(HttpServletResponse response, @PathVariable int orderId) throws Exception {
+        dto.generatePdfForOrder(response, orderId);
      }
 }
