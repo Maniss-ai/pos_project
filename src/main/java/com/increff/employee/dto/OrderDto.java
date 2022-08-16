@@ -1,17 +1,26 @@
 package com.increff.employee.dto;
 
+import com.increff.employee.generatepdf.ObjectToXml;
 import com.increff.employee.model.data.OrderData;
+import com.increff.employee.model.data.OrderItemData;
 import com.increff.employee.model.form.OrderItemForm;
 import com.increff.employee.model.form.ViewOrderForm;
 import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.pojo.OrderItemPojo;
 import com.increff.employee.service.ApiException;
 import com.increff.employee.service.InventoryService;
+import com.increff.employee.service.OrderItemService;
 import com.increff.employee.service.OrderService;
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -25,6 +34,8 @@ public class OrderDto {
     private OrderService orderService;
     @Autowired
     private InventoryService inventoryService;
+    @Autowired
+    private OrderItemService orderItemService;
 
     public List<OrderData> search(ViewOrderForm form) throws ApiException, ParseException {
         List<OrderPojo> pojoList;
@@ -67,6 +78,32 @@ public class OrderDto {
         throw new ApiException("Order Id doesn't exists");
     }
 
+    public List<OrderItemData> getSingleOrder(int order_id) {
+        List<OrderItemPojo> pojoList = orderItemService.getSingleOrder(order_id);
+        List<OrderItemData> dataList = new ArrayList<>();
+        for(OrderItemPojo pojo : pojoList) {
+            dataList.add(DtoHelper.convertPojoToDataOrderItem(pojo));
+        }
+        return dataList;
+    }
+
+
+    public void generatePdfForOrder(HttpServletResponse response, int orderId) throws Exception {
+        List<OrderItemData> placeOrderDataList = getSingleOrder(orderId);
+        OrderPojo orderPojo = getOrder(orderId);
+        ObjectToXml.generateXmlString(placeOrderDataList, orderPojo);
+
+
+        File file = new File("src/main/resources/pdf/invoice.pdf");
+
+        if (file.exists()) {
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
+            response.setContentLength((int) file.length());
+            InputStream inputStream = new BufferedInputStream(Files.newInputStream(file.toPath()));
+            FileCopyUtils.copy(inputStream, response.getOutputStream());
+        }
+    }
     public OrderPojo getOrder(int order_id) {
         return orderService.getOrder(order_id);
     }

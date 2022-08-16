@@ -14,7 +14,7 @@ import java.util.List;
 
 @Api
 @RestController
-public class InventoryControllerApi {
+public class InventoryController {
     @Autowired
     private InventoryDto inventoryDto;
 
@@ -50,7 +50,7 @@ public class InventoryControllerApi {
 
     @ApiOperation(value = "Updates an Inventory")
     @RequestMapping(path = "/api/inventory/{barcode}", method = RequestMethod.PUT)
-    public void update(@PathVariable String barcode, @RequestBody InventoryUpdateForm form) throws ApiException {
-        inventoryDto.update(barcode, form);
+    public void update(@PathVariable String barcode, @RequestBody InventoryUpdateForm inventoryUpdateForm) throws ApiException {
+        inventoryDto.update(barcode, inventoryUpdateForm);
     }
 }

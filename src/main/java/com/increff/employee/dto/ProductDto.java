@@ -9,7 +9,7 @@ import com.increff.employee.service.ApiException;
 import com.increff.employee.service.BrandService;
 import com.increff.employee.service.InventoryService;
 import com.increff.employee.service.ProductService;
-import org.apache.commons.math3.util.Precision;
+import com.increff.employee.util.Checks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,13 +27,12 @@ public class ProductDto {
     @Autowired
     private InventoryService inventoryService;
 
-    // CRUD ....
     public ProductData add(ProductForm form) throws ApiException {
-        nullCheck(form);
+        Checks.nullCheckProduct(form);
         ProductPojo pojo = DtoHelper.convertFormToPojoProduct(form);
-        normalize(pojo);
-        boolean unique = isUnique(pojo);
-        boolean brand_category_exists = isBrandCategoryExists(pojo);
+        DtoHelper.normalizeProduct(pojo);
+        boolean unique = Checks.isUnique(pojo, getAll());
+        boolean brand_category_exists = brandService.getBrandCategory(pojo) != null;
 
         if(unique && brand_category_exists) {
             return DtoHelper.convertPojoToDataProduct(productService.add(pojo));
@@ -45,10 +44,6 @@ public class ProductDto {
                 throw new ApiException("Brand-Category doesn't exists mann");
             }
         }
-    }
-
-    private boolean isBrandCategoryExists(ProductPojo pojo) throws ApiException {
-        return brandService.getBrandCategory(pojo) != null;
     }
 
     @Transactional(rollbackOn = ApiException.class)
@@ -108,37 +103,16 @@ public class ProductDto {
     }
 
     public ProductData update(int id, ProductUpdateForm form) throws ApiException {
-        nullCheckForUpdate(form);
+        Checks.nullCheckForUpdateProduct(form);
         ProductPojo pojo = DtoHelper.convertFormToPojoUpdateProduct(form);
-        normalizeForUpdate(pojo);
+        DtoHelper.normalizeForUpdateProduct(pojo);
         checkIfBarcodeExistsInProduct(id);
 
-        if(isUnique(id, pojo)) {
+        if(Checks.isUnique(id, pojo, getAll())) {
             return DtoHelper.convertPojoToDataProduct(productService.update(id, pojo));
         } else {
             throw new ApiException("Barcode should be Unique");
         }
-    }
-
-    // CHECKS ....
-    boolean isUnique(ProductPojo pojo) throws ApiException {
-        List<ProductData> dataList = getAll();
-        for(ProductData productData : dataList) {
-            if(Objects.equals(productData.getBarcode(), pojo.getBarcode())) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    boolean isUnique(int current_id, ProductPojo pojo) throws ApiException {
-        List<ProductData> dataList = getAll();
-        for(ProductData productData : dataList) {
-            if(Objects.equals(productData.getBarcode(), pojo.getBarcode()) && productData.getId() != current_id) {
-                return false;
-            }
-        }
-        return true;
     }
 
     public void checkIfBarcodeExistsInProduct(int id) throws ApiException {
@@ -152,41 +126,4 @@ public class ProductDto {
         }
     }
 
-    // MODIFYING ....
-
-    public static void normalize(ProductPojo p) {
-        p.setBarcode(p.getBarcode().toLowerCase().trim());
-        p.setProduct(p.getProduct().toLowerCase().trim());
-        p.setBrand(p.getBrand().toLowerCase().trim());
-        p.setCategory(p.getCategory().toLowerCase().trim());
-    }
-
-    public static void normalizeForUpdate(ProductPojo p) {
-        p.setBarcode(p.getBarcode().toLowerCase().trim());
-        p.setProduct(p.getProduct().toLowerCase().trim());
-    }
-
-
-    private void nullCheckForUpdate(ProductUpdateForm form) throws ApiException {
-        if(form.getBarcode().isEmpty() || form.getBarcode() == null) {
-            throw new ApiException("Barcode can't be empty");
-        }
-        else if(form.getProduct().isEmpty() || form.getProduct() == null) {
-            throw new ApiException("Product name can't be empty");
-        }
-        else if(form.getMrp() == null || form.getMrp() == 0) {
-            throw new ApiException("MRP can't be empty");
-        }
-    }
-    private void nullCheck(ProductForm form) throws ApiException {
-        if(form.getBarcode().isEmpty() || form.getBarcode() == null) {
-            throw new ApiException("Barcode can't be empty");
-        }
-        else if(form.getProduct().isEmpty() || form.getProduct() == null) {
-            throw new ApiException("Product name can't be empty");
-        }
-        else if(form.getMrp() == null || form.getMrp() == 0) {
-            throw new ApiException("MRP can't be empty");
-        }
-    }
 }

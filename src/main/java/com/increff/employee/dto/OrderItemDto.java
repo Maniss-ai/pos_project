@@ -12,6 +12,7 @@ import com.increff.employee.service.ApiException;
 import com.increff.employee.service.InventoryService;
 import com.increff.employee.service.OrderItemService;
 import com.increff.employee.service.ProductService;
+import com.increff.employee.util.Checks;
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,9 +47,9 @@ public class OrderItemDto {
 
     // CRUD ....
     public OrderItemData add(OrderItemForm form) throws ApiException {
-        nullCheck(form);
+        Checks.nullCheckOrderItem(form);
         OrderItemPojo pojo = DtoHelper.convertFormToPojoOrderItem(form, 0);
-        normalize(pojo);
+        DtoHelper.normalizeOrderItem(pojo);
 
         // get inventory_id using barcode_id match ....
         int inventory_id = getInventoryIdMatchWithBarcode(form.getBarcode());
@@ -70,17 +71,6 @@ public class OrderItemDto {
                 return DtoHelper.convertPojoToDataOrderItem(orderItemService.add(pojo));
             }
         }
-    }
-
-
-    private boolean alreadyAdded(OrderItemForm form) {
-        List<OrderItemPojo> list = orderItemService.getAll();
-        for(OrderItemPojo orderItemPojo : list) {
-            if(Objects.equals(orderItemPojo.getBarcode(), form.getBarcode()) && 0 == orderItemPojo.getOrder_id()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public void delete(int id) throws ApiException {
@@ -150,7 +140,7 @@ public class OrderItemDto {
     }
 
     public void update(int place_order_id, OrderItemUpdateForm form) throws ApiException {
-        nullCheckForUpdate(form);
+        Checks.nullCheckForUpdateOrderItem(form);
         String barcode = get(place_order_id).getBarcode();
         OrderItemPojo pojo = DtoHelper.convertFormToPojoForUpdateOrderItem(form, 0, barcode);
 
@@ -169,34 +159,34 @@ public class OrderItemDto {
         }
     }
 
-    // CHECKS ....
+    public void generatePdfForOrder(HttpServletResponse response, int orderId) throws Exception {
+        List<OrderItemData> placeOrderDataList = getSingleOrder(orderId);
+        OrderPojo orderPojo = orderDto.getOrder(orderId);
+        ObjectToXml.generateXmlString(placeOrderDataList, orderPojo);
 
-    private void nullCheck(OrderItemForm form) throws ApiException {
-        if(form.getBarcode().isEmpty() || form.getBarcode() == null) {
-            throw new ApiException("Barcode can't be empty");
-        }
-        else if(form.getQuantity() == 0) {
-            throw new ApiException("Quantity can't be empty");
+
+        File file = new File("src/main/resources/pdf/invoice.pdf");
+
+        if (file.exists()) {
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
+            response.setContentLength((int) file.length());
+            InputStream inputStream = new BufferedInputStream(Files.newInputStream(file.toPath()));
+            FileCopyUtils.copy(inputStream, response.getOutputStream());
         }
     }
 
-    private void nullCheckForUpdate(OrderItemUpdateForm form) throws ApiException {
-        if(form.getQuantity() == 0) {
-            throw new ApiException("Quantity can't be empty");
-        }
-    }
-
-    boolean isUnique(OrderItemPojo pojo) {
-        List<OrderItemData> dataList = getAll();
-        for(OrderItemData placeOrderData : dataList) {
-            if(Objects.equals(placeOrderData.getBarcode(), pojo.getBarcode())) {
-                return false;
+    private boolean alreadyAdded(OrderItemForm form) {
+        List<OrderItemPojo> list = orderItemService.getAll();
+        for(OrderItemPojo orderItemPojo : list) {
+            if(Objects.equals(orderItemPojo.getBarcode(), form.getBarcode()) && 0 == orderItemPojo.getOrder_id()) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
-    boolean isSellingPriceLessThanMRP(OrderItemPojo pojo) throws ApiException {
+    private boolean isSellingPriceLessThanMRP(OrderItemPojo pojo) throws ApiException {
         ProductPojo productPojo = productService.getWithBarcode(pojo.getBarcode());
 
         if(pojo.getSelling_price() > productPojo.getMrp()) {
@@ -207,11 +197,6 @@ public class OrderItemDto {
             return true;
         }
     }
-    // MODIFYING ....
-    public static void normalize(OrderItemPojo p) {
-        p.setBarcode(p.getBarcode().toLowerCase().trim());
-    }
-
 
     private int getInventoryIdMatchWithBarcode(String barcode) throws ApiException {
         int inventory_id = -1;
@@ -240,28 +225,12 @@ public class OrderItemDto {
                 break;
             }
         }
+
         if(product_id == -1) {
             throw new ApiException("Inventory with barcode: " + get(product_id).getBarcode() + " doesn't exists");
         }
         else {
             return product_id;
-        }
-    }
-
-    public void generatePdfForOrder(HttpServletResponse response, int orderId) throws Exception {
-        List<OrderItemData> placeOrderDataList = getSingleOrder(orderId);
-        OrderPojo orderPojo = orderDto.getOrder(orderId);
-        ObjectToXml.generateXmlString(placeOrderDataList, orderPojo);
-
-
-        File file = new File("src/main/resources/pdf/invoice.pdf");
-
-        if (file.exists()) {
-            response.setContentType("application/pdf");
-            response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
-            response.setContentLength((int) file.length());
-            InputStream inputStream = new BufferedInputStream(Files.newInputStream(file.toPath()));
-            FileCopyUtils.copy(inputStream, response.getOutputStream());
         }
     }
 }

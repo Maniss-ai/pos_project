@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <orderInvoice id="1">
     <orderInvoicePojoList>
-        <barcode>abc127</barcode>
-        <bill_amount>2.0</bill_amount>
-        <quantity>2</quantity>
+        <barcode>abc123</barcode>
+        <bill_amount>2343.4</bill_amount>
+        <quantity>10</quantity>
         <SNo>1</SNo>
-        <selling_price>1.0</selling_price>
+        <selling_price>234.34</selling_price>
+    </orderInvoicePojoList>
+    <orderInvoicePojoList>
+        <barcode>abc124</barcode>
+        <bill_amount>2343.4</bill_amount>
+        <quantity>10</quantity>
+        <SNo>2</SNo>
+        <selling_price>234.34</selling_price>
+    </orderInvoicePojoList>
+    <orderInvoicePojoList>
+        <barcode>abc127</barcode>
+        <bill_amount>2343.4</bill_amount>
+        <quantity>10</quantity>
+        <SNo>3</SNo>
+        <selling_price>234.34</selling_price>
     </orderInvoicePojoList>
     <order_id>1</order_id>
-    <time>2022-08-05</time>
-    <total_amount>2.0</total_amount>
+    <time>2022-08-12</time>
+    <total_amount>7030.2</total_amount>
 </orderInvoice>

@@ -1,5 +1,6 @@
 package com.increff.employee.controller;
 
+import com.increff.employee.dto.AboutAppDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,19 +15,13 @@ import io.swagger.annotations.ApiOperation;
 @Api
 @RestController
 public class AboutAppController {
-
 	@Autowired
-	private AboutAppService service;
+	private AboutAppDto aboutAppDto;
 
 	@ApiOperation(value = "Gives application name and version")
 	@RequestMapping(path = "/api/about", method = RequestMethod.GET)
 	public AboutAppData getDetails() {
-		AboutAppData d = new AboutAppData();
-		d.setName(service.getName());
-		d.setVersion(service.getVersion());
-		return d;
+		return aboutAppDto.getDetails();
 	}
-
-
 
 }

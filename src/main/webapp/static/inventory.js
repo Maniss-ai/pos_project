@@ -230,8 +230,13 @@ function createErrorDataInventory(lines) {
 	}
 }
 
-function downloadErrorsInventory(){
-	writeFileDataInventory(errorDataInventory);
+function downloadErrorsInventory() {
+	if(errorDataBrand.length) {
+		writeFileDataInventory(errorDataInventory);
+	}
+	else {
+		$.notify("No errors", "info");
+	}
 }
 /******************************  FILE UPLOAD METHODS: END  ******************************/
 

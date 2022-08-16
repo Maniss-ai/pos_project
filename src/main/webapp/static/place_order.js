@@ -13,7 +13,6 @@ function getProductUrl() {
 	return baseUrl + "/api/product";	
 }
 
-
 //BUTTON ACTIONS
 function addPlaceOrder(event) {
 	//Set the values to update

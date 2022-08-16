@@ -210,7 +210,12 @@ function createErrorDataProduct(lines) {
 }
 
 function downloadErrorsProduct() {
-	writeFileDataProduct(errorDataProduct);
+	if(errorDataBrand.length) {
+		writeFileDataProduct(errorDataProduct);
+	}
+	else {
+		$.notify("No errors", "info");
+	}
 }
 /******************************  FILE UPLOAD METHODS: END  ******************************/
 

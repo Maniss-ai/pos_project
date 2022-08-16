@@ -39,7 +39,6 @@ function getViewOrderList(event) {
 }
 
 //UI DISPLAY METHODS
-
 function displaySelectedOrders(data) {
 	console.log('Printing placed orders data ....');
 	var tbody = $('#view_order-table').children('tbody');
@@ -85,7 +84,7 @@ function generateInvoice(order_id) {
 		var fileURL = URL.createObjectURL(file);
 		
 		setTimeout(() => {
-		window.open(fileURL);
+			window.open(fileURL);
 		})
 		console.log(fileURL);
 

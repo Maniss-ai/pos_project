@@ -38,6 +38,8 @@ public class ObjectToXml {
             orderInvoicePojoList.add(orderInvoicePojo);
         }
 
+        total_amount = Precision.round(total_amount, 2);
+
         JAXBContext contextObj = JAXBContext.newInstance(OrderInvoice.class);
 
         Marshaller marshallerObj = contextObj.createMarshaller();

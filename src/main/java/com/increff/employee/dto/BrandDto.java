@@ -6,6 +6,7 @@ import com.increff.employee.pojo.BrandPojo;
 import com.increff.employee.service.ApiException;
 import com.increff.employee.service.BrandService;
 import com.increff.employee.service.ProductService;
+import com.increff.employee.util.Checks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +23,13 @@ public class BrandDto {
     @Autowired
     private ProductService productService;
 
-
     @Transactional
     // CRUD....
     public BrandData add(BrandForm form) throws ApiException {
-        nullCheck(form);
+        Checks.nullCheckBrand(form);
         BrandPojo pojo = DtoHelper.convertFormToPojoBrand(form);
-        normalize(pojo);
-        if(isUnique(pojo)) {
+        DtoHelper.normalizeBrand(pojo);
+        if(Checks.isUniqueBrand(pojo, getAll())) {
             return DtoHelper.convertPojoToDataBrand(brandService.add(pojo));
         }
         else {
@@ -98,9 +98,9 @@ public class BrandDto {
     }
 
     public BrandData update(int id, BrandForm form) throws ApiException {
-        nullCheck(form);
+        Checks.nullCheckBrand(form);
         BrandPojo pojo = DtoHelper.convertFormToPojoBrand(form);
-        normalize(pojo);
+        DtoHelper.normalizeBrand(pojo);
         try {
             brandService.getCheck(id);
         }
@@ -108,7 +108,7 @@ public class BrandDto {
             throw new ApiException("Unable to update, Id doesn't exists");
         }
 
-        if(isUnique(id, pojo)) {
+        if(Checks.isUniqueBrand(id, pojo, getAll())) {
             return DtoHelper.convertPojoToDataBrand(brandService.update(id, pojo));
         }
         else {
@@ -116,50 +116,4 @@ public class BrandDto {
         }
     }
 
-    // CHECKS ....
-    public boolean isUnique(BrandPojo pojo) {
-        List<BrandData> dataList = getAll();
-
-        for(BrandData pojoItem : dataList) {
-            if(
-                    Objects.equals(pojoItem.getBrand(), pojo.getBrand()) &&
-                    Objects.equals(pojoItem.getCategory(), pojo.getCategory())
-            ) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public boolean isUnique(int current_id, BrandPojo pojo) {
-        List<BrandData> dataList = getAll();
-
-        for(BrandData pojoItem : dataList) {
-            if(
-                    Objects.equals(pojoItem.getBrand(), pojo.getBrand()) &&
-                            Objects.equals(pojoItem.getCategory(), pojo.getCategory()) &&
-                            pojoItem.getId() != current_id
-            ) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    // MODIFYING ....
-    public static void normalize(BrandPojo p) {
-        p.setBrand(p.getBrand().toLowerCase().trim());
-        p.setCategory(p.getCategory().toLowerCase().trim());
-    }
-
-    private void nullCheck(BrandForm form) throws ApiException {
-        if(form.getBrand() == null || form.getBrand().isEmpty()) {
-            throw new ApiException("Brand can't be null");
-        }
-        else if(form.getCategory() == null || form.getCategory().isEmpty()) {
-            throw new ApiException("Category can't be null");
-        }
-    }
 }

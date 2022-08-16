@@ -7,6 +7,7 @@ import com.increff.employee.pojo.InventoryPojo;
 import com.increff.employee.service.ApiException;
 import com.increff.employee.service.InventoryService;
 import com.increff.employee.service.ProductService;
+import com.increff.employee.util.Checks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,12 +25,12 @@ public class InventoryDto {
 
     // CRUD ....
     public InventoryData add(InventoryForm form) throws ApiException {
-        nullCheck(form);
+        Checks.nullCheckInventory(form);
         InventoryPojo pojo = DtoHelper.convertFormToPojoInventory(form);
-        normalize(pojo);
-        boolean barcode_exists = isBarcodeExists(pojo);
+        DtoHelper.normalizeInventory(pojo);
+        boolean barcode_exists = productService.getInventoryBarcode(pojo) != null;
 
-        if (doesNotExist(form) && barcode_exists) {
+        if (Checks.doesNotExistInventory(form, getAll()) && barcode_exists) {
             return DtoHelper.convertPojoToDataInventory(inventoryService.add(pojo));
         } else {
             if (!barcode_exists) {
@@ -66,20 +67,6 @@ public class InventoryDto {
         return dataList;
     }
 
-    private boolean isBarcodeExists(InventoryPojo pojo) throws ApiException {
-        return productService.getInventoryBarcode(pojo) != null;
-    }
-
-    private boolean doesNotExist(InventoryForm form) {
-        List<InventoryPojo> list = inventoryService.getAll();
-        for(InventoryPojo inventoryPojo : list) {
-            if(Objects.equals(inventoryPojo.getBarcode(), form.getBarcode())) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public void delete(int id) {
         inventoryService.delete(id);
     }
@@ -100,32 +87,9 @@ public class InventoryDto {
     }
 
     public InventoryData update(String barcode, InventoryUpdateForm form) throws ApiException {
-        nullCheckForUpdate(form);
+        Checks.nullCheckForUpdateInventory(form);
         InventoryPojo pojo = DtoHelper.convertFormToPojoForUpdateInventory(form);
         return DtoHelper.convertPojoToDataInventory(inventoryService.update(barcode, pojo));
-    }
-
-    // CHECKS ....
-
-    private void nullCheck(InventoryForm form) throws ApiException {
-        if(form.getBarcode().isEmpty() || form.getBarcode() == null) {
-            throw new ApiException("Barcode can't be empty");
-        }
-        else if(form.getInventory() == 0) {
-            throw new ApiException("Inventory can't be empty");
-        }
-    }
-
-    private void nullCheckForUpdate(InventoryUpdateForm form) throws ApiException {
-        if(form.getInventory() == 0) {
-            throw new ApiException("Inventory can't be empty");
-        }
-    }
-
-
-    // MODIFYING ....
-    public static void normalize(InventoryPojo p) {
-        p.setBarcode(p.getBarcode().toLowerCase().trim());
     }
 
 }

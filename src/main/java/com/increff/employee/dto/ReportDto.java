@@ -5,6 +5,7 @@ import com.increff.employee.model.data.InventoryData;
 import com.increff.employee.model.form.ReportForm;
 import com.increff.employee.pojo.*;
 import com.increff.employee.service.*;
+import com.increff.employee.util.Checks;
 import com.mysql.cj.conf.ConnectionUrlParser;
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +42,13 @@ public class ReportDto {
             }
 
             // check weather brand or category exists ...
-            if(!form.getBrand().isEmpty() && !form.getCategory().isEmpty() && form.getBrand() != null && form.getCategory() != null && !checkBrandCategoryExists(form.getBrand(), form.getCategory())) {
+            if(!form.getBrand().isEmpty() && !form.getCategory().isEmpty() && form.getBrand() != null && form.getCategory() != null && !Checks.checkBrandCategoryExists(form.getBrand(), form.getCategory(), brandService.getAll())) {
                 throw new ApiException("Brand or Category doesn't exists");
             }
-            if(!form.getBrand().isEmpty() && form.getBrand() != null && !checkBrandExists(form.getBrand())) {
+            if(!form.getBrand().isEmpty() && form.getBrand() != null && !Checks.checkBrandExists(form.getBrand(), brandService.getAll())) {
                 throw new ApiException("Brand doesn't exists");
             }
-            if(!form.getCategory().isEmpty() && form.getCategory() != null && !checkCategoryExists(form.getCategory())) {
+            if(!form.getCategory().isEmpty() && form.getCategory() != null && !Checks.checkCategoryExists(form.getCategory(), brandService.getAll())) {
                 throw new ApiException("Category doesn't exists");
             }
 
@@ -288,39 +289,6 @@ public class ReportDto {
         }
     }
 
-    private boolean checkBrandCategoryExists(String brand, String category) {
-        List<BrandPojo> brandPojoList = brandService.getAll();
-        for(BrandPojo brandPojo : brandPojoList) {
-            if(Objects.equals(brandPojo.getBrand(), brand) && Objects.equals(brandPojo.getCategory(), category)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private boolean checkBrandExists(String brand) {
-        List<BrandPojo> brandPojoList = brandService.getAll();
-        for(BrandPojo brandPojo : brandPojoList) {
-            if(Objects.equals(brandPojo.getBrand(), brand)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private boolean checkCategoryExists(String category) {
-        List<BrandPojo> brandPojoList = brandService.getAll();
-        for(BrandPojo brandPojo : brandPojoList) {
-            if(Objects.equals(brandPojo.getCategory(), category)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public void brandJavaObjToTsvFile(List<BrandData> dataList) {
         try {
             FileWriter fos = new FileWriter("src/main/resources/tsv/brand.tsv");
@@ -341,7 +309,7 @@ public class ReportDto {
         }
     }
 
-    public void inventoryJavaObjToTsvFile(List<InventoryData> dataList) {
+    public void inventoryJavaObjToTsvFile(List<InventoryData> dataList) throws ApiException {
         try {
             FileWriter fos = new FileWriter("src/main/resources/tsv/inventory.tsv");
             PrintWriter dos = new PrintWriter(fos);
@@ -356,7 +324,7 @@ public class ReportDto {
             dos.close();
             fos.close();
         } catch (IOException e) {
-            System.out.println("Error Printing Tab Delimited File");
+            throw new ApiException("Error Printing Tab Delimited File");
         }
     }
 

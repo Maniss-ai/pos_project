@@ -3,10 +3,14 @@ package com.increff.employee.dto;
 import com.increff.employee.model.data.*;
 import com.increff.employee.model.form.*;
 import com.increff.employee.pojo.*;
+import com.increff.employee.service.ApiException;
 import org.apache.commons.math3.util.Precision;
 
+import java.util.List;
+import java.util.Objects;
+
 public class DtoHelper {
-    // Brand Conversions
+    // Brand Conversions and normalize
     protected static BrandData convertPojoToDataBrand(BrandPojo pojo) {
         BrandData data = new BrandData();
         data.setCategory(pojo.getCategory());
@@ -20,6 +24,11 @@ public class DtoHelper {
         pojo.setCategory(form.getCategory());
         pojo.setBrand(form.getBrand());
         return pojo;
+    }
+
+    public static void normalizeBrand(BrandPojo p) {
+        p.setBrand(p.getBrand().toLowerCase().trim());
+        p.setCategory(p.getCategory().toLowerCase().trim());
     }
 
     // Product Conversions
@@ -41,6 +50,18 @@ public class DtoHelper {
         pojo.setProduct(form.getProduct());
         pojo.setMrp(Precision.round(form.getMrp(), 2));
         return pojo;
+    }
+
+    public static void normalizeProduct(ProductPojo p) {
+        p.setBarcode(p.getBarcode().toLowerCase().trim());
+        p.setProduct(p.getProduct().toLowerCase().trim());
+        p.setBrand(p.getBrand().toLowerCase().trim());
+        p.setCategory(p.getCategory().toLowerCase().trim());
+    }
+
+    public static void normalizeForUpdateProduct(ProductPojo p) {
+        p.setBarcode(p.getBarcode().toLowerCase().trim());
+        p.setProduct(p.getProduct().toLowerCase().trim());
     }
 
     protected static ProductPojo convertFormToPojoUpdateProduct(ProductUpdateForm form) {
@@ -73,14 +94,16 @@ public class DtoHelper {
         return pojo;
     }
 
+    public static void normalizeInventory(InventoryPojo p) {
+        p.setBarcode(p.getBarcode().toLowerCase().trim());
+    }
+
     // OrderItem Conversions
     protected static OrderItemData convertPojoToDataOrderItem(OrderItemPojo pojo) {
         OrderItemData data = new OrderItemData();
         data.setOrder_id(pojo.getOrder_id());
         data.setBarcode(pojo.getBarcode());
         data.setQuantity(pojo.getQuantity());
-        System.out.println("PRECISION DATA" + (Precision.round(pojo.getSelling_price(), 2)));
-        System.out.println("DATA" + pojo.getSelling_price());
         data.setSelling_price(Precision.round(pojo.getSelling_price(), 2));
         data.setId(pojo.getId());
         return data;
@@ -100,8 +123,6 @@ public class DtoHelper {
         pojo.setBarcode(barcode);
         pojo.setOrder_id(order_id);
         pojo.setQuantity(form.getQuantity());
-        System.out.println("SELLING PRICE : " + form.getSelling_price());
-        System.out.println("SELLING PRICE : " + Precision.round(form.getSelling_price(), 2));
         pojo.setSelling_price(Precision.round(form.getSelling_price(), 2));
         return pojo;
     }
@@ -122,6 +143,10 @@ public class DtoHelper {
         pojo.setQuantity(form.getQuantity());
         pojo.setSelling_price(Precision.round(form.getSelling_price(), 2));
         return pojo;
+    }
+
+    public static void normalizeOrderItem(OrderItemPojo p) {
+        p.setBarcode(p.getBarcode().toLowerCase().trim());
     }
 
 }

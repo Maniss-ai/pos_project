@@ -2,26 +2,21 @@ package com.increff.employee.controller;
 
 import com.increff.employee.dto.OrderItemDto;
 import com.increff.employee.dto.OrderDto;
-import com.increff.employee.generatepdf.ObjectToXml;
 import com.increff.employee.model.data.OrderItemData;
 import com.increff.employee.model.form.OrderItemForm;
 import com.increff.employee.model.form.OrderItemUpdateForm;
-import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.nio.file.Files;
 import java.util.List;
 
 @Api
 @RestController
-public class OrderItemControllerApi extends javax.servlet.http.HttpServlet implements javax.servlet.Servlet {
+public class OrderItemController extends javax.servlet.http.HttpServlet implements javax.servlet.Servlet {
     @Autowired
     private OrderItemDto dto;
     @Autowired
@@ -53,7 +48,7 @@ public class OrderItemControllerApi extends javax.servlet.http.HttpServlet imple
     }
 
     @ApiOperation(value = "Get order by Id")
-    @RequestMapping(path = "/api/order/place-order/placed/{order-id}", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/order/place-order/placed/{orderId}", method = RequestMethod.GET)
     public List<OrderItemData> getSingleOrder(@PathVariable int orderId) {
         return dto.getSingleOrder(orderId);
     }
@@ -65,13 +60,13 @@ public class OrderItemControllerApi extends javax.servlet.http.HttpServlet imple
     }
 
     @ApiOperation(value = "Updates order items")
-    @RequestMapping(path = "/api/order/place-order/{place-order-id}", method = RequestMethod.PUT)
+    @RequestMapping(path = "/api/order/place-order/{placeOrderId}", method = RequestMethod.PUT)
     public void update(@PathVariable int placeOrderId, @RequestBody OrderItemUpdateForm form) throws ApiException {
         dto.update(placeOrderId, form);
     }
 
     @ApiOperation(value = "Generate Invoice for order")
-    @RequestMapping(path = "/api/order/place-order/invoice/{order-id}", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/order/place-order/invoice/{orderId}", method = RequestMethod.GET)
     public void generateXmlString(HttpServletResponse response, @PathVariable int orderId) throws Exception {
         dto.generatePdfForOrder(response, orderId);
      }

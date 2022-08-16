@@ -190,8 +190,13 @@ function createErrorDataBrand(lines) {
 }
 
 function downloadErrorsBrand() {
-	console.log("errorDataBrand   : " + errorDataBrand);
-	writeFileDataBrand(errorDataBrand);
+	console.log("errorDataBrand   : " + errorDataBrand.length);
+	if(errorDataBrand.length) {
+		writeFileDataBrand(errorDataBrand);
+	}
+	else {
+		$.notify("No errors", "info");
+	}
 }
 /******************************  FILE UPLOAD METHODS: END  ******************************/
 
