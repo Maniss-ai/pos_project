@@ -30,15 +30,9 @@ public class InventoryController {
         return inventoryDto.bulkAddInventory(inventoryFormList);
     }
 
-    @ApiOperation(value = "Deletes an Inventory")
-    @RequestMapping(path = "/api/inventory/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable int id) {
-        inventoryDto.delete(id);
-    }
-
     @ApiOperation(value = "Gets an Inventory by ID")
     @RequestMapping(path = "/api/inventory/{id}", method = RequestMethod.GET)
-    public InventoryData get(@PathVariable int id) throws ApiException {
+    public InventoryData get(@PathVariable Integer id) throws ApiException {
         return inventoryDto.get(id);
     }
 

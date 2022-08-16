@@ -79,20 +79,6 @@ function getProductList() {
 	});
 }
 
-function deleteProduct(id) {
-	var url = getProductUrl() + "/" + id;
-
-	$.ajax({
-		url: url,
-		type: 'DELETE',
-		success: function (data) {
-			console.log("Product deleted");
-			getProductList();     //...
-		},
-		error: handleAjaxErrorProduct
-	});
-}
-
 function getBrandCategoryList(event) {
 	var url = getBrandUrl();
 	$.ajax({
@@ -266,8 +252,7 @@ function displayProductList(data) {
 	for (var i in data) {
 		var e = data[i];
 		console.log(e);
-		var buttonHtml = '<button class="btn btn-primary" onclick="deleteProduct(' + e.id + ')">Delete</button>'
-		buttonHtml += ' <button class="btn btn-primary" onclick="displayEditProduct(' + e.id + ')">Edit</button>'
+		var buttonHtml = ' <button class="btn btn-primary" onclick="displayEditProduct(' + e.id + ')">Edit</button>'
 		var row = '<tr>'
 			+ '<td>' + value_count++ + '</td>'
 			+ '<td>' + e.barcode + '</td>'

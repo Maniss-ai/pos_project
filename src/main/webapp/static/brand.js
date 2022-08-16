@@ -74,20 +74,6 @@ function getBrandList() {
 	});
 }
 
-function deleteBrand(id){
-	var url = getBrandUrl() + "/" + id;
-
-	$.ajax({
-	   url: url,
-	   type: 'DELETE',
-	   success: function(data) {
-	   		console.log("brand deleted");
-	   		getBrandList();
-	   },
-	   error: handleAjaxError
-	});
-}
-
 /******************************  FILE UPLOAD METHODS: START  ******************************/
 var fileDataBrand = [];
 var errorDataBrand = [];
@@ -249,8 +235,7 @@ function displayBrandList(data){
 	var value_count = 1;
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = '<button class="btn btn-primary" onclick="deleteBrand(' + e.id + ')">Delete</button>'
-		buttonHtml += ' <button class="btn btn-primary" onclick="displayEditBrand(' + e.id + ')">Edit</button>'
+		var buttonHtml = ' <button class="btn btn-primary" onclick="displayEditBrand(' + e.id + ')">Edit</button>'
 		var row = '<tr>'
 		+ '<td>' + value_count++ + '</td>'
 		+ '<td>' + e.brand + '</td>'

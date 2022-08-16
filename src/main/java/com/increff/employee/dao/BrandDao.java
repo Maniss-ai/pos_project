@@ -28,13 +28,7 @@ public class BrandDao extends AbstractDao {
         return p;
     }
 
-    public void delete(int id) {
-        Query query = em.createQuery(delete_id);
-        query.setParameter("id", id);
-        query.executeUpdate();
-    }
-
-    public BrandPojo select(int id) throws ApiException {
+    public BrandPojo select(Integer id) throws ApiException {
         try {
             TypedQuery<BrandPojo> query = getQuery(select_id, BrandPojo.class);
             query.setParameter("id", id);
@@ -55,7 +49,6 @@ public class BrandDao extends AbstractDao {
             TypedQuery<BrandPojo> query = getQuery(select_brand_category, BrandPojo.class);
             query.setParameter("brand", pojo.getBrand());
             query.setParameter("category", pojo.getCategory());
-            System.out.println("DAO: " + query.getSingleResult());
             return query.getSingleResult();
         }
         catch (Exception e) {

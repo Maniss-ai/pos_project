@@ -109,7 +109,7 @@ public class DtoHelper {
         return data;
     }
 
-    protected static OrderItemPojo convertFormToPojoOrderItem(OrderItemForm form, int order_id) {
+    protected static OrderItemPojo convertFormToPojoOrderItem(OrderItemForm form, Integer order_id) {
         OrderItemPojo pojo = new OrderItemPojo();
         pojo.setOrder_id(order_id);
         pojo.setBarcode(form.getBarcode());
@@ -118,7 +118,7 @@ public class DtoHelper {
         return pojo;
     }
 
-    protected static OrderItemPojo convertFormToPojoForUpdateOrderItem(OrderItemUpdateForm form, int order_id, String barcode) {
+    protected static OrderItemPojo convertFormToPojoForUpdateOrderItem(OrderItemUpdateForm form, Integer order_id, String barcode) {
         OrderItemPojo pojo = new OrderItemPojo();
         pojo.setBarcode(barcode);
         pojo.setOrder_id(order_id);

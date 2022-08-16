@@ -34,22 +34,15 @@ public class OrderItemController extends javax.servlet.http.HttpServlet implemen
         dto.submit(orderFormList);
     }
 
-
-    @ApiOperation(value = "Delete order item")
-    @RequestMapping(path = "/api/order/place-order/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable int id) throws ApiException {
-        dto.delete(id);
-    }
-
     @ApiOperation(value = "Get order item by Id")
     @RequestMapping(path = "/api/order/place-order/{id}", method = RequestMethod.GET)
-    public OrderItemData get(@PathVariable int id) throws ApiException {
+    public OrderItemData get(@PathVariable Integer id) throws ApiException {
         return dto.get(id);
     }
 
     @ApiOperation(value = "Get order by Id")
     @RequestMapping(path = "/api/order/place-order/placed/{orderId}", method = RequestMethod.GET)
-    public List<OrderItemData> getSingleOrder(@PathVariable int orderId) {
+    public List<OrderItemData> getSingleOrder(@PathVariable Integer orderId) {
         return dto.getSingleOrder(orderId);
     }
 
@@ -59,15 +52,15 @@ public class OrderItemController extends javax.servlet.http.HttpServlet implemen
         return dto.getAll();
     }
 
-    @ApiOperation(value = "Updates order items")
+    @ApiOperation(value = "Update order items")
     @RequestMapping(path = "/api/order/place-order/{placeOrderId}", method = RequestMethod.PUT)
-    public void update(@PathVariable int placeOrderId, @RequestBody OrderItemUpdateForm form) throws ApiException {
+    public void update(@PathVariable Integer placeOrderId, @RequestBody OrderItemUpdateForm form) throws ApiException {
         dto.update(placeOrderId, form);
     }
 
-    @ApiOperation(value = "Generate Invoice for order")
+    @ApiOperation(value = "Generate Invoice for placed order")
     @RequestMapping(path = "/api/order/place-order/invoice/{orderId}", method = RequestMethod.GET)
-    public void generateXmlString(HttpServletResponse response, @PathVariable int orderId) throws Exception {
+    public void generateXmlString(HttpServletResponse response, @PathVariable Integer orderId) throws Exception {
         dto.generatePdfForOrder(response, orderId);
-     }
+    }
 }

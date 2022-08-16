@@ -34,13 +34,7 @@ public class ProductDao extends AbstractDao {
         return p;
     }
 
-    public void delete(int id) {
-        Query query = em.createQuery(delete_id);
-        query.setParameter("id", id);
-        query.executeUpdate();
-    }
-
-    public ProductPojo select(int id) throws ApiException {
+    public ProductPojo select(Integer id) throws ApiException {
         try {
             TypedQuery<ProductPojo> query = getQuery(select_id, ProductPojo.class);
             query.setParameter("id", id);

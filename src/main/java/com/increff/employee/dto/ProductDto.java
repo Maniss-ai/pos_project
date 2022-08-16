@@ -50,7 +50,7 @@ public class ProductDto {
     public List<ProductData> bulkAddProduct(List<ProductForm> formList) throws ApiException {
         List<ProductData> dataList = new ArrayList<>();
         StringBuilder error = new StringBuilder();
-        int row = 1;
+        Integer row = 1;
 
         for(ProductForm productForm : formList) {
             try {
@@ -70,20 +70,11 @@ public class ProductDto {
         return dataList;
     }
 
-    public void delete(int id) throws ApiException {
-        if(!idExistsInProductPojo(id)) {
-            productService.delete(id);
-        }
-        else {
-            throw new ApiException("Unable to delete, Id exists in inventory");
-        }
-    }
-
-    private boolean idExistsInProductPojo(int id) {
+    private boolean idExistsInProductPojo(Integer id) {
         return false;
     }
 
-    public ProductData getWithId(int id) throws ApiException {
+    public ProductData getWithId(Integer id) throws ApiException {
         ProductPojo pojo = productService.getWithId(id);
         return DtoHelper.convertPojoToDataProduct(pojo);
     }
@@ -102,7 +93,7 @@ public class ProductDto {
         return dataList;
     }
 
-    public ProductData update(int id, ProductUpdateForm form) throws ApiException {
+    public ProductData update(Integer id, ProductUpdateForm form) throws ApiException {
         Checks.nullCheckForUpdateProduct(form);
         ProductPojo pojo = DtoHelper.convertFormToPojoUpdateProduct(form);
         DtoHelper.normalizeForUpdateProduct(pojo);
@@ -115,7 +106,7 @@ public class ProductDto {
         }
     }
 
-    public void checkIfBarcodeExistsInProduct(int id) throws ApiException {
+    public void checkIfBarcodeExistsInProduct(Integer id) throws ApiException {
         String actualBarcode = productService.getWithId(id).getBarcode();
 
         List<InventoryPojo> inventoryPojoList = inventoryService.getAll();

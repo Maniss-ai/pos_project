@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class InventoryUpdateForm {
-    private int inventory;
+    private Integer inventory;
 }

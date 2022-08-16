@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class InventoryForm {
     private String barcode;
-    private int inventory;
+    private Integer inventory;
 }

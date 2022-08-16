@@ -99,21 +99,6 @@ function getBarcode(index, data) {
 	});
 }
 
-
-function deleteInventory(id) {
-	var url = getInventoryUrl() + "/" + id;
-
-	$.ajax({
-	   url: url,
-	   type: 'DELETE',
-	   success: function(data) {
-	   		console.log("inventory deleted");
-	   		getInventoryList();     //...
-	   },
-	   error: handleAjaxErrorInventory
-	});
-}
-
 function getBarcodeList(event) {
 	var url = getProductUrl();
 	$.ajax({
@@ -286,8 +271,7 @@ function displayInventoryList(data) {
 	for(var i in data) {
 		var e = data[i];
 		console.log(e);
-		var buttonHtml = '<button class="btn btn-primary" onclick="deleteInventory(' + e.id + ')">Delete</button>'
-		buttonHtml += ' <button class="btn btn-primary" onclick="displayEditInventory(' + e.id + ',' + e.mrp + ')">Edit</button>'
+		var buttonHtml = ' <button class="btn btn-primary" onclick="displayEditInventory(' + e.id + ',' + e.mrp + ')">Edit</button>'
 		var row = '<tr>'
 			+ '<td>' + value_count++ + '</td>'
 			+ '<td>' + e.product_name + '</td>'

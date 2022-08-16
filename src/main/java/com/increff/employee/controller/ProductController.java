@@ -30,15 +30,9 @@ public class ProductController {
         return dto.bulkAddProduct(productFormList);
     }
 
-    @ApiOperation(value = "Deletes a product")
-    @RequestMapping(path = "/api/product/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable int id) throws ApiException {
-        dto.delete(id);
-    }
-
     @ApiOperation(value = "Gets a product by Id")
     @RequestMapping(path = "/api/product/{id}", method = RequestMethod.GET)
-    public ProductData get(@PathVariable int id) throws ApiException {
+    public ProductData get(@PathVariable Integer id) throws ApiException {
         return dto.getWithId(id);
     }
 
@@ -56,7 +50,7 @@ public class ProductController {
 
     @ApiOperation(value = "Updates a Product")
     @RequestMapping(path = "/api/product/{id}", method = RequestMethod.PUT)
-    public ProductData update(@PathVariable int id, @RequestBody ProductUpdateForm form) throws ApiException {
+    public ProductData update(@PathVariable Integer id, @RequestBody ProductUpdateForm form) throws ApiException {
         return dto.update(id, form);
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public class ProductInMemDao {
     private HashMap<Integer, ProductPojo> rows;
-    private int lastId;
+    private Integer lastId;
 
     @PostConstruct
     public void init() {
@@ -24,11 +24,11 @@ public class ProductInMemDao {
         rows.put(lastId, p);
     }
 
-    public void delete(int id) {
+    public void delete(Integer id) {
         rows.remove(id);
     }
 
-    public ProductPojo select(int id) {
+    public ProductPojo select(Integer id) {
         return rows.get(id);
     }
 
@@ -36,7 +36,7 @@ public class ProductInMemDao {
         return new ArrayList<>(rows.values());
     }
 
-    public void update(int id, ProductPojo p) {
+    public void update(Integer id, ProductPojo p) {
         rows.put(id, p);
     }
 }

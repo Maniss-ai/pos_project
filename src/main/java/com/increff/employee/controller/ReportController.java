@@ -22,13 +22,12 @@ public class ReportController {
     @ApiOperation(value = "Generate Sales Report")
     @RequestMapping(path = "/api/report/sales", method = RequestMethod.POST)
     public StringBuilder salesReport(@RequestBody ReportForm form) throws ApiException, ParseException {
-        System.out.println(form.getStart_date());
         return dto.getAllSales(form);
     }
 
     @ApiOperation(value = "Generate Brand Report")
     @RequestMapping(path = "/api/report/brand", method = RequestMethod.GET)
-    public StringBuilder brandReport() {
+    public StringBuilder brandReport() throws ApiException {
         return dto.getAllBrand();
     }
 

@@ -47,7 +47,7 @@ public class InventoryDto {
     public List<InventoryData> bulkAddInventory(List<InventoryForm> formList) throws ApiException {
         List<InventoryData> dataList = new ArrayList<>();
         StringBuilder error = new StringBuilder();
-        int row = 1;
+        Integer row = 1;
 
         for(InventoryForm inventoryForm : formList) {
             try {
@@ -67,11 +67,7 @@ public class InventoryDto {
         return dataList;
     }
 
-    public void delete(int id) {
-        inventoryService.delete(id);
-    }
-
-    public InventoryData get(int id) throws ApiException {
+    public InventoryData get(Integer id) throws ApiException {
         InventoryPojo pojo = inventoryService.get(id);
         return DtoHelper.convertPojoToDataInventory(pojo);
     }
@@ -81,7 +77,6 @@ public class InventoryDto {
         List<InventoryData> dataList = new ArrayList<>();
         for (InventoryPojo pojo : pojoList) {
             dataList.add(DtoHelper.convertPojoToDataInventory(pojo));
-            System.out.println(pojo.getBarcode());
         }
         return dataList;
     }

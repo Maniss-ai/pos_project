@@ -7,17 +7,17 @@ import java.util.List;
 
 @XmlRootElement
 public class OrderInvoice {
-    int id;
+    Integer id;
     List<OrderInvoicePojo> orderInvoicePojoList;
     String time;
-    int order_id;
+    Integer order_id;
     Double total_amount;
 
     public OrderInvoice() {
 
     }
 
-    public OrderInvoice(int id, List<OrderInvoicePojo> orderInvoicePojoList, String time, int order_id, Double total_amount) {
+    public OrderInvoice(Integer id, List<OrderInvoicePojo> orderInvoicePojoList, String time, Integer order_id, Double total_amount) {
         this.id = id;
         this.orderInvoicePojoList = orderInvoicePojoList;
         this.time = time;
@@ -26,10 +26,10 @@ public class OrderInvoice {
     }
 
     @XmlAttribute
-    public int getId() {
+    public Integer getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -51,11 +51,11 @@ public class OrderInvoice {
     }
 
     @XmlElement
-    public int getOrder_id() {
+    public Integer getOrder_id() {
         return order_id;
     }
 
-    public void setOrder_id(int order_id) {
+    public void setOrder_id(Integer order_id) {
         this.order_id = order_id;
     }
 

@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public class BrandInMemDao {
     private HashMap<Integer, BrandPojo> rows;
-    private int lastId;
+    private Integer lastId;
 
     @PostConstruct
     public void init() {
@@ -24,21 +24,19 @@ public class BrandInMemDao {
         rows.put(lastId, p);
     }
 
-    public void delete(int id) {
+    public void delete(Integer id) {
         rows.remove(id);
     }
 
-    public BrandPojo select(int id) {
+    public BrandPojo select(Integer id) {
         return rows.get(id);
     }
 
     public List<BrandPojo> selectAll() {
-        ArrayList<BrandPojo> list = new ArrayList<>();
-        list.addAll(rows.values());
-        return list;
+        return new ArrayList<>(rows.values());
     }
 
-    public void update(int id, BrandPojo p) {
+    public void update(Integer id, BrandPojo p) {
         rows.put(id, p);
     }
 }

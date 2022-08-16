@@ -28,7 +28,7 @@ public class OrderDao extends AbstractDao {
         return query.getResultList();
     }
 
-    public List<OrderPojo> selectAllWithIdAndDate(LocalDate start_date, LocalDate end_date, int order_id) {
+    public List<OrderPojo> selectAllWithIdAndDate(LocalDate start_date, LocalDate end_date, Integer order_id) {
         TypedQuery<OrderPojo> query = getQuery(select_all_with_id_date, OrderPojo.class);
         query.setParameter("start_date", start_date);
         query.setParameter("end_date", end_date);
@@ -36,13 +36,13 @@ public class OrderDao extends AbstractDao {
         return query.getResultList();
     }
 
-    public List<OrderPojo> selectAllWithId(int order_id) {
+    public List<OrderPojo> selectAllWithId(Integer order_id) {
         TypedQuery<OrderPojo> query = getQuery(select_all_with_id, OrderPojo.class);
         query.setParameter("order_id", order_id);
         return query.getResultList();
     }
 
-    public OrderPojo getOrder(int order_id) {
+    public OrderPojo getOrder(Integer order_id) {
         TypedQuery<OrderPojo> query = getQuery(select_order_with_order_id, OrderPojo.class);
         query.setParameter("order_id", order_id);
         return query.getSingleResult();

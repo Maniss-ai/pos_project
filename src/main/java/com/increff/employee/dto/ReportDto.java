@@ -100,7 +100,7 @@ public class ReportDto {
         }
     }
 
-    public StringBuilder getAllBrand() {
+    public StringBuilder getAllBrand() throws ApiException {
         StringBuilder dataListString = new StringBuilder("");
         List<BrandPojo> pojoList = brandService.getAll();
         List<BrandData> dataList = new ArrayList<>();
@@ -147,7 +147,7 @@ public class ReportDto {
         List<OrderPojo> orderPojoList = orderService.getSelectedOrdersWithoutId(start_date, end_date);
 
         // Match Order Ids according to the given Time Range ....
-        for(int i = 0; i < orderItemPojoList.size(); i++) {
+        for(Integer i = 0; i < orderItemPojoList.size(); i++) {
             boolean equalIds = false;
             for(OrderPojo orderPojo : orderPojoList) {
                 if(orderItemPojoList.get(i).getOrder_id() == orderPojo.getOrder_id()) {
@@ -163,8 +163,8 @@ public class ReportDto {
             }
         }
 
-        int totalRevenue = 0;
-        int totalQuantity = 0;
+        Double totalRevenue = 0.0;
+        Integer totalQuantity = 0;
         for(OrderItemPojo pojo : orderItemPojoList) {
             totalQuantity += pojo.getQuantity();
             totalRevenue += pojo.getQuantity() * pojo.getSelling_price();
@@ -183,10 +183,10 @@ public class ReportDto {
         List<OrderPojo> orderPojoList = orderService.getSelectedOrdersWithoutId(start_date, end_date);
 
         // Match Order Ids according to the given Time Range ....
-        for(int i = 0; i < orderItemPojoList.size(); i++) {
+        for(Integer i = 0; i < orderItemPojoList.size(); i++) {
             boolean equalIds = false;
             for(OrderPojo orderPojo : orderPojoList) {
-                if(orderItemPojoList.get(i).getOrder_id() == orderPojo.getOrder_id()) {
+                if(Objects.equals(orderItemPojoList.get(i).getOrder_id(), orderPojo.getOrder_id())) {
                     equalIds = true;
                     break;
                 }
@@ -199,7 +199,7 @@ public class ReportDto {
         }
 
         Map<String, ConnectionUrlParser.Pair<Integer, Double>> revenueQuantityMap = new HashMap<>();
-        int totalQuantity;
+        Integer totalQuantity;
         Double totalRevenue;
 
         for (OrderItemPojo orderItemPojo : orderItemPojoList) {
@@ -241,7 +241,7 @@ public class ReportDto {
         List<OrderPojo> orderPojoList = orderService.getSelectedOrdersWithoutId(start_date, end_date);
 
         // Match Order Ids according to the given Time Range ....
-        for(int i = 0; i < orderItemPojoList.size(); i++) {
+        for(Integer i = 0; i < orderItemPojoList.size(); i++) {
             boolean equalIds = false;
             for(OrderPojo orderPojo : orderPojoList) {
                 if(orderItemPojoList.get(i).getOrder_id() == orderPojo.getOrder_id()) {
@@ -257,7 +257,7 @@ public class ReportDto {
         }
 
         Map<String, ConnectionUrlParser.Pair<Integer, Double>> revenueQuantityMap = new HashMap<>();
-        int totalQuantity;
+        Integer totalQuantity;
         Double totalRevenue;
 
         for (OrderItemPojo orderItemPojo : orderItemPojoList) {
@@ -289,7 +289,7 @@ public class ReportDto {
         }
     }
 
-    public void brandJavaObjToTsvFile(List<BrandData> dataList) {
+    public void brandJavaObjToTsvFile(List<BrandData> dataList) throws ApiException {
         try {
             FileWriter fos = new FileWriter("src/main/resources/tsv/brand.tsv");
             PrintWriter dos = new PrintWriter(fos);
@@ -305,7 +305,7 @@ public class ReportDto {
             dos.close();
             fos.close();
         } catch (IOException e) {
-            System.out.println("Error Printing Tab Delimited File");
+            throw new ApiException("Error Printing Tab Delimited File");
         }
     }
 

@@ -20,13 +20,8 @@ public class ProductService {
         return dao.insert(p);
     }
 
-    @Transactional
-    public void delete(int id) {
-        dao.delete(id);
-    }
-
     @Transactional(rollbackOn = ApiException.class)
-    public ProductPojo getWithId(int id) throws ApiException {
+    public ProductPojo getWithId(Integer id) throws ApiException {
         return getCheck(id);
     }
 
@@ -41,7 +36,7 @@ public class ProductService {
     }
 
     @Transactional(rollbackOn  = ApiException.class)
-    public ProductPojo update(int id, ProductPojo p) throws ApiException {
+    public ProductPojo update(Integer id, ProductPojo p) throws ApiException {
         ProductPojo pojo = getCheck(id);
         pojo.setBarcode(p.getBarcode());
         pojo.setProduct(p.getProduct());
@@ -76,7 +71,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductPojo getCheck(int id) throws ApiException {
+    public ProductPojo getCheck(Integer id) throws ApiException {
         ProductPojo p = dao.select(id);
         if (p == null) {
             throw new ApiException("Brand-Category does not exit");

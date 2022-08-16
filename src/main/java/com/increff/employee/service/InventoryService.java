@@ -18,13 +18,8 @@ public class InventoryService {
         return dao.insert(p);
     }
 
-    @Transactional
-    public void delete(int id) {
-        dao.delete(id);
-    }
-
     @Transactional(rollbackOn = ApiException.class)
-    public InventoryPojo get(int id) throws ApiException {
+    public InventoryPojo get(Integer id) throws ApiException {
         return dao.select(id);
     }
 
@@ -35,9 +30,7 @@ public class InventoryService {
 
     @Transactional(rollbackOn  = ApiException.class)
     public InventoryPojo update(String barcode, InventoryPojo p) throws ApiException {
-        System.out.println("1. Inventory Service Working!!");
         InventoryPojo pojo = getCheck(barcode);
-        System.out.println("2. Inventory Service Working!!");
         pojo.setInventory(p.getInventory());
         return pojo;
     }

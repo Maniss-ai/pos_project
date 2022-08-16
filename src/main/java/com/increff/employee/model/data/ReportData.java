@@ -7,5 +7,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ReportData extends ReportForm {
-    private int id;
+    private Integer id;
 }

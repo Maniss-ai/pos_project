@@ -19,13 +19,8 @@ public class BrandService {
         return dao.insert(p);
     }
 
-    @Transactional
-    public void delete(int id) throws ApiException {
-        dao.delete(id);
-    }
-
     @Transactional(rollbackOn = ApiException.class)
-    public BrandPojo get(int id) throws ApiException {
+    public BrandPojo get(Integer id) throws ApiException {
         try {
             return getCheck(id);
         }
@@ -40,7 +35,7 @@ public class BrandService {
     }
 
     @Transactional(rollbackOn  = ApiException.class)
-    public BrandPojo update(int id, BrandPojo p) throws ApiException {
+    public BrandPojo update(Integer id, BrandPojo p) throws ApiException {
         BrandPojo brandPojo = getCheck(id);
         brandPojo.setCategory(p.getCategory());
         brandPojo.setBrand(p.getBrand());
@@ -48,7 +43,7 @@ public class BrandService {
     }
 
     @Transactional
-    public BrandPojo getCheck(int id) throws ApiException {
+    public BrandPojo getCheck(Integer id) throws ApiException {
         BrandPojo p = dao.select(id);
         if (p == null) {
             throw new ApiException("Brand " + get(id).getBrand() + " does not exit");

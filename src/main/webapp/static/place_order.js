@@ -112,21 +112,6 @@ function getBarcodePlaceOrder(index, data) {
 	});
 }
 
-
-function deletePlaceOrder(id) {
-	var url = getPlaceOrderUrl() + "/" + id;
-
-	$.ajax({
-	   url: url,
-	   type: 'DELETE',
-	   success: function(data) {
-	   		console.log("place order deleted");
-	   		getPlaceOrderList();     //...
-	   },
-	   error: handleAjaxErrorPlaceOrder
-	});
-}
-
 function getBarcodeList(event) {
 	var url = getProductUrl();
 	$.ajax({
@@ -180,8 +165,7 @@ function displayPlaceOrderList(data) {
 	var value_count = 1;
 	for(var i in data) {
 		var e = data[i];
-		var buttonHtml = '<button class="btn btn-primary" onclick="deletePlaceOrder(' + e.id + ')">Delete</button>'
-		buttonHtml += ' <button class="btn btn-primary" onclick="displayEditPlaceOrder(' + e.id + ')">Edit</button>'
+		var buttonHtml = ' <button class="btn btn-primary" onclick="displayEditPlaceOrder(' + e.id + ')">Edit</button>'
 		var row = '<tr>'
 			+ '<td>' + value_count++ + '</td>'
 			+ '<td>' + e.product_name + '</td>'

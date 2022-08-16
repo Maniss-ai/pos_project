@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OrderItemUpdateForm {
-    private int quantity;
+    private Integer quantity;
     private Double selling_price;
 }

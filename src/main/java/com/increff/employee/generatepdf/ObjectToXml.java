@@ -23,7 +23,7 @@ public class ObjectToXml {
         ArrayList<OrderInvoicePojo> orderInvoicePojoList = new ArrayList<>();
 
         Double total_amount = 0.0;
-        int number = 1;
+        Integer number = 1;
         for(OrderItemData placeOrderData : placeOrderDataList) {
             OrderInvoicePojo orderInvoicePojo = new OrderInvoicePojo();
 
@@ -50,9 +50,6 @@ public class ObjectToXml {
         marshallerObj.marshal(orderInvoice, stringWriter);
 
         String xmlContent = stringWriter.toString();
-        System.out.println("\n\n\n :::::DATA:::::DATA:::::DATA:::::\n\n\n");
-        System.out.println(xmlContent);
-        System.out.println("\n\n\n :::::DATA:::::DATA:::::DATA:::::\n\n\n");
 
         marshallerObj.marshal(orderInvoice, Files.newOutputStream(Paths.get("src/main/resources/xml/invoice.xml")));
         GenerateInvoice.convertToPDF();

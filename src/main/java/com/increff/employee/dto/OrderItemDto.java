@@ -52,8 +52,8 @@ public class OrderItemDto {
         DtoHelper.normalizeOrderItem(pojo);
 
         // get inventory_id using barcode_id match ....
-        int inventory_id = getInventoryIdMatchWithBarcode(form.getBarcode());
-        int inventory_items = inventoryService.get(inventory_id).getInventory();
+        Integer inventory_id = getInventoryIdMatchWithBarcode(form.getBarcode());
+        Integer inventory_items = inventoryService.get(inventory_id).getInventory();
 
         // check if there exists enough products in inventory to place order ....
         if(inventory_items < form.getQuantity()) {
@@ -73,16 +73,12 @@ public class OrderItemDto {
         }
     }
 
-    public void delete(int id) throws ApiException {
-        orderItemService.delete(id);
-    }
-
-    public OrderItemData get(int id) throws ApiException {
+    public OrderItemData get(Integer id) throws ApiException {
         OrderItemPojo pojo = orderItemService.get(id);
         return DtoHelper.convertPojoToDataOrderItem(pojo);
     }
 
-    public List<OrderItemData> getSingleOrder(int order_id) {
+    public List<OrderItemData> getSingleOrder(Integer order_id) {
         List<OrderItemPojo> pojoList = orderItemService.getSingleOrder(order_id);
         List<OrderItemData> dataList = new ArrayList<>();
         for(OrderItemPojo pojo : pojoList) {
@@ -120,7 +116,7 @@ public class OrderItemDto {
         orderPojo.setBill_amount(total_bill_amount);
 
         orderItemService.submit(orderPojo);
-        int order_id = orderPojo.getOrder_id();
+        Integer order_id = orderPojo.getOrder_id();
 
         // add order_id and update items ....
         for (OrderItemForm form : orderFormList) {
@@ -129,7 +125,7 @@ public class OrderItemDto {
             orderItemService.updateOrderId(orderItemPojo.getBarcode(), orderItemPojo);
 
             // update inventory ....
-            int current_inventory = inventoryService.getCheck(orderItemPojo.getBarcode()).getInventory();
+            Integer current_inventory = inventoryService.getCheck(orderItemPojo.getBarcode()).getInventory();
             current_inventory -= orderItemPojo.getQuantity();
 
             InventoryPojo inventoryPojo = new InventoryPojo();
@@ -139,14 +135,14 @@ public class OrderItemDto {
         }
     }
 
-    public void update(int place_order_id, OrderItemUpdateForm form) throws ApiException {
+    public void update(Integer place_order_id, OrderItemUpdateForm form) throws ApiException {
         Checks.nullCheckForUpdateOrderItem(form);
         String barcode = get(place_order_id).getBarcode();
         OrderItemPojo pojo = DtoHelper.convertFormToPojoForUpdateOrderItem(form, 0, barcode);
 
         // get inventory_id using barcode_id match ....
-        int inventory_id = getInventoryIdMatchWithBarcode(barcode);
-        int inventory_items = inventoryService.get(inventory_id).getInventory();
+        Integer inventory_id = getInventoryIdMatchWithBarcode(barcode);
+        Integer inventory_items = inventoryService.get(inventory_id).getInventory();
 
         if(inventory_items < form.getQuantity()) {
             throw new ApiException("There's only " + inventory_items + " items available in the Inventory");
@@ -159,7 +155,7 @@ public class OrderItemDto {
         }
     }
 
-    public void generatePdfForOrder(HttpServletResponse response, int orderId) throws Exception {
+    public void generatePdfForOrder(HttpServletResponse response, Integer orderId) throws Exception {
         List<OrderItemData> placeOrderDataList = getSingleOrder(orderId);
         OrderPojo orderPojo = orderDto.getOrder(orderId);
         ObjectToXml.generateXmlString(placeOrderDataList, orderPojo);
@@ -198,8 +194,8 @@ public class OrderItemDto {
         }
     }
 
-    private int getInventoryIdMatchWithBarcode(String barcode) throws ApiException {
-        int inventory_id = -1;
+    private Integer getInventoryIdMatchWithBarcode(String barcode) throws ApiException {
+        Integer inventory_id = -1;
         List<InventoryPojo> list = inventoryService.getAll();
         for(InventoryPojo inventoryPojo : list) {
             if(Objects.equals(inventoryPojo.getBarcode(), barcode)) {
@@ -216,8 +212,8 @@ public class OrderItemDto {
         }
     }
 
-    private int getProductIdMatchWithBarcode(OrderItemPojo pojo) throws ApiException {
-        int product_id = -1;
+    private Integer getProductIdMatchWithBarcode(OrderItemPojo pojo) throws ApiException {
+        Integer product_id = -1;
         List<ProductPojo> list = productService.getAll();
         for(ProductPojo productPojo : list) {
             if(Objects.equals(productPojo.getBarcode(), pojo.getBarcode())) {

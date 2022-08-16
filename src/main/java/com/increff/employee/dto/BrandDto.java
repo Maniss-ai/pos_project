@@ -42,7 +42,7 @@ public class BrandDto {
     public List<BrandData> bulkAddBrand(List<BrandForm> formList) throws ApiException {
         List<BrandData> dataList = new ArrayList<>();
         StringBuilder error = new StringBuilder();
-        int row = 1;
+        Integer row = 1;
 
         for(BrandForm brandForm : formList) {
             try {
@@ -62,28 +62,12 @@ public class BrandDto {
         return dataList;
     }
 
-    public void delete(int id) throws ApiException {
-        try {
-            brandService.getCheck(id);
-        }
-        catch (Exception e) {
-            throw new ApiException("Unable to delete, ID doesn't exists");
-        }
-
-        if(!idExistsInProductPojo(id)) {
-            brandService.delete(id);
-        }
-        else {
-            throw new ApiException("Unable to delete, Id exists in product table");
-        }
-    }
-
     // TODO
-    private boolean idExistsInProductPojo(int id) {
+    private boolean idExistsInProductPojo(Integer id) {
         return false;
     }
 
-    public BrandData get(int id) throws ApiException {
+    public BrandData get(Integer id) throws ApiException {
         BrandPojo pojo = brandService.get(id);
         return DtoHelper.convertPojoToDataBrand(pojo);
     }
@@ -97,7 +81,7 @@ public class BrandDto {
         return dataList;
     }
 
-    public BrandData update(int id, BrandForm form) throws ApiException {
+    public BrandData update(Integer id, BrandForm form) throws ApiException {
         Checks.nullCheckBrand(form);
         BrandPojo pojo = DtoHelper.convertFormToPojoBrand(form);
         DtoHelper.normalizeBrand(pojo);

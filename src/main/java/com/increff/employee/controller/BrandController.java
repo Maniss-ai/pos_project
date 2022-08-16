@@ -30,15 +30,9 @@ public class BrandController {
         return dto.bulkAddBrand(brandFormList);
     }
 
-    @ApiOperation(value = "Deletes an Brand")
-    @RequestMapping(path = "/api/brand/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable int id) throws ApiException {
-        dto.delete(id);
-    }
-
     @ApiOperation(value = "Gets a Brand by ID")
     @RequestMapping(path = "/api/brand/{id}", method = RequestMethod.GET)
-    public BrandData get(@PathVariable int id) throws ApiException {
+    public BrandData get(@PathVariable Integer id) throws ApiException {
         return dto.get(id);
     }
 
@@ -50,7 +44,7 @@ public class BrandController {
 
     @ApiOperation(value = "Update a Brand")
     @RequestMapping(path = "/api/brand/{id}", method = RequestMethod.PUT)
-    public BrandData update(@PathVariable int id, @RequestBody BrandForm form) throws ApiException {
+    public BrandData update(@PathVariable Integer id, @RequestBody BrandForm form) throws ApiException {
         return dto.update(id, form);
     }
 

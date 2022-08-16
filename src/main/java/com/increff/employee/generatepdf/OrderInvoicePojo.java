@@ -1,9 +1,9 @@
 package com.increff.employee.generatepdf;
 
 public class OrderInvoicePojo {
-    int SNo;
+    Integer SNo;
     String barcode;
-    int quantity;
+    Integer quantity;
     Double selling_price;
     Double bill_amount;
 
@@ -11,7 +11,7 @@ public class OrderInvoicePojo {
 
     }
 
-    public OrderInvoicePojo(int SNo, String barcode, int quantity, Double selling_price, Double bill_amount) {
+    public OrderInvoicePojo(Integer SNo, String barcode, Integer quantity, Double selling_price, Double bill_amount) {
         this.SNo = SNo;
         this.barcode = barcode;
         this.quantity = quantity;
@@ -19,11 +19,11 @@ public class OrderInvoicePojo {
         this.bill_amount = bill_amount;
     }
 
-    public int getSNo() {
+    public Integer getSNo() {
         return SNo;
     }
 
-    public void setSNo(int SNo) {
+    public void setSNo(Integer SNo) {
         this.SNo = SNo;
     }
 
@@ -35,11 +35,11 @@ public class OrderInvoicePojo {
         this.barcode = barcode;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

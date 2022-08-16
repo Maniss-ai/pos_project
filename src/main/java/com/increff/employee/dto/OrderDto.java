@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class OrderDto {
@@ -41,7 +42,7 @@ public class OrderDto {
         List<OrderPojo> pojoList;
         List<OrderData> dataList = new ArrayList<>();
 
-        if(form.getOrder_id() != 0) {
+        if(form.getOrder_id() != null && form.getOrder_id() != 0) {
             checkOrderIdExists(form.getOrder_id());
             pojoList = orderService.getSelectedOrdersWithId(form.getOrder_id());
         }
@@ -67,10 +68,10 @@ public class OrderDto {
         return dataList;
     }
 
-    private void checkOrderIdExists(int order_id) throws ApiException {
+    private void checkOrderIdExists(Integer order_id) throws ApiException {
         List<OrderPojo> orderPojoList = orderService.getSelectedOrdersWithId(order_id);
         for(OrderPojo orderPojo : orderPojoList) {
-            if(orderPojo.getOrder_id() == order_id) {
+            if(Objects.equals(orderPojo.getOrder_id(), order_id)) {
                return;
             }
         }
@@ -78,7 +79,7 @@ public class OrderDto {
         throw new ApiException("Order Id doesn't exists");
     }
 
-    public List<OrderItemData> getSingleOrder(int order_id) {
+    public List<OrderItemData> getSingleOrder(Integer order_id) {
         List<OrderItemPojo> pojoList = orderItemService.getSingleOrder(order_id);
         List<OrderItemData> dataList = new ArrayList<>();
         for(OrderItemPojo pojo : pojoList) {
@@ -88,7 +89,7 @@ public class OrderDto {
     }
 
 
-    public void generatePdfForOrder(HttpServletResponse response, int orderId) throws Exception {
+    public void generatePdfForOrder(HttpServletResponse response, Integer orderId) throws Exception {
         List<OrderItemData> placeOrderDataList = getSingleOrder(orderId);
         OrderPojo orderPojo = getOrder(orderId);
         ObjectToXml.generateXmlString(placeOrderDataList, orderPojo);
@@ -104,7 +105,7 @@ public class OrderDto {
             FileCopyUtils.copy(inputStream, response.getOutputStream());
         }
     }
-    public OrderPojo getOrder(int order_id) {
+    public OrderPojo getOrder(Integer order_id) {
         return orderService.getOrder(order_id);
     }
 }

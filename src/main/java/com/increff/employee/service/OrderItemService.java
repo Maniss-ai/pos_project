@@ -19,18 +19,13 @@ public class OrderItemService {
         return dao.insert(p);
     }
 
-    @Transactional
-    public void delete(int id) {
-        dao.delete(id);
-    }
-
     @Transactional(rollbackOn = ApiException.class)
-    public OrderItemPojo get(int id) throws ApiException {
+    public OrderItemPojo get(Integer id) throws ApiException {
         return dao.select(id);
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public List<OrderItemPojo> getSingleOrder(int order_id) {
+    public List<OrderItemPojo> getSingleOrder(Integer order_id) {
         return dao.selectSingleOrder(order_id);
     }
 
@@ -40,7 +35,7 @@ public class OrderItemService {
     }
 
     @Transactional(rollbackOn  = ApiException.class)
-    public void update(int place_order_id, OrderItemPojo p) throws ApiException {
+    public void update(Integer place_order_id, OrderItemPojo p) throws ApiException {
         OrderItemPojo pojo = getCheck(place_order_id);
         pojo.setOrder_id(p.getOrder_id());
         pojo.setBarcode(p.getBarcode());
@@ -50,7 +45,6 @@ public class OrderItemService {
 
     @Transactional(rollbackOn  = ApiException.class)
     public void updateOrderId(String barcode, OrderItemPojo p) throws ApiException {
-        System.out.println(barcode + " UPDATE ORDER ID SERVICE");
         OrderItemPojo pojo = getCheckOrderId(barcode);
         pojo.setOrder_id(p.getOrder_id());
         pojo.setBarcode(p.getBarcode());
@@ -67,7 +61,7 @@ public class OrderItemService {
     }
 
     @Transactional
-    public OrderItemPojo getCheck(int place_order_id) throws ApiException {
+    public OrderItemPojo getCheck(Integer place_order_id) throws ApiException {
         OrderItemPojo p = dao.select(place_order_id);
         if (p == null) {
             throw new ApiException("Product with id: " + place_order_id + " does not exit");
