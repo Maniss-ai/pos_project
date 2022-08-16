@@ -32,7 +32,7 @@ public class BrandDtoTest extends AbstractUnitTest {
     @Test(expected = ApiException.class)
     public void testAddDuplicate() throws ApiException {
         BrandForm brandForm = new BrandForm();
-        brandForm.setBrand("PuMa    ");
+        brandForm.setBrand("  PuMa    ");
         brandForm.setCategory("    SHOES    ");
 
         brandDto.add(brandForm);

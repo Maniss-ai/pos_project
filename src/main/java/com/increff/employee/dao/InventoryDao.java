@@ -31,10 +31,15 @@ public class InventoryDao extends AbstractDao {
         return p;
     }
 
-    public InventoryPojo select(Integer id) {
-        TypedQuery<InventoryPojo> query = getQuery(select_id, InventoryPojo.class);
-        query.setParameter("id", id);
-        return query.getSingleResult();
+    public InventoryPojo select(Integer id) throws ApiException {
+        try {
+            TypedQuery<InventoryPojo> query = getQuery(select_id, InventoryPojo.class);
+            query.setParameter("id", id);
+            return query.getSingleResult();
+        }
+        catch (Exception e) {
+            throw new ApiException("Id doesn't exists");
+        }
     }
 
     public InventoryPojo select1(Integer barcode_id) {
