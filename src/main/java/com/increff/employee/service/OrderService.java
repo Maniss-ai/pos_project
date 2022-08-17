@@ -15,21 +15,21 @@ public class OrderService {
     private OrderDao dao;
 
     @Transactional
-    public List<OrderPojo> getSelectedOrdersWithoutId(LocalDate start_date, LocalDate end_date) {
-        return dao.selectAllWithoutId(start_date, end_date);
+    public List<OrderPojo> getSelectedOrdersWithoutId(LocalDate startDate, LocalDate endDate) {
+        return dao.selectAllWithoutId(startDate, endDate);
     }
 
     @Transactional
-    public List<OrderPojo> getSelectedOrdersWithIdAndDate(LocalDate start_date, LocalDate end_date, Integer order_id) {
-        return dao.selectAllWithIdAndDate(start_date, end_date, order_id);
+    public List<OrderPojo> getSelectedOrdersWithIdAndDate(LocalDate startDate, LocalDate endDate, Integer orderId) {
+        return dao.selectAllWithIdAndDate(startDate, endDate, orderId);
     }
     @Transactional
-    public List<OrderPojo> getSelectedOrdersWithId(Integer order_id) {
-        return dao.selectAllWithId(order_id);
+    public List<OrderPojo> getSelectedOrdersWithId(Integer orderId) {
+        return dao.selectAllWithId(orderId);
     }
 
     @Transactional
-    public OrderPojo getOrder(Integer order_id) {
-        return dao.getOrder(order_id);
+    public OrderPojo getOrder(Integer orderId) {
+        return dao.getOrder(orderId);
     }
 }

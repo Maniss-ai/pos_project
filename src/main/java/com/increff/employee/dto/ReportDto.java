@@ -35,9 +35,9 @@ public class ReportDto {
     private OrderService orderService;
 
     public StringBuilder getAllSales(ReportForm form) throws ApiException, ParseException {
-        if(form.getStart_date() != null && form.getEnd_date() != null && !form.getStart_date().isEmpty() && !form.getEnd_date().isEmpty()) {
+        if(form.getStartDate() != null && form.getEndDate() != null && !form.getStartDate().isEmpty() && !form.getEndDate().isEmpty()) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            if(sdf.parse(form.getStart_date()).compareTo(sdf.parse(form.getEnd_date())) > 0) {
+            if(sdf.parse(form.getStartDate()).compareTo(sdf.parse(form.getEndDate())) > 0) {
                 throw new ApiException("Start Date should come before End Date");
             }
 
@@ -56,26 +56,26 @@ public class ReportDto {
             List<ProductPojo> productPojoList;
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate start_date = LocalDate.parse(form.getStart_date(), formatter);
-            LocalDate end_date = LocalDate.parse(form.getEnd_date(), formatter);
+            LocalDate startDate = LocalDate.parse(form.getStartDate(), formatter);
+            LocalDate endDate = LocalDate.parse(form.getEndDate(), formatter);
 
             // USING BRAND and CATEGORY + DATE
             if(!form.getBrand().isEmpty() && !form.getCategory().isEmpty() && form.getBrand() != null && form.getCategory() != null) {
                 salesData.append(form.getBrand()).append("\t").append(form.getCategory()).append("\t");
                 productPojoList = productService.getProductWithBrandCategory(form);
-                getReportWithBrandCategory(start_date, end_date, salesData, productPojoList);
+                getReportWithBrandCategory(startDate, endDate, salesData, productPojoList);
             }
 
             // USING BRAND ONLY + DATE
             else if(!form.getBrand().isEmpty() && form.getBrand() != null) {
                 productPojoList = productService.getProductWithBrand(form.getBrand());
-                getReportWithBrand(start_date, end_date, salesData, productPojoList, form.getBrand());
+                getReportWithBrand(startDate, endDate, salesData, productPojoList, form.getBrand());
             }
 
             // USING CATEGORY ONLY + DATE
             else if(!form.getCategory().isEmpty() && form.getCategory() != null) {
                 productPojoList = productService.getProductWithCategory(form);
-                getReportWithCategory(start_date, end_date, salesData, productPojoList, form);
+                getReportWithCategory(startDate, endDate, salesData, productPojoList, form);
             }
 
             // USING DATE ONLY
@@ -89,7 +89,7 @@ public class ReportDto {
 
                 for (String brand : brandSet) {
                     productPojoList = productService.getProductWithBrand(brand);
-                    getReportWithBrand(start_date, end_date, salesData, productPojoList, brand);
+                    getReportWithBrand(startDate, endDate, salesData, productPojoList, brand);
                 }
             }
 
@@ -136,7 +136,7 @@ public class ReportDto {
         return dataListString;
     }
 
-    private void getReportWithBrandCategory(LocalDate start_date, LocalDate end_date, StringBuilder salesData, List<ProductPojo> productPojoList) throws ApiException {
+    private void getReportWithBrandCategory(LocalDate startDate, LocalDate endDate, StringBuilder salesData, List<ProductPojo> productPojoList) throws ApiException {
         // GET PlaceOrderPojo using Barcode and Add to DATA LIST .... ....
         List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
         for (ProductPojo pojo : productPojoList) {
@@ -144,15 +144,14 @@ public class ReportDto {
         }
 
         // Get Order Ids
-        List<OrderPojo> orderPojoList = orderService.getSelectedOrdersWithoutId(start_date, end_date);
+        List<OrderPojo> orderPojoList = orderService.getSelectedOrdersWithoutId(startDate, endDate);
 
         // Match Order Ids according to the given Time Range ....
         for(Integer i = 0; i < orderItemPojoList.size(); i++) {
             boolean equalIds = false;
             for(OrderPojo orderPojo : orderPojoList) {
-                if(orderItemPojoList.get(i).getOrder_id() == orderPojo.getOrder_id()) {
+                if(Objects.equals(orderItemPojoList.get(i).getOrderId(), orderPojo.getOrderId())) {
                     equalIds = true;
-                    System.out.println(orderPojo.getTime());
                     break;
                 }
             }
@@ -167,26 +166,26 @@ public class ReportDto {
         Integer totalQuantity = 0;
         for(OrderItemPojo pojo : orderItemPojoList) {
             totalQuantity += pojo.getQuantity();
-            totalRevenue += pojo.getQuantity() * pojo.getSelling_price();
+            totalRevenue += pojo.getQuantity() * pojo.getSellingPrice();
         }
 
         salesData.append(totalQuantity).append("\t").append(Precision.round(totalRevenue, 2));
     }
 
-    private void getReportWithBrand(LocalDate start_date, LocalDate end_date, StringBuilder salesData, List<ProductPojo> productPojoList, String brand) throws ApiException {
+    private void getReportWithBrand(LocalDate startDate, LocalDate endDate, StringBuilder salesData, List<ProductPojo> productPojoList, String brand) throws ApiException {
         List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
         for (ProductPojo pojo : productPojoList) {
             orderItemPojoList.addAll(orderItemService.getCheckWithBarcode(pojo.getBarcode()));
         }
 
         // Get Order Ids
-        List<OrderPojo> orderPojoList = orderService.getSelectedOrdersWithoutId(start_date, end_date);
+        List<OrderPojo> orderPojoList = orderService.getSelectedOrdersWithoutId(startDate, endDate);
 
         // Match Order Ids according to the given Time Range ....
         for(Integer i = 0; i < orderItemPojoList.size(); i++) {
             boolean equalIds = false;
             for(OrderPojo orderPojo : orderPojoList) {
-                if(Objects.equals(orderItemPojoList.get(i).getOrder_id(), orderPojo.getOrder_id())) {
+                if(Objects.equals(orderItemPojoList.get(i).getOrderId(), orderPojo.getOrderId())) {
                     equalIds = true;
                     break;
                 }
@@ -204,7 +203,7 @@ public class ReportDto {
 
         for (OrderItemPojo orderItemPojo : orderItemPojoList) {
             totalQuantity = orderItemPojo.getQuantity();
-            totalRevenue = orderItemPojo.getQuantity() * orderItemPojo.getSelling_price();
+            totalRevenue = orderItemPojo.getQuantity() * orderItemPojo.getSellingPrice();
 
             if (revenueQuantityMap.containsKey(productService.getWithBarcode(orderItemPojo.getBarcode()).getCategory())) {
                 totalQuantity += revenueQuantityMap.get(productService.getWithBarcode(orderItemPojo.getBarcode()).getCategory()).left;
@@ -231,20 +230,20 @@ public class ReportDto {
         }
     }
 
-    private void getReportWithCategory(LocalDate start_date, LocalDate end_date, StringBuilder salesData, List<ProductPojo> productPojoList, ReportForm form) throws ApiException {
+    private void getReportWithCategory(LocalDate startDate, LocalDate endDate, StringBuilder salesData, List<ProductPojo> productPojoList, ReportForm form) throws ApiException {
         List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
         for (ProductPojo pojo : productPojoList) {
             orderItemPojoList.addAll(orderItemService.getCheckWithBarcode(pojo.getBarcode()));
         }
 
         // Get Order Ids
-        List<OrderPojo> orderPojoList = orderService.getSelectedOrdersWithoutId(start_date, end_date);
+        List<OrderPojo> orderPojoList = orderService.getSelectedOrdersWithoutId(startDate, endDate);
 
         // Match Order Ids according to the given Time Range ....
         for(Integer i = 0; i < orderItemPojoList.size(); i++) {
             boolean equalIds = false;
             for(OrderPojo orderPojo : orderPojoList) {
-                if(orderItemPojoList.get(i).getOrder_id() == orderPojo.getOrder_id()) {
+                if(orderItemPojoList.get(i).getOrderId() == orderPojo.getOrderId()) {
                     equalIds = true;
                     break;
                 }
@@ -262,7 +261,7 @@ public class ReportDto {
 
         for (OrderItemPojo orderItemPojo : orderItemPojoList) {
             totalQuantity = orderItemPojo.getQuantity();
-            totalRevenue = orderItemPojo.getQuantity() * orderItemPojo.getSelling_price();
+            totalRevenue = orderItemPojo.getQuantity() * orderItemPojo.getSellingPrice();
 
             if (revenueQuantityMap.containsKey(productService.getWithBarcode(orderItemPojo.getBarcode()).getBrand())) {
                 totalQuantity += revenueQuantityMap.get(productService.getWithBarcode(orderItemPojo.getBarcode()).getBrand()).left;

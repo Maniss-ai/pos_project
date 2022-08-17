@@ -42,24 +42,24 @@ public class OrderDto {
         List<OrderPojo> pojoList;
         List<OrderData> dataList = new ArrayList<>();
 
-        if(form.getOrder_id() != null && form.getOrder_id() != 0) {
-            checkOrderIdExists(form.getOrder_id());
-            pojoList = orderService.getSelectedOrdersWithId(form.getOrder_id());
+        if(form.getOrderId() != null && form.getOrderId() != 0) {
+            checkOrderIdExists(form.getOrderId());
+            pojoList = orderService.getSelectedOrdersWithId(form.getOrderId());
         }
-        else if(form.getStart_date() != null && form.getEnd_date() != null && !form.getStart_date().isEmpty() && !form.getEnd_date().isEmpty()) {
+        else if(form.getStartDate() != null && form.getEndDate() != null && !form.getStartDate().isEmpty() && !form.getEndDate().isEmpty()) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            if(sdf.parse(form.getStart_date()).compareTo(sdf.parse(form.getEnd_date())) > 0) {
+            if(sdf.parse(form.getStartDate()).compareTo(sdf.parse(form.getEndDate())) > 0) {
                 throw new ApiException("Start Date should come before End Date");
             }
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate start_date = LocalDate.parse(form.getStart_date(), formatter);
-            LocalDate end_date = LocalDate.parse(form.getEnd_date(), formatter);
+            LocalDate startDate = LocalDate.parse(form.getStartDate(), formatter);
+            LocalDate endDate = LocalDate.parse(form.getEndDate(), formatter);
 
-            pojoList = orderService.getSelectedOrdersWithoutId(start_date, end_date);
+            pojoList = orderService.getSelectedOrdersWithoutId(startDate, endDate);
         }
         else {
-            throw new ApiException("Please provide either Order_Id or Date range");
+            throw new ApiException("Please provide either OrderId or Date range");
         }
 
         for (OrderPojo pojo : pojoList) {
@@ -68,19 +68,8 @@ public class OrderDto {
         return dataList;
     }
 
-    private void checkOrderIdExists(Integer order_id) throws ApiException {
-        List<OrderPojo> orderPojoList = orderService.getSelectedOrdersWithId(order_id);
-        for(OrderPojo orderPojo : orderPojoList) {
-            if(Objects.equals(orderPojo.getOrder_id(), order_id)) {
-               return;
-            }
-        }
-
-        throw new ApiException("Order Id doesn't exists");
-    }
-
-    public List<OrderItemData> getSingleOrder(Integer order_id) {
-        List<OrderItemPojo> pojoList = orderItemService.getSingleOrder(order_id);
+    public List<OrderItemData> getSingleOrder(Integer orderId) {
+        List<OrderItemPojo> pojoList = orderItemService.getSingleOrder(orderId);
         List<OrderItemData> dataList = new ArrayList<>();
         for(OrderItemPojo pojo : pojoList) {
             dataList.add(DtoHelper.convertPojoToDataOrderItem(pojo));
@@ -88,12 +77,10 @@ public class OrderDto {
         return dataList;
     }
 
-
     public void generatePdfForOrder(HttpServletResponse response, Integer orderId) throws Exception {
         List<OrderItemData> placeOrderDataList = getSingleOrder(orderId);
         OrderPojo orderPojo = getOrder(orderId);
         ObjectToXml.generateXmlString(placeOrderDataList, orderPojo);
-
 
         File file = new File("src/main/resources/pdf/invoice.pdf");
 
@@ -105,7 +92,18 @@ public class OrderDto {
             FileCopyUtils.copy(inputStream, response.getOutputStream());
         }
     }
-    public OrderPojo getOrder(Integer order_id) {
-        return orderService.getOrder(order_id);
+    public OrderPojo getOrder(Integer orderId) {
+        return orderService.getOrder(orderId);
+    }
+
+    private void checkOrderIdExists(Integer orderId) throws ApiException {
+        List<OrderPojo> orderPojoList = orderService.getSelectedOrdersWithId(orderId);
+        for(OrderPojo orderPojo : orderPojoList) {
+            if(Objects.equals(orderPojo.getOrderId(), orderId)) {
+               return;
+            }
+        }
+
+        throw new ApiException("Order Id doesn't exists");
     }
 }

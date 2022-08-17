@@ -51,6 +51,7 @@ public class GenerateInvoice {
         }
     }
 
+    // todo check uses
     public static void generatePdf(HttpServletResponse response) {
         try {
             FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());

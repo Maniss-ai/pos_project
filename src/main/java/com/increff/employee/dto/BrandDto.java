@@ -62,11 +62,6 @@ public class BrandDto {
         return dataList;
     }
 
-    // TODO
-    private boolean idExistsInProductPojo(Integer id) {
-        return false;
-    }
-
     public BrandData get(Integer id) throws ApiException {
         BrandPojo pojo = brandService.get(id);
         return DtoHelper.convertPojoToDataBrand(pojo);

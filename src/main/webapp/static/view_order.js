@@ -10,7 +10,7 @@ function getSubmitOrderUrl() {
 
 function getPlaceOrderUrl() {
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	return baseUrl + "/api/order/place-order";	
+	return baseUrl + "/api/order/order-item";	
 }
 
 // BUTTON ACTIONS
@@ -52,20 +52,15 @@ function displaySelectedOrders(data) {
 			+ '<td>' + value_count++ + '</td>'
 			+ '<td>' + e.id + '</td>'
 			+ '<td>' + e.time + '</td>'
-			+ '<td>'  + e.bill_amount.toFixed(2) + '</td>'
+			+ '<td>'  + e.billAmount.toFixed(2) + '</td>'
 			+ '<td>' + buttonHtml + '</td>'
 			+ '</tr>';
     	tbody.append(row);
 	}
 }
 
-/**********************************  TODO  **********************************/
-/**********************************  TODO  **********************************/
-/**********************************  TODO  **********************************/
-/**********************************  TODO  **********************************/
-
 function generateInvoice(order_id) {
-	var url = getPlaceOrderUrl() + "/invoice/" + order_id;
+	var url = getViewOrderUrl() + "/invoice/" + order_id;
 
 	$.ajax({
 	   url: url,
@@ -96,7 +91,7 @@ function generateInvoice(order_id) {
 }
 
 function viewSelectedOrders(order_id) {
-	var url = getPlaceOrderUrl() + '/placed/' + order_id;
+	var url = getViewOrderUrl() + '/placed/' + order_id;
 	
 	$.ajax({
 		url: url,
@@ -120,20 +115,14 @@ function displaySinglePlacedOrder(data) {
 			+ '<td>' + value_count++ + '</td>'
 			+ '<td>' + e.barcode + '</td>'
 			+ '<td>' + e.quantity + '</td>'
-			+ '<td>'  + e.selling_price + '</td>'
-			+ '<td>'  + e.quantity * e.selling_price + '</td>'
+			+ '<td>'  + e.sellingPrice + '</td>'
+			+ '<td>'  + (e.quantity * e.sellingPrice).toFixed(2) + '</td>'
 			+ '</tr>';
     	tbody.append(row);
 	}
 
 	$('#edit-view_order-modal').modal('toggle');
 }
-
-/**********************************  TODO  **********************************/
-/**********************************  TODO  **********************************/
-/**********************************  TODO  **********************************/
-/**********************************  TODO  **********************************/
-
 
 //HELPER METHOD
 function toJson($form) {

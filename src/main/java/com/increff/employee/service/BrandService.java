@@ -44,16 +44,26 @@ public class BrandService {
 
     @Transactional
     public BrandPojo getCheck(Integer id) throws ApiException {
-        BrandPojo p = dao.select(id);
-        if (p == null) {
-            throw new ApiException("Brand " + get(id).getBrand() + " does not exit");
+        try {
+            BrandPojo p = dao.select(id);
+            if (p == null) {
+                throw new ApiException("Brand " + get(id).getBrand() + " does not exit");
+            }
+            return p;
         }
-        return p;
+        catch (Exception e) {
+            throw new ApiException("Id doesn't exists");
+        }
     }
 
     @Transactional
     public BrandPojo getBrandCategory(ProductPojo pojo) throws ApiException {
-        return dao.getBrandCategory(pojo);
+        try {
+            return dao.getBrandCategory(pojo);
+        }
+        catch (Exception e) {
+            throw new ApiException("Brand Category doesn't exists");
+        }
     }
 
 }

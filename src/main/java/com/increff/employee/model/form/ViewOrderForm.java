@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ViewOrderForm {
-    private Integer order_id;
-    private String start_date;
-    private String end_date;
+    private Integer orderId;
+    private String startDate;
+    private String endDate;
 }

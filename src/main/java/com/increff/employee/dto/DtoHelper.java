@@ -101,47 +101,47 @@ public class DtoHelper {
     // OrderItem Conversions
     protected static OrderItemData convertPojoToDataOrderItem(OrderItemPojo pojo) {
         OrderItemData data = new OrderItemData();
-        data.setOrder_id(pojo.getOrder_id());
+        data.setOrderId(pojo.getOrderId());
         data.setBarcode(pojo.getBarcode());
         data.setQuantity(pojo.getQuantity());
-        data.setSelling_price(Precision.round(pojo.getSelling_price(), 2));
+        data.setSellingPrice(Precision.round(pojo.getSellingPrice(), 2));
         data.setId(pojo.getId());
         return data;
     }
 
-    protected static OrderItemPojo convertFormToPojoOrderItem(OrderItemForm form, Integer order_id) {
+    protected static OrderItemPojo convertFormToPojoOrderItem(OrderItemForm form, Integer orderId) {
         OrderItemPojo pojo = new OrderItemPojo();
-        pojo.setOrder_id(order_id);
+        pojo.setOrderId(orderId);
         pojo.setBarcode(form.getBarcode());
         pojo.setQuantity(form.getQuantity());
-        pojo.setSelling_price(Precision.round(form.getSelling_price(), 2));
+        pojo.setSellingPrice(Precision.round(form.getSellingPrice(), 2));
         return pojo;
     }
 
-    protected static OrderItemPojo convertFormToPojoForUpdateOrderItem(OrderItemUpdateForm form, Integer order_id, String barcode) {
+    protected static OrderItemPojo convertFormToPojoForUpdateOrderItem(OrderItemUpdateForm form, Integer orderId, String barcode) {
         OrderItemPojo pojo = new OrderItemPojo();
         pojo.setBarcode(barcode);
-        pojo.setOrder_id(order_id);
+        pojo.setOrderId(orderId);
         pojo.setQuantity(form.getQuantity());
-        pojo.setSelling_price(Precision.round(form.getSelling_price(), 2));
+        pojo.setSellingPrice(Precision.round(form.getSellingPrice(), 2));
         return pojo;
     }
 
     // Order Conversions
     protected static OrderData convertPojoToDataOrder(OrderPojo pojo) {
         OrderData data = new OrderData();
-        data.setId(pojo.getOrder_id());
+        data.setId(pojo.getOrderId());
         data.setTime(pojo.getTime().toString());
-        data.setBill_amount(Precision.round(pojo.getBill_amount(), 2));
+        data.setBillAmount(Precision.round(pojo.getBillAmount(), 2));
         return data;
     }
 
     protected static OrderItemPojo convertFormToPojoOrder(OrderItemForm form) {
         OrderItemPojo pojo = new OrderItemPojo();
-//        pojo.setOrder_id(form.getOrder_id());
+//        pojo.setOrderId(form.getOrderId());
         pojo.setBarcode(form.getBarcode());
         pojo.setQuantity(form.getQuantity());
-        pojo.setSelling_price(Precision.round(form.getSelling_price(), 2));
+        pojo.setSellingPrice(Precision.round(form.getSellingPrice(), 2));
         return pojo;
     }
 

@@ -125,7 +125,7 @@ function processDataInventory(){
 	var file = $('#inventoryFile')[0].files[0];
 
 	if(document.getElementById("inventoryFile").files.length == 0) {
-		alert("please select a TSV file.");
+		$.notify("Please select TSV file", "warn");
 		resetUploadDialogInventory();
 		return;
 	}

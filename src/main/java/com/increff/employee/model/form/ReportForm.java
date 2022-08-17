@@ -8,7 +8,7 @@ import lombok.Setter;
 public class ReportForm {
     private String brand;
     private String category;
-    private String start_date;
-    private String end_date;
+    private String startDate;
+    private String endDate;
 
 }

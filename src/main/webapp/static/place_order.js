@@ -1,6 +1,6 @@
 function getPlaceOrderUrl() {
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	return baseUrl + "/api/order/place-order";
+	return baseUrl + "/api/order/order-item";
 }
 
 function getSubmitOrderUrl() {
@@ -171,8 +171,8 @@ function displayPlaceOrderList(data) {
 			+ '<td>' + e.product_name + '</td>'
 			+ '<td>' + e.barcode + '</td>'
 			+ '<td>'  + e.quantity + '</td>'
-			+ '<td>'  + e.selling_price.toFixed(2) + '</td>'
-            + '<td>'  +(e.selling_price * e.quantity).toFixed(2) + '</td>'
+			+ '<td>'  + e.sellingPrice.toFixed(2) + '</td>'
+            + '<td>'  +(e.sellingPrice * e.quantity).toFixed(2) + '</td>'
 			+ '<td>' + buttonHtml + '</td>'
 			+ '</tr>';
     	tbody.append(row);
@@ -185,8 +185,6 @@ function displayEditPlaceOrder(id) {
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		console.log("EDIT: PLACE order data fetched");
-			console.log("DISPLAY EDIT PLACEORDER : " + data);
 	   		displayPlaceOrder(data);
 	   },
 	   error: handleAjaxErrorPlaceOrder
@@ -196,7 +194,7 @@ function displayEditPlaceOrder(id) {
 function displayPlaceOrder(data) {
 	$("#place_order-edit-form input[name=barcode]").val(data.barcode);
 	$("#place_order-edit-form input[name=quantity]").val(data.quantity);
-	$("#place_order-edit-form input[name=selling_price]").val(data.selling_price);
+	$("#place_order-edit-form input[name=sellingPrice]").val(data.sellingPrice);
 	$("#place_order-edit-form input[name=barcode]").val(data.barcode);
 	$("#place_order-edit-form input[name=id]").val(data.id);
 	$('#edit-place_order-modal').modal('toggle');

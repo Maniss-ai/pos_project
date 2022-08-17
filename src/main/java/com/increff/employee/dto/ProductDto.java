@@ -32,16 +32,16 @@ public class ProductDto {
         ProductPojo pojo = DtoHelper.convertFormToPojoProduct(form);
         DtoHelper.normalizeProduct(pojo);
         boolean unique = Checks.isUnique(pojo, getAll());
-        boolean brand_category_exists = brandService.getBrandCategory(pojo) != null;
+        boolean brandCategoryExists = brandService.getBrandCategory(pojo) != null;
 
-        if(unique && brand_category_exists) {
+        if(unique && brandCategoryExists) {
             return DtoHelper.convertPojoToDataProduct(productService.add(pojo));
         } else {
             if(!unique) {
                 throw new ApiException("Barcode should be unique");
             }
             else {
-                throw new ApiException("Brand-Category doesn't exists mann");
+                throw new ApiException("Brand-Category doesn't exists");
             }
         }
     }
@@ -68,10 +68,6 @@ public class ProductDto {
         }
 
         return dataList;
-    }
-
-    private boolean idExistsInProductPojo(Integer id) {
-        return false;
     }
 
     public ProductData getWithId(Integer id) throws ApiException {

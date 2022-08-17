@@ -4,19 +4,19 @@ public class OrderInvoicePojo {
     Integer SNo;
     String barcode;
     Integer quantity;
-    Double selling_price;
-    Double bill_amount;
+    Double sellingPrice;
+    Double billAmount;
 
     public OrderInvoicePojo() {
 
     }
 
-    public OrderInvoicePojo(Integer SNo, String barcode, Integer quantity, Double selling_price, Double bill_amount) {
+    public OrderInvoicePojo(Integer SNo, String barcode, Integer quantity, Double sellingPrice, Double billAmount) {
         this.SNo = SNo;
         this.barcode = barcode;
         this.quantity = quantity;
-        this.selling_price = selling_price;
-        this.bill_amount = bill_amount;
+        this.sellingPrice = sellingPrice;
+        this.billAmount = billAmount;
     }
 
     public Integer getSNo() {
@@ -43,19 +43,19 @@ public class OrderInvoicePojo {
         this.quantity = quantity;
     }
 
-    public Double getSelling_price() {
-        return selling_price;
+    public Double getSellingPrice() {
+        return sellingPrice;
     }
 
-    public void setSelling_price(Double selling_price) {
-        this.selling_price = selling_price;
+    public void setSellingPrice(Double sellingPrice) {
+        this.sellingPrice = sellingPrice;
     }
 
-    public Double getBill_amount() {
-        return bill_amount;
+    public Double getBillAmount() {
+        return billAmount;
     }
 
-    public void setBill_amount(Double bill_amount) {
-        this.bill_amount = bill_amount;
+    public void setBillAmount(Double billAmount) {
+        this.billAmount = billAmount;
     }
 }

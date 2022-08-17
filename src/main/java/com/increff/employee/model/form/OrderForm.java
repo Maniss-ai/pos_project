@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class OrderForm {
     private String time;
-    private Double bill_amount;
+    private Double billAmount;
 }

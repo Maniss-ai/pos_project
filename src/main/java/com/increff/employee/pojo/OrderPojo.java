@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 public class OrderPojo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer order_id;
+    private Integer orderId;
 
     private LocalDate time;
-    private Double bill_amount;
+    private Double billAmount;
 }

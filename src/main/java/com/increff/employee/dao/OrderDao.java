@@ -12,39 +12,39 @@ import java.util.List;
 
 @Repository
 public class OrderDao extends AbstractDao {
-    private static final String select_all_without_id = "select p from OrderPojo p where time between :start_date and :end_date";
-    private static final String select_all_with_id_date = "select p from OrderPojo p where (time between :start_date and :end_date) and order_id=:order_id";
-    private static final String select_all_with_id = "select p from OrderPojo p where order_id=:order_id";
-    private static final String select_order_with_order_id = "select o from OrderPojo o where order_id=:order_id";
+    private static final String SELECT_ALL_WITHOUT_ID = "select p from OrderPojo p where time between :startDate and :endDate";
+    private static final String SELECT_ALL_WITH_ID_DATE = "select p from OrderPojo p where (time between :startDate and :endDate) and orderId=:orderId";
+    private static final String SELECT_ALL_WITH_ID = "select p from OrderPojo p where orderId=:orderId";
+    private static final String SELECT_ORDER_WITH_ORDER_ID = "select o from OrderPojo o where orderId=:orderId";
 
     @PersistenceContext
     @Autowired
-    private final EntityManager em = getEntityManager();
+    private final EntityManager entityManager = getEntityManager();
 
-    public List<OrderPojo> selectAllWithoutId(LocalDate start_date, LocalDate end_date) {
-        TypedQuery<OrderPojo> query = getQuery(select_all_without_id, OrderPojo.class);
-        query.setParameter("start_date", start_date);
-        query.setParameter("end_date", end_date);
+    public List<OrderPojo> selectAllWithoutId(LocalDate startDate, LocalDate endDate) {
+        TypedQuery<OrderPojo> query = getQuery(SELECT_ALL_WITHOUT_ID, OrderPojo.class);
+        query.setParameter("startDate", startDate);
+        query.setParameter("endDate", endDate);
         return query.getResultList();
     }
 
-    public List<OrderPojo> selectAllWithIdAndDate(LocalDate start_date, LocalDate end_date, Integer order_id) {
-        TypedQuery<OrderPojo> query = getQuery(select_all_with_id_date, OrderPojo.class);
-        query.setParameter("start_date", start_date);
-        query.setParameter("end_date", end_date);
-        query.setParameter("order_id", order_id);
+    public List<OrderPojo> selectAllWithIdAndDate(LocalDate startDate, LocalDate endDate, Integer orderId) {
+        TypedQuery<OrderPojo> query = getQuery(SELECT_ALL_WITH_ID_DATE, OrderPojo.class);
+        query.setParameter("startDate", startDate);
+        query.setParameter("endDate", endDate);
+        query.setParameter("orderId", orderId);
         return query.getResultList();
     }
 
-    public List<OrderPojo> selectAllWithId(Integer order_id) {
-        TypedQuery<OrderPojo> query = getQuery(select_all_with_id, OrderPojo.class);
-        query.setParameter("order_id", order_id);
+    public List<OrderPojo> selectAllWithId(Integer orderId) {
+        TypedQuery<OrderPojo> query = getQuery(SELECT_ALL_WITH_ID, OrderPojo.class);
+        query.setParameter("orderId", orderId);
         return query.getResultList();
     }
 
-    public OrderPojo getOrder(Integer order_id) {
-        TypedQuery<OrderPojo> query = getQuery(select_order_with_order_id, OrderPojo.class);
-        query.setParameter("order_id", order_id);
+    public OrderPojo getOrder(Integer orderId) {
+        TypedQuery<OrderPojo> query = getQuery(SELECT_ORDER_WITH_ORDER_ID, OrderPojo.class);
+        query.setParameter("orderId", orderId);
         return query.getSingleResult();
     }
 }

@@ -7,6 +7,7 @@ import com.increff.employee.pojo.ProductPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -41,13 +42,17 @@ public class ProductService {
         pojo.setBarcode(p.getBarcode());
         pojo.setProduct(p.getProduct());
         pojo.setMrp(p.getMrp());
-        dao.update(p);
         return pojo;
     }
 
     @Transactional
     public ProductPojo getInventoryBarcode(InventoryPojo pojo) throws ApiException {
-        return dao.getInventoryBarcode(pojo.getBarcode());
+        try {
+            return dao.getInventoryBarcode(pojo.getBarcode());
+        }
+        catch (Exception e) {
+            throw new ApiException("Barcode doesn't exists");
+        }
     }
 
     @Transactional
@@ -72,18 +77,28 @@ public class ProductService {
 
     @Transactional
     public ProductPojo getCheck(Integer id) throws ApiException {
-        ProductPojo p = dao.select(id);
-        if (p == null) {
-            throw new ApiException("Brand-Category does not exit");
+        try {
+            ProductPojo p = dao.select(id);
+            if (p == null) {
+                throw new ApiException("Brand-Category does not exit");
+            }
+            return p;
         }
-        return p;
+        catch (Exception e) {
+            throw new ApiException("Barcode doesn't exists");
+        }
     }
 
     private ProductPojo getCheckWithBarcode(String barcode) throws ApiException {
-        ProductPojo p = dao.getInventoryBarcode(barcode);
-        if (p == null) {
-            throw new ApiException("Brand-Category " + getWithBarcode(barcode).getBrand() + " does not exit");
+        try {
+            ProductPojo p = dao.getInventoryBarcode(barcode);
+            if (p == null) {
+                throw new ApiException("Brand-Category " + getWithBarcode(barcode).getBrand() + " does not exit");
+            }
+            return p;
         }
-        return p;
+        catch (Exception e) {
+            throw new ApiException("Barcode doesn't exists");
+        }
     }
 }

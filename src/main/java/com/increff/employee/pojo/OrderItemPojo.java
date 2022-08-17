@@ -15,8 +15,8 @@ public class OrderItemPojo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer order_id;
+    private Integer orderId;
     private String barcode;
     private Integer quantity;
-    private double selling_price;
+    private double sellingPrice;
 }

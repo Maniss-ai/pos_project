@@ -13,8 +13,6 @@ function getInventoryReportUrl(){
 	return baseUrl + "/api/report/inventory";
 }
 
-/**************************  GENERATE REPORTS  **************************/
-
 function generateSalesReport(event) {
 	var $form = $("#report-form");
 	var json = toJson($form);
@@ -31,10 +29,11 @@ function generateSalesReport(event) {
         success: function(data) {
             console.log("Getting Sales Reports ...." + data.split("\n").length);
             console.log(data);
-			if(data.split("\n").length <= 2) {
-				$.notify("Empty sales report for selected date", "info");
-				return;
-			}
+			console.log("SIZE : " + data.split("\n").length)
+			// if(data.split("\n").length <= 1) {
+			// 	$.notify("Empty sales report for selected date", "info");
+			// 	return;
+			// }
 			writeFileDataReport(data);
 			$.notify("Sales Report generated successfully", "success");
         },

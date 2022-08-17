@@ -24,12 +24,12 @@ public class Checks {
         }
     }
 
-    public static boolean isUniqueBrand(int current_id, BrandPojo pojo, List<BrandData> dataList) {
+    public static boolean isUniqueBrand(int currentId, BrandPojo pojo, List<BrandData> dataList) {
         for(BrandData pojoItem : dataList) {
             if(
                     Objects.equals(pojoItem.getBrand(), pojo.getBrand()) &&
                             Objects.equals(pojoItem.getCategory(), pojo.getCategory()) &&
-                            pojoItem.getId() != current_id
+                            pojoItem.getId() != currentId
             ) {
                 return false;
             }
@@ -73,9 +73,9 @@ public class Checks {
         return true;
     }
 
-    public static boolean isUnique(int current_id, ProductPojo pojo, List<ProductData> dataList) throws ApiException {
+    public static boolean isUnique(int currentId, ProductPojo pojo, List<ProductData> dataList) throws ApiException {
         for(ProductData productData : dataList) {
-            if(Objects.equals(productData.getBarcode(), pojo.getBarcode()) && productData.getId() != current_id) {
+            if(Objects.equals(productData.getBarcode(), pojo.getBarcode()) && productData.getId() != currentId) {
                 return false;
             }
         }

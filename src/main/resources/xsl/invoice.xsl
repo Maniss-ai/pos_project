@@ -44,7 +44,7 @@
                     <fo:block font-size="12pt" text-align="center" font-family="Helvetica" font-weight="bold"
                               space-after="5mm">
 
-                        Order Id-<xsl:value-of select="order_id"/>
+                        Order Id-<xsl:value-of select="orderId"/>
 
                     </fo:block>
 
@@ -132,7 +132,7 @@
 
                         <!--                         TODO-->
                         Total Bill Amount:
-                        <xsl:value-of select="total_amount"/>
+                        <xsl:value-of select="totalAmount"/>
                          Rs.
                     </fo:block>
 
@@ -192,7 +192,7 @@
 
                 <fo:block text-align="center" font-size="13pt">
 
-                    <xsl:value-of select="selling_price"/>
+                    <xsl:value-of select="sellingPrice"/>
 
                 </fo:block>
 
@@ -202,7 +202,7 @@
 
                 <fo:block text-align="center" font-size="13pt">
 
-                    <xsl:value-of select="bill_amount"/>
+                    <xsl:value-of select="billAmount"/>
 
                 </fo:block>
 

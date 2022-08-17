@@ -5,6 +5,7 @@ import com.increff.employee.pojo.InventoryPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -20,7 +21,12 @@ public class InventoryService {
 
     @Transactional(rollbackOn = ApiException.class)
     public InventoryPojo get(Integer id) throws ApiException {
-        return dao.select(id);
+        try {
+            return dao.select(id);
+        }
+        catch (Exception e) {
+            throw new ApiException("Id doesn't exists");
+        }
     }
 
     @Transactional
@@ -37,10 +43,15 @@ public class InventoryService {
 
     @Transactional
     public InventoryPojo getCheck(String barcode) throws ApiException {
-        InventoryPojo p = dao.selectBarcode(barcode);
-        if (p == null) {
-            throw new ApiException("Inventory with given barcode : " + barcode + " does not exit");
+        try {
+            InventoryPojo p = dao.selectBarcode(barcode);
+            if (p == null) {
+                throw new ApiException("Inventory with given barcode : " + barcode + " does not exit");
+            }
+            return p;
         }
-        return p;
+        catch (Exception e) {
+            throw new ApiException("Barcode doesn't exists");
+        }
     }
 }

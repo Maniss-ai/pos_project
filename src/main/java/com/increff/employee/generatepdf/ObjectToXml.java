@@ -22,7 +22,7 @@ public class ObjectToXml {
         // convert placeOrderPojoList -> OrderInvoicePojoList
         ArrayList<OrderInvoicePojo> orderInvoicePojoList = new ArrayList<>();
 
-        Double total_amount = 0.0;
+        Double totalAmount = 0.0;
         Integer number = 1;
         for(OrderItemData placeOrderData : placeOrderDataList) {
             OrderInvoicePojo orderInvoicePojo = new OrderInvoicePojo();
@@ -30,22 +30,22 @@ public class ObjectToXml {
             orderInvoicePojo.setSNo(number++);
             orderInvoicePojo.setBarcode(placeOrderData.getBarcode());
             orderInvoicePojo.setQuantity(placeOrderData.getQuantity());
-            orderInvoicePojo.setSelling_price(Precision.round(placeOrderData.getSelling_price(), 2));
-            orderInvoicePojo.setBill_amount(Precision.round(placeOrderData.getQuantity() * placeOrderData.getSelling_price(), 2));
+            orderInvoicePojo.setSellingPrice(Precision.round(placeOrderData.getSellingPrice(), 2));
+            orderInvoicePojo.setBillAmount(Precision.round(placeOrderData.getQuantity() * placeOrderData.getSellingPrice(), 2));
 
-            total_amount += orderInvoicePojo.getBill_amount();
+            totalAmount += orderInvoicePojo.getBillAmount();
 
             orderInvoicePojoList.add(orderInvoicePojo);
         }
 
-        total_amount = Precision.round(total_amount, 2);
+        totalAmount = Precision.round(totalAmount, 2);
 
         JAXBContext contextObj = JAXBContext.newInstance(OrderInvoice.class);
 
         Marshaller marshallerObj = contextObj.createMarshaller();
         marshallerObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-        OrderInvoice orderInvoice = new OrderInvoice(1, orderInvoicePojoList, orderPojo.getTime().toString(), orderPojo.getOrder_id(), total_amount);
+        OrderInvoice orderInvoice = new OrderInvoice(1, orderInvoicePojoList, orderPojo.getTime().toString(), orderPojo.getOrderId(), totalAmount);
         StringWriter stringWriter = new StringWriter();
         marshallerObj.marshal(orderInvoice, stringWriter);
 

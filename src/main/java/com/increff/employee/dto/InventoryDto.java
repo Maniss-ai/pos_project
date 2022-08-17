@@ -28,18 +28,14 @@ public class InventoryDto {
         Checks.nullCheckInventory(form);
         InventoryPojo pojo = DtoHelper.convertFormToPojoInventory(form);
         DtoHelper.normalizeInventory(pojo);
-        boolean barcode_exists = productService.getInventoryBarcode(pojo) != null;
+        productService.getInventoryBarcode(pojo);
 
-        if (Checks.doesNotExistInventory(form, getAll()) && barcode_exists) {
+        if (Checks.doesNotExistInventory(form, getAll())) {
             return DtoHelper.convertPojoToDataInventory(inventoryService.add(pojo));
         } else {
-            if (!barcode_exists) {
-                throw new ApiException("Barcode doesn't exists  ");
-            } else {
                 InventoryUpdateForm inventoryUpdateForm = new InventoryUpdateForm();
                 inventoryUpdateForm.setInventory(form.getInventory());
                 return update(pojo.getBarcode(), inventoryUpdateForm);
-            }
         }
     }
 

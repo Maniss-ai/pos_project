@@ -10,19 +10,19 @@ public class OrderInvoice {
     Integer id;
     List<OrderInvoicePojo> orderInvoicePojoList;
     String time;
-    Integer order_id;
-    Double total_amount;
+    Integer orderId;
+    Double totalAmount;
 
     public OrderInvoice() {
 
     }
 
-    public OrderInvoice(Integer id, List<OrderInvoicePojo> orderInvoicePojoList, String time, Integer order_id, Double total_amount) {
+    public OrderInvoice(Integer id, List<OrderInvoicePojo> orderInvoicePojoList, String time, Integer orderId, Double totalAmount) {
         this.id = id;
         this.orderInvoicePojoList = orderInvoicePojoList;
         this.time = time;
-        this.order_id = order_id;
-        this.total_amount = total_amount;
+        this.orderId = orderId;
+        this.totalAmount = totalAmount;
     }
 
     @XmlAttribute
@@ -51,20 +51,20 @@ public class OrderInvoice {
     }
 
     @XmlElement
-    public Integer getOrder_id() {
-        return order_id;
+    public Integer getOrderId() {
+        return orderId;
     }
 
-    public void setOrder_id(Integer order_id) {
-        this.order_id = order_id;
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 
     @XmlElement
-    public Double getTotal_amount() {
-        return total_amount;
+    public Double getTotalAmount() {
+        return totalAmount;
     }
 
-    public void setTotal_amount(Double total_amount) {
-        this.total_amount = total_amount;
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 }
