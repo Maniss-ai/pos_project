@@ -91,7 +91,7 @@ public class OrderDto {
             FileCopyUtils.copy(inputStream, response.getOutputStream());
         }
     }
-    public OrderPojo getOrder(Integer orderId) {
+    public OrderPojo getOrder(Integer orderId) throws ApiException {
         return orderService.getOrder(orderId);
     }
 

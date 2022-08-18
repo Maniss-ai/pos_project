@@ -6,6 +6,7 @@ import com.increff.employee.pojo.OrderItemPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -21,7 +22,12 @@ public class OrderItemService {
 
     @Transactional(rollbackOn = ApiException.class)
     public OrderItemPojo get(Integer id) throws ApiException {
-        return dao.select(id);
+        try {
+            return dao.select(id);
+        }
+        catch (Exception e) {
+            throw new ApiException("Product with id: " + id + " does not exit");
+        }
     }
 
     @Transactional(rollbackOn = ApiException.class)
@@ -53,29 +59,44 @@ public class OrderItemService {
     }
 
     public List<OrderItemPojo> getCheckWithBarcode(String barcode) throws ApiException {
-        List<OrderItemPojo> orderItemPojoList = dao.select1(barcode);
-        if (orderItemPojoList == null) {
+        try {
+            List<OrderItemPojo> orderItemPojoList = dao.select1(barcode);
+            if (orderItemPojoList == null) {
+                throw new ApiException("Product with barcode: " + barcode + " does not exit");
+            }
+            return orderItemPojoList;
+        }
+        catch (Exception e) {
             throw new ApiException("Product with barcode: " + barcode + " does not exit");
         }
-        return orderItemPojoList;
     }
 
     @Transactional
-    public OrderItemPojo getCheck(Integer placeOrderId) throws ApiException {
-        OrderItemPojo p = dao.select(placeOrderId);
-        if (p == null) {
-            throw new ApiException("Product with id: " + placeOrderId + " does not exit");
+    public OrderItemPojo getCheck(Integer orderItemId) throws ApiException {
+        try {
+            OrderItemPojo p = dao.select(orderItemId);
+            if (p == null) {
+                throw new ApiException("Product id does not exit");
+            }
+            return p;
         }
-        return p;
+        catch (Exception e) {
+            throw new ApiException("Product id does not exit");
+        }
     }
 
     @Transactional
     public OrderItemPojo getCheckOrderId(String barcode) throws ApiException {
-        OrderItemPojo p = dao.selectOrderId(barcode);
-        if (p == null) {
+        try {
+            OrderItemPojo p = dao.selectOrderId(barcode);
+            if (p == null) {
+                throw new ApiException("Product with barcode: " + barcode + " does not exit");
+            }
+            return p;
+        }
+        catch (Exception e) {
             throw new ApiException("Product with barcode: " + barcode + " does not exit");
         }
-        return p;
     }
 
     @Transactional

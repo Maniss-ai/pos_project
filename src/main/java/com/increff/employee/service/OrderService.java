@@ -24,12 +24,22 @@ public class OrderService {
         return dao.selectAllWithIdAndDate(startDate, endDate, orderId);
     }
     @Transactional
-    public List<OrderPojo> getSelectedOrdersWithId(Integer orderId) {
-        return dao.selectAllWithId(orderId);
+    public List<OrderPojo> getSelectedOrdersWithId(Integer orderId) throws ApiException {
+        try {
+            return dao.selectAllWithId(orderId);
+        }
+        catch (Exception e) {
+            throw new ApiException("Order Id doesn't exists");
+        }
     }
 
     @Transactional
-    public OrderPojo getOrder(Integer orderId) {
-        return dao.getOrder(orderId);
+    public OrderPojo getOrder(Integer orderId) throws ApiException {
+        try {
+            return dao.getOrder(orderId);
+        }
+        catch (Exception e) {
+            throw new ApiException("Order Id doesn't exists");
+        }
     }
 }

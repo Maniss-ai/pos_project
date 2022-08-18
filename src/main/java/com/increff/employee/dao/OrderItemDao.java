@@ -37,14 +37,9 @@ public class OrderItemDao extends AbstractDao {
     }
 
     public OrderItemPojo select(Integer id) throws ApiException {
-        try {
-            TypedQuery<OrderItemPojo> query = getQuery(SELECT_ID, OrderItemPojo.class);
-            query.setParameter("id", id);
-            return query.getSingleResult();
-        }
-        catch (Exception e) {
-            throw new ApiException("Product with id: " + id + " does not exit");
-        }
+        TypedQuery<OrderItemPojo> query = getQuery(SELECT_ID, OrderItemPojo.class);
+        query.setParameter("id", id);
+        return query.getSingleResult();
     }
 
     public List<OrderItemPojo> selectSingleOrder(Integer orderId) {
@@ -68,9 +63,5 @@ public class OrderItemDao extends AbstractDao {
     public List<OrderItemPojo> selectAll() {
         TypedQuery<OrderItemPojo> query = getQuery(SELECT_ALL, OrderItemPojo.class);
         return query.getResultList();
-    }
-
-    public void update(OrderItemPojo p) {
-
     }
 }
