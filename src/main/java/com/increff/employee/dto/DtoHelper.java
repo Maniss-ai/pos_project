@@ -128,6 +128,7 @@ public class DtoHelper {
     }
 
     // Order Conversions
+    // TODO convert original orderId to Hash OrderId then pass it to orderData
     protected static OrderData convertPojoToDataOrder(OrderPojo pojo) {
         OrderData data = new OrderData();
         data.setId(pojo.getOrderId());

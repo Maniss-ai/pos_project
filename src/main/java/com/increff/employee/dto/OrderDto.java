@@ -3,15 +3,13 @@ package com.increff.employee.dto;
 import com.increff.employee.generatepdf.ObjectToXml;
 import com.increff.employee.model.data.OrderData;
 import com.increff.employee.model.data.OrderItemData;
-import com.increff.employee.model.form.OrderItemForm;
 import com.increff.employee.model.form.ViewOrderForm;
-import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.pojo.OrderItemPojo;
+import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.service.ApiException;
 import com.increff.employee.service.InventoryService;
 import com.increff.employee.service.OrderItemService;
 import com.increff.employee.service.OrderService;
-import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
@@ -42,6 +40,7 @@ public class OrderDto {
         List<OrderPojo> pojoList;
         List<OrderData> dataList = new ArrayList<>();
 
+        //  // TODO convert Hash OrderId to original orderId then pass perform operations
         if(form.getOrderId() != null && form.getOrderId() != 0) {
             checkOrderIdExists(form.getOrderId());
             pojoList = orderService.getSelectedOrdersWithId(form.getOrderId());
