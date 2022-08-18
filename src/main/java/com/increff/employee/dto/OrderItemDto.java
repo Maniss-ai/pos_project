@@ -1,6 +1,5 @@
 package com.increff.employee.dto;
 
-import com.increff.employee.generatepdf.ObjectToXml;
 import com.increff.employee.model.data.OrderItemData;
 import com.increff.employee.model.form.OrderItemForm;
 import com.increff.employee.model.form.OrderItemUpdateForm;
@@ -16,14 +15,8 @@ import com.increff.employee.util.Checks;
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +37,6 @@ public class OrderItemDto {
 
     }
 
-    // CRUD ....
     public OrderItemData add(OrderItemForm form) throws ApiException {
         Checks.nullCheckOrderItem(form);
         OrderItemPojo pojo = DtoHelper.convertFormToPojoOrderItem(form, 0);
@@ -124,7 +116,7 @@ public class OrderItemDto {
         }
     }
 
-    public void update(Integer orderItemId, OrderItemUpdateForm form) throws ApiException {
+    public OrderItemData update(Integer orderItemId, OrderItemUpdateForm form) throws ApiException {
         Checks.nullCheckForUpdateOrderItem(form);
         String barcode = get(orderItemId).getBarcode();
         OrderItemPojo pojo = DtoHelper.convertFormToPojoForUpdateOrderItem(form, 0, barcode);
@@ -140,7 +132,7 @@ public class OrderItemDto {
             throw new ApiException("Selling Price can't be more than MRP");
         }
         else {
-            orderItemService.update(orderItemId, pojo);
+            return DtoHelper.convertPojoToDataOrderItem(orderItemService.update(orderItemId, pojo));
         }
     }
 

@@ -1,19 +1,13 @@
-package com.increff.employee.service.dao_test;
+package com.increff.employee.dao;
 
-import com.increff.employee.dao.BrandDao;
-import com.increff.employee.dao.InventoryDao;
-import com.increff.employee.dao.ProductDao;
 import com.increff.employee.pojo.BrandPojo;
 import com.increff.employee.pojo.InventoryPojo;
 import com.increff.employee.pojo.ProductPojo;
-import com.increff.employee.service.AbstractUnitTest;
+import com.increff.employee.AbstractUnitTest;
 import com.increff.employee.service.ApiException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class InventoryDaoTest extends AbstractUnitTest {
     @Autowired

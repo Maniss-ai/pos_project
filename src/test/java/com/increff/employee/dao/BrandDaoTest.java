@@ -1,14 +1,12 @@
-package com.increff.employee.service.dao_test;
+package com.increff.employee.dao;
 
-import com.increff.employee.dao.BrandDao;
 import com.increff.employee.pojo.BrandPojo;
-import com.increff.employee.service.AbstractUnitTest;
+import com.increff.employee.AbstractUnitTest;
 import com.increff.employee.service.ApiException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BrandDaoTest extends AbstractUnitTest {
@@ -40,12 +38,6 @@ public class BrandDaoTest extends AbstractUnitTest {
 
         Assert.assertEquals("adidas", brandPojo.getBrand());
         Assert.assertEquals("pants", brandPojo.getCategory());
-    }
-
-    @Test(expected = ApiException.class)
-    public void testSelectWhenIdNotExists() throws ApiException {
-        int id = 0;
-        brandDao.select(id);
     }
 
     @Test

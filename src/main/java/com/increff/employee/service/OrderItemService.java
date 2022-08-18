@@ -6,7 +6,6 @@ import com.increff.employee.pojo.OrderItemPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -41,12 +40,14 @@ public class OrderItemService {
     }
 
     @Transactional(rollbackOn  = ApiException.class)
-    public void update(Integer placeOrderId, OrderItemPojo p) throws ApiException {
+    public OrderItemPojo update(Integer placeOrderId, OrderItemPojo p) throws ApiException {
         OrderItemPojo pojo = getCheck(placeOrderId);
         pojo.setOrderId(p.getOrderId());
         pojo.setBarcode(p.getBarcode());
         pojo.setQuantity(p.getQuantity());
         pojo.setSellingPrice(p.getSellingPrice());
+
+        return pojo;
     }
 
     @Transactional(rollbackOn  = ApiException.class)

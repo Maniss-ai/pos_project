@@ -1,7 +1,8 @@
-package com.increff.employee.service;
+package com.increff.employee;
 
 import static org.junit.Assert.assertEquals;
 
+import com.increff.employee.service.AboutAppService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

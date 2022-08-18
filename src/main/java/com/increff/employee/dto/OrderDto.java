@@ -1,6 +1,6 @@
 package com.increff.employee.dto;
 
-import com.increff.employee.generatepdf.ObjectToXml;
+import com.increff.employee.util.ObjectToXml;
 import com.increff.employee.model.data.OrderData;
 import com.increff.employee.model.data.OrderItemData;
 import com.increff.employee.model.form.ViewOrderForm;

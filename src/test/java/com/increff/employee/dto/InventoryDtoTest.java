@@ -1,14 +1,10 @@
-package com.increff.employee.service.dto_test;
+package com.increff.employee.dto;
 
-import com.increff.employee.dto.BrandDto;
-import com.increff.employee.dto.InventoryDto;
-import com.increff.employee.dto.ProductDto;
 import com.increff.employee.model.data.InventoryData;
-import com.increff.employee.model.data.ProductData;
 import com.increff.employee.model.form.BrandForm;
 import com.increff.employee.model.form.InventoryForm;
 import com.increff.employee.model.form.ProductForm;
-import com.increff.employee.service.AbstractUnitTest;
+import com.increff.employee.AbstractUnitTest;
 import com.increff.employee.service.ApiException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -183,6 +179,37 @@ public class InventoryDtoTest extends AbstractUnitTest {
     public void testGetWithIdWhenIdNotExists() throws ApiException {
         int id = 0;
         inventoryDto.get(id);
+    }
+
+    @Test
+    public void testGetAll() throws ApiException {
+        for(int i = 0; i < 5; i++) {
+            BrandForm brandForm = new BrandForm();
+            brandForm.setBrand("Brand" + i+1);
+            brandForm.setCategory("Category" + i+1);
+            brandDto.add(brandForm);
+        }
+
+        for(int i = 0; i < 5; i++) {
+            ProductForm productForm = new ProductForm();
+            productForm.setBrand("Brand" + i+1);
+            productForm.setCategory("Category" + i+1);
+            productForm.setBarcode("Barcode" + i+1);
+            productForm.setProduct("Product" + i+1);
+            productForm.setMrp((i+1) * 100.23);
+            productDto.add(productForm);
+        }
+
+        for(int i = 0; i < 5; i++) {
+            InventoryForm inventoryForm = new InventoryForm();
+            inventoryForm.setBarcode("Barcode" + i+1);
+            inventoryForm.setInventory((i+1) * 10);
+            inventoryDto.add(inventoryForm);
+        }
+
+        List<InventoryData> inventoryFormList = inventoryDto.getAll();
+
+        Assert.assertEquals(5, inventoryFormList.size());
     }
 
 }

@@ -1,11 +1,8 @@
-package com.increff.employee.service.service_test;
+package com.increff.employee.service;
 
 import com.increff.employee.pojo.BrandPojo;
 import com.increff.employee.pojo.ProductPojo;
-import com.increff.employee.service.AbstractUnitTest;
-import com.increff.employee.service.ApiException;
-import com.increff.employee.service.BrandService;
-import com.increff.employee.service.ProductService;
+import com.increff.employee.AbstractUnitTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

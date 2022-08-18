@@ -1,17 +1,10 @@
-package com.increff.employee.service.service_test;
+package com.increff.employee.service;
 
-import com.increff.employee.model.data.BrandData;
-import com.increff.employee.model.form.BrandForm;
 import com.increff.employee.pojo.BrandPojo;
-import com.increff.employee.service.AbstractUnitTest;
-import com.increff.employee.service.ApiException;
-import com.increff.employee.service.BrandService;
+import com.increff.employee.AbstractUnitTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BrandServiceTest extends AbstractUnitTest {
     @Autowired

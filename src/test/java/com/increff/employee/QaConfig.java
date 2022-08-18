@@ -1,4 +1,4 @@
-package com.increff.employee.service;
+package com.increff.employee;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;

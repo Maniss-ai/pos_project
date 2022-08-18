@@ -43,7 +43,7 @@ public class OrderItemController extends javax.servlet.http.HttpServlet implemen
 
     @ApiOperation(value = "Update order items")
     @RequestMapping(path = "/api/order/order-item/{orderItemId}", method = RequestMethod.PUT)
-    public void update(@PathVariable Integer orderItemId, @RequestBody OrderItemUpdateForm form) throws ApiException {
-        dto.update(orderItemId, form);
+    public OrderItemData update(@PathVariable Integer orderItemId, @RequestBody OrderItemUpdateForm form) throws ApiException {
+        return dto.update(orderItemId, form);
     }
 }

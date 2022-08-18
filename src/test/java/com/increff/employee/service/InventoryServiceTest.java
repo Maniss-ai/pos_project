@@ -1,23 +1,13 @@
-package com.increff.employee.service.service_test;
+package com.increff.employee.service;
 
-import com.increff.employee.dto.BrandDto;
-import com.increff.employee.dto.InventoryDto;
-import com.increff.employee.dto.ProductDto;
-import com.increff.employee.model.data.InventoryData;
-import com.increff.employee.model.data.ProductData;
-import com.increff.employee.model.form.BrandForm;
-import com.increff.employee.model.form.InventoryForm;
-import com.increff.employee.model.form.ProductForm;
+import com.increff.employee.AbstractUnitTest;
 import com.increff.employee.pojo.BrandPojo;
 import com.increff.employee.pojo.InventoryPojo;
 import com.increff.employee.pojo.ProductPojo;
-import com.increff.employee.service.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.sound.sampled.Line;
-import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryServiceTest extends AbstractUnitTest {

@@ -1,13 +1,11 @@
-package com.increff.employee.service.dto_test;
+package com.increff.employee.dto;
 
-import com.increff.employee.dto.BrandDto;
-import com.increff.employee.dto.ProductDto;
 import com.increff.employee.model.data.BrandData;
 import com.increff.employee.model.data.ProductData;
 import com.increff.employee.model.form.BrandForm;
 import com.increff.employee.model.form.ProductForm;
 import com.increff.employee.model.form.ProductUpdateForm;
-import com.increff.employee.service.AbstractUnitTest;
+import com.increff.employee.AbstractUnitTest;
 import com.increff.employee.service.ApiException;
 import org.junit.Assert;
 import org.junit.Test;
