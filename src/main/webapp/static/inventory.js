@@ -188,6 +188,7 @@ function bulkAddInventory() {
 			console.log(response);
 			var lines = response.responseJSON.message.split("\n");
 			console.log("RESPONSE: " + lines);
+			$.notify("Error in tsv file, please download errors", {autoHide : false});
 
 			createErrorDataInventory(lines);
 

@@ -13,7 +13,6 @@ import java.util.List;
 @Repository
 public class OrderDao extends AbstractDao {
     private static final String SELECT_ALL_WITHOUT_ID = "select p from OrderPojo p where time between :startDate and :endDate";
-    private static final String SELECT_ALL_WITH_ID_DATE = "select p from OrderPojo p where (time between :startDate and :endDate) and orderId=:orderId";
     private static final String SELECT_ALL_WITH_ID = "select p from OrderPojo p where orderId=:orderId";
     private static final String SELECT_ORDER_WITH_ORDER_ID = "select o from OrderPojo o where orderId=:orderId";
 
@@ -25,14 +24,6 @@ public class OrderDao extends AbstractDao {
         TypedQuery<OrderPojo> query = getQuery(SELECT_ALL_WITHOUT_ID, OrderPojo.class);
         query.setParameter("startDate", startDate);
         query.setParameter("endDate", endDate);
-        return query.getResultList();
-    }
-
-    public List<OrderPojo> selectAllWithIdAndDate(LocalDate startDate, LocalDate endDate, Integer orderId) {
-        TypedQuery<OrderPojo> query = getQuery(SELECT_ALL_WITH_ID_DATE, OrderPojo.class);
-        query.setParameter("startDate", startDate);
-        query.setParameter("endDate", endDate);
-        query.setParameter("orderId", orderId);
         return query.getResultList();
     }
 

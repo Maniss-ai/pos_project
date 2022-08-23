@@ -152,6 +152,7 @@ function bulkAddBrand() {
 	   },
 	   error: function(response) {
 			var lines = response.responseJSON.message.split("\n");
+			$.notify("Error in tsv file, please download errors", {autoHide : false});
 			createErrorDataBrand(lines);
 			updateUploadDialogBrand();
 		}

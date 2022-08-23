@@ -187,7 +187,6 @@ public class OrderItemDtoTest extends AbstractUnitTest {
             inventoryDto.add(inventoryForm);
         }
 
-        double totalSellingPrice = 0.0;
         List<OrderItemForm> orderItemFormList = new ArrayList<>();
         for(int i = 0; i < 5; i++) {
             OrderItemForm orderItemForm = new OrderItemData();
@@ -196,8 +195,6 @@ public class OrderItemDtoTest extends AbstractUnitTest {
             orderItemForm.setSellingPrice((i+1) * 7.298);
             orderItemDto.add(orderItemForm);
             orderItemFormList.add(orderItemForm);
-
-            totalSellingPrice += orderItemForm.getSellingPrice();
         }
 
         orderItemDto.submit(orderItemFormList);
@@ -272,6 +269,37 @@ public class OrderItemDtoTest extends AbstractUnitTest {
         orderItemUpdateForm.setSellingPrice(90.214442);
 
         orderItemDto.update(orderItemData.getId(), orderItemUpdateForm);
+    }
+
+    @Test
+    public void testOrderSubmit() throws ApiException {
+        BrandForm brandForm = new BrandForm();
+        brandForm.setBrand(" pUMa   ");
+        brandForm.setCategory(" ShoES   ");
+        brandDto.add(brandForm);
+
+        ProductForm productForm = new ProductForm();
+        productForm.setBrand(brandForm.getBrand());
+        productForm.setCategory(brandForm.getCategory());
+        productForm.setBarcode("puma123");
+        productForm.setProduct("sports shoes");
+        productForm.setMrp(1799.28);
+        productDto.add(productForm);
+
+        InventoryForm inventoryForm = new InventoryForm();
+        inventoryForm.setBarcode(productForm.getBarcode());
+        inventoryForm.setInventory(120);
+        inventoryDto.add(inventoryForm);
+
+        OrderItemForm orderItemForm = new OrderItemData();
+        orderItemForm.setBarcode(inventoryForm.getBarcode());
+        orderItemForm.setQuantity(inventoryForm.getInventory() - 20);
+        orderItemForm.setSellingPrice(productForm.getMrp() - 234.32);
+        orderItemDto.add(orderItemForm);
+
+        List<OrderItemForm> orderItemFormList = new ArrayList<>();
+        orderItemFormList.add(orderItemForm);
+        orderItemDto.submit(orderItemFormList);
     }
 
 }

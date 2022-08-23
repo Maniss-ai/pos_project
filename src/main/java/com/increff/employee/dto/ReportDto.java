@@ -42,13 +42,13 @@ public class ReportDto {
             }
 
             // check weather brand or category exists ...
-            if(!form.getBrand().isEmpty() && !form.getCategory().isEmpty() && form.getBrand() != null && form.getCategory() != null && !Checks.checkBrandCategoryExists(form.getBrand(), form.getCategory(), brandService.getAll())) {
+            if(form.getBrand() != null && form.getCategory() != null && !form.getBrand().isEmpty() && !form.getCategory().isEmpty() && !Checks.checkBrandCategoryExists(form.getBrand(), form.getCategory(), brandService.getAll())) {
                 throw new ApiException("Brand or Category doesn't exists");
             }
-            if(!form.getBrand().isEmpty() && form.getBrand() != null && !Checks.checkBrandExists(form.getBrand(), brandService.getAll())) {
+            if(form.getBrand() != null && !form.getBrand().isEmpty() && !Checks.checkBrandExists(form.getBrand(), brandService.getAll())) {
                 throw new ApiException("Brand doesn't exists");
             }
-            if(!form.getCategory().isEmpty() && form.getCategory() != null && !Checks.checkCategoryExists(form.getCategory(), brandService.getAll())) {
+            if(form.getCategory() != null && !form.getCategory().isEmpty() && !Checks.checkCategoryExists(form.getCategory(), brandService.getAll())) {
                 throw new ApiException("Category doesn't exists");
             }
 
@@ -60,20 +60,20 @@ public class ReportDto {
             LocalDate endDate = LocalDate.parse(form.getEndDate(), formatter);
 
             // USING BRAND and CATEGORY + DATE
-            if(!form.getBrand().isEmpty() && !form.getCategory().isEmpty() && form.getBrand() != null && form.getCategory() != null) {
+            if(form.getBrand() != null && !form.getBrand().isEmpty() && form.getCategory() != null && !form.getCategory().isEmpty()) {
                 salesData.append(form.getBrand()).append("\t").append(form.getCategory()).append("\t");
                 productPojoList = productService.getProductWithBrandCategory(form);
                 getReportWithBrandCategory(startDate, endDate, salesData, productPojoList);
             }
 
             // USING BRAND ONLY + DATE
-            else if(!form.getBrand().isEmpty() && form.getBrand() != null) {
+            else if(form.getBrand() != null && !form.getBrand().isEmpty()) {
                 productPojoList = productService.getProductWithBrand(form.getBrand());
                 getReportWithBrand(startDate, endDate, salesData, productPojoList, form.getBrand());
             }
 
             // USING CATEGORY ONLY + DATE
-            else if(!form.getCategory().isEmpty() && form.getCategory() != null) {
+            else if(form.getCategory() != null && !form.getCategory().isEmpty()) {
                 productPojoList = productService.getProductWithCategory(form);
                 getReportWithCategory(startDate, endDate, salesData, productPojoList, form);
             }

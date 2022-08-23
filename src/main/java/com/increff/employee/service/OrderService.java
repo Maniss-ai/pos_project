@@ -20,13 +20,15 @@ public class OrderService {
     }
 
     @Transactional
-    public List<OrderPojo> getSelectedOrdersWithIdAndDate(LocalDate startDate, LocalDate endDate, Integer orderId) {
-        return dao.selectAllWithIdAndDate(startDate, endDate, orderId);
-    }
-    @Transactional
     public List<OrderPojo> getSelectedOrdersWithId(Integer orderId) throws ApiException {
         try {
-            return dao.selectAllWithId(orderId);
+            List<OrderPojo> orderPojoList = dao.selectAllWithId(orderId);
+            if(orderPojoList.size() == 0) {
+                throw new ApiException("Order Id doesn't exists");
+            }
+            else {
+                return orderPojoList;
+            }
         }
         catch (Exception e) {
             throw new ApiException("Order Id doesn't exists");

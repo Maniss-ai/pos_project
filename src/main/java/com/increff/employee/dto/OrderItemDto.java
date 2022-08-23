@@ -85,6 +85,18 @@ public class OrderItemDto {
         if(orderFormList.isEmpty()) {
             throw new ApiException("Please add product to place an order");
         }
+
+        for(OrderItemForm orderItemForm : orderFormList) {
+            // get inventoryId using barcodeId match ....
+            Integer inventoryId = getInventoryIdMatchWithBarcode(orderItemForm.getBarcode());
+            Integer inventoryItems = inventoryService.get(inventoryId).getInventory();
+
+            // check if there exists enough products in inventory to place order ....
+            if(inventoryItems < orderItemForm.getQuantity()) {
+                throw new ApiException("For Barcode " + orderItemForm.getBarcode() +"\nThere are only " + inventoryItems + " items available in the Inventory");
+            }
+        }
+
         OrderPojo orderPojo = new OrderPojo();
 
         orderPojo.setTime(LocalDate.now());
@@ -173,24 +185,6 @@ public class OrderItemDto {
         }
         else {
             return inventoryId;
-        }
-    }
-
-    private Integer getProductIdMatchWithBarcode(OrderItemPojo pojo) throws ApiException {
-        Integer productId = -1;
-        List<ProductPojo> list = productService.getAll();
-        for(ProductPojo productPojo : list) {
-            if(Objects.equals(productPojo.getBarcode(), pojo.getBarcode())) {
-                productId = productPojo.getId();
-                break;
-            }
-        }
-
-        if(productId == -1) {
-            throw new ApiException("Inventory with barcode: " + get(productId).getBarcode() + " doesn't exists");
-        }
-        else {
-            return productId;
         }
     }
 }

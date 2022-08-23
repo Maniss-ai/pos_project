@@ -25,7 +25,7 @@ public class OrderItemService {
             return dao.select(id);
         }
         catch (Exception e) {
-            throw new ApiException("Product with id: " + id + " does not exit");
+            throw new ApiException("Product id does not exit");
         }
     }
 
@@ -67,7 +67,7 @@ public class OrderItemService {
             }
             return orderItemPojoList;
         }
-        catch (Exception e) {
+        catch (ApiException e) {
             throw new ApiException("Product with barcode: " + barcode + " does not exit");
         }
     }
@@ -90,14 +90,14 @@ public class OrderItemService {
     public OrderItemPojo getCheckOrderId(String barcode) throws ApiException {
         try {
             OrderItemPojo p = dao.selectOrderId(barcode);
-            if (p == null) {
-                throw new ApiException("Product with barcode: " + barcode + " does not exit");
+            if (p != null) {
+                return p;
             }
-            return p;
         }
         catch (Exception e) {
             throw new ApiException("Product with barcode: " + barcode + " does not exit");
         }
+        return null;
     }
 
     @Transactional

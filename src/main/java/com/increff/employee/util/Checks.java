@@ -100,13 +100,13 @@ public class Checks {
         if(form.getBarcode().isEmpty() || form.getBarcode() == null) {
             throw new ApiException("Barcode can't be empty");
         }
-        else if(form.getInventory() == null || form.getInventory() == 0) {
-            throw new ApiException("Inventory can't be empty");
-        }
+//        else if(form.getInventory() == null) {
+//            throw new ApiException("Inventory can't be empty");
+//        }
     }
 
     public static void nullCheckForUpdateInventory(InventoryUpdateForm form) throws ApiException {
-        if(form.getInventory() == null || form.getInventory() == 0) {
+        if(form.getInventory() == null) {
             throw new ApiException("Inventory can't be empty");
         }
     }

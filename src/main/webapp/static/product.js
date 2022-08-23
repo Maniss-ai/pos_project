@@ -169,9 +169,10 @@ function bulkAddProduct() {
 			var lines = response.responseJSON.message.split("\n");
 			console.log("RESPONSE: " + lines);
 
+			$.notify("Error in tsv file, please download errors", {autoHide : false});
 			createErrorDataProduct(lines);
 
-			console.log(errorDataBrand);
+			console.log(errorDataProduct);
 			updateUploadDialogProduct();
 	   }
 	});
@@ -196,7 +197,8 @@ function createErrorDataProduct(lines) {
 }
 
 function downloadErrorsProduct() {
-	if(errorDataBrand.length) {
+	console.log("errorDataProduct   : " + errorDataProduct.length);
+	if(errorDataProduct.length) {
 		writeFileDataProduct(errorDataProduct);
 	}
 	else {
