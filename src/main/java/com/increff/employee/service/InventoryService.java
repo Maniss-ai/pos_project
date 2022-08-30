@@ -35,20 +35,16 @@ public class InventoryService {
     }
 
     @Transactional(rollbackOn  = ApiException.class)
-    public InventoryPojo update(String barcode, InventoryPojo p) throws ApiException {
-        InventoryPojo pojo = getCheck(barcode);
+    public InventoryPojo update(Integer productId, InventoryPojo p) throws ApiException {
+        InventoryPojo pojo = getCheck(productId);
         pojo.setInventory(p.getInventory());
         return pojo;
     }
 
     @Transactional
-    public InventoryPojo getCheck(String barcode) throws ApiException {
+    public InventoryPojo getCheck(Integer productId) throws ApiException {
         try {
-            InventoryPojo p = dao.selectBarcode(barcode);
-            if (p == null) {
-                throw new ApiException("Inventory with given barcode : " + barcode + " does not exit");
-            }
-            return p;
+            return dao.selectBarcode(productId);
         }
         catch (Exception e) {
             throw new ApiException("Barcode doesn't exists");

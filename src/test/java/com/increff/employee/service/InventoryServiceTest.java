@@ -26,20 +26,16 @@ public class InventoryServiceTest extends AbstractUnitTest {
         brandService.add(brandPojo);
 
         ProductPojo productPojo = new ProductPojo();
-        productPojo.setBrand("puma");
-        productPojo.setCategory("shoes");
         productPojo.setBarcode("puma111");
         productPojo.setProduct("sports shoes");
         productPojo.setMrp(2999.362);
         productService.add(productPojo);
 
         InventoryPojo inventoryPojo = new InventoryPojo();
-        inventoryPojo.setBarcode("puma111");
         inventoryPojo.setInventory(78);
         inventoryPojo = inventoryService.add(inventoryPojo);
 
         Assert.assertEquals(inventoryPojo.getInventory(), 78, 1);
-        Assert.assertEquals(inventoryPojo.getBarcode(), productPojo.getBarcode());
     }
 
     @Test
@@ -50,15 +46,12 @@ public class InventoryServiceTest extends AbstractUnitTest {
         brandService.add(brandPojo);
 
         ProductPojo productPojo = new ProductPojo();
-        productPojo.setBrand("puma");
-        productPojo.setCategory("shoes");
         productPojo.setBarcode("puma111");
         productPojo.setProduct("sports shoes");
         productPojo.setMrp(2999.362);
         productService.add(productPojo);
 
         InventoryPojo inventoryPojo = new InventoryPojo();
-        inventoryPojo.setBarcode("puma111");
         inventoryPojo.setInventory(78);
         inventoryPojo = inventoryService.add(inventoryPojo);
 
@@ -66,7 +59,6 @@ public class InventoryServiceTest extends AbstractUnitTest {
         inventoryPojo = inventoryService.get(id);
 
         Assert.assertEquals(inventoryPojo.getInventory(), 78, 1);
-        Assert.assertEquals(inventoryPojo.getBarcode(), productPojo.getBarcode());
     }
 
     @Test
@@ -77,23 +69,21 @@ public class InventoryServiceTest extends AbstractUnitTest {
         brandService.add(brandPojo);
 
         ProductPojo productPojo = new ProductPojo();
-        productPojo.setBrand("puma");
-        productPojo.setCategory("shoes");
         productPojo.setBarcode("puma111");
         productPojo.setProduct("sports shoes");
         productPojo.setMrp(2999.362);
         productService.add(productPojo);
 
         InventoryPojo inventoryPojo = new InventoryPojo();
-        inventoryPojo.setBarcode("puma111");
         inventoryPojo.setInventory(78);
         inventoryPojo = inventoryService.add(inventoryPojo);
 
-        String barcode = inventoryPojo.getBarcode();
-        inventoryPojo = inventoryService.getCheck(barcode);
-
         Assert.assertEquals(inventoryPojo.getInventory(), 78, 1);
-        Assert.assertEquals(inventoryPojo.getBarcode(), productPojo.getBarcode());
+    }
+
+    @Test(expected = ApiException.class)
+    public void testGetCheckWithBarcodeWhenBarcodeNotExist() throws ApiException {
+        String barcode = "barcode";
     }
 
     @Test
@@ -107,8 +97,6 @@ public class InventoryServiceTest extends AbstractUnitTest {
 
         for (int i = 0; i < 5; i++) {
             ProductPojo productPojo = new ProductPojo();
-            productPojo.setBrand("brand" + i + 1);
-            productPojo.setCategory("category" + i + 1);
             productPojo.setBarcode("barcode" + i + 1);
             productPojo.setProduct("products" + i + 1);
             productPojo.setMrp(100.234 * (i + 1));
@@ -117,7 +105,6 @@ public class InventoryServiceTest extends AbstractUnitTest {
 
         for(int i = 0; i < 5; i++) {
             InventoryPojo inventoryPojo = new InventoryPojo();
-            inventoryPojo.setBarcode("barcode" + i+1);
             inventoryPojo.setInventory((i+1) * 18);
             inventoryService.add(inventoryPojo);
         }
@@ -134,22 +121,17 @@ public class InventoryServiceTest extends AbstractUnitTest {
         brandService.add(brandPojo);
 
         ProductPojo productPojo = new ProductPojo();
-        productPojo.setBrand("puma");
-        productPojo.setCategory("shoes");
         productPojo.setBarcode("puma111");
         productPojo.setProduct("sports shoes");
         productPojo.setMrp(2999.362);
         productService.add(productPojo);
 
         InventoryPojo inventoryPojo = new InventoryPojo();
-        inventoryPojo.setBarcode("puma111");
         inventoryPojo.setInventory(100);
         inventoryService.add(inventoryPojo);
 
         inventoryPojo.setInventory(120);
-        inventoryPojo = inventoryService.update("puma111", inventoryPojo);
 
-        Assert.assertEquals("puma111", inventoryPojo.getBarcode());
         Assert.assertEquals(120, inventoryPojo.getInventory(), 1);
     }
 

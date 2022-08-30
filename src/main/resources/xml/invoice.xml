@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <orderInvoice id="1">
-    <orderId>2</orderId>
+    <orderId>5</orderId>
     <orderInvoicePojoList>
-        <barcode>abc123</barcode>
-        <billAmount>1110.0</billAmount>
-        <quantity>10</quantity>
+        <barcode>abc124</barcode>
+        <billAmount>306.0</billAmount>
+        <quantity>17</quantity>
         <SNo>1</SNo>
-        <sellingPrice>111.0</sellingPrice>
+        <sellingPrice>18.0</sellingPrice>
     </orderInvoicePojoList>
-    <time>2022-08-22</time>
-    <totalAmount>1110.0</totalAmount>
+    <time>2022-08-29</time>
+    <totalAmount>306.0</totalAmount>
 </orderInvoice>

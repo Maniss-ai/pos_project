@@ -103,6 +103,13 @@ var rowProduct = [];
 
 function processDataProduct() {
 	var file = $('#productFile')[0].files[0];
+	var fileName = document.querySelector('#productFile').value;
+
+	// check for TSV extension ...
+	if(fileName.substring(fileName.length-3, fileName.length) != "tsv") {
+		$.notify("Please select TSV file", "warn");
+		return;
+	}
 
 	if(document.getElementById("productFile").files.length == 0) {
 		$.notify("Please select TSV file", "warn");
@@ -151,7 +158,7 @@ function uploadRowsProduct() {
 
 /****************************************** BULK ADD BRAND : TODO ******************************************/
 function bulkAddProduct() {
-	var url = getProductUrl() + "/bulk-add-product";
+	var url = getProductUrl() + "/bulk-add";
 	console.log(jsonArrayProduct);
 	// Make ajax call
 	$.ajax({
@@ -240,6 +247,7 @@ function updateUploadDialogProduct() {
 function updateFileNameProduct() {
 	var $file = $('#productFile');
 	var fileName = $file.val();
+	fileName = fileName.replace(/^.*[\\\/]/, '');
 	$('#productFileName').html(fileName);
 }
 /*************************************  UPLOAD DATA: END  *************************************/

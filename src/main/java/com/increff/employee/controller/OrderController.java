@@ -34,7 +34,7 @@ public class OrderController {
 
     @ApiOperation(value = "Get order by Id")
     @RequestMapping(path = "/api/order/view-order/placed/{orderId}", method = RequestMethod.GET)
-    public List<OrderItemData> getSingleOrder(@PathVariable Integer orderId) {
+    public List<OrderItemData> getSingleOrder(@PathVariable Integer orderId) throws ApiException {
         return dto.getSingleOrder(orderId);
     }
 

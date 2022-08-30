@@ -3,6 +3,7 @@ package com.increff.employee.dto;
 import com.increff.employee.model.data.ProductData;
 import com.increff.employee.model.form.ProductForm;
 import com.increff.employee.model.form.ProductUpdateForm;
+import com.increff.employee.pojo.BrandPojo;
 import com.increff.employee.pojo.InventoryPojo;
 import com.increff.employee.pojo.ProductPojo;
 import com.increff.employee.service.ApiException;
@@ -32,17 +33,17 @@ public class ProductDto {
         ProductPojo pojo = DtoHelper.convertFormToPojoProduct(form);
         DtoHelper.normalizeProduct(pojo);
         boolean unique = Checks.isUnique(pojo, getAll());
-        boolean brandCategoryExists = brandService.getBrandCategory(pojo) != null;
+        BrandPojo brandPojo = brandService.getBrandCategory(form.getBrand(), form.getCategory());
 
-        if(unique && brandCategoryExists) {
-            return DtoHelper.convertPojoToDataProduct(productService.add(pojo));
+        pojo.setBrandCategoryId(brandPojo.getId());
+
+        if(unique) {
+            ProductData productData = DtoHelper.convertPojoToDataProduct(productService.add(pojo));
+            productData.setBrand(form.getBrand());
+            productData.setCategory(form.getCategory());
+            return productData;
         } else {
-            if(!unique) {
-                throw new ApiException("Barcode should be unique");
-            }
-            else {
-                throw new ApiException("Brand-Category doesn't exists");
-            }
+            throw new ApiException("Barcode should be unique");
         }
     }
 
@@ -71,20 +72,34 @@ public class ProductDto {
     }
 
     public ProductData getWithId(Integer id) throws ApiException {
-        ProductPojo pojo = productService.getWithId(id);
-        return DtoHelper.convertPojoToDataProduct(pojo);
+        ProductPojo productPojo = productService.getWithId(id);
+
+        ProductData productData = DtoHelper.convertPojoToDataProduct(productPojo);
+        productData.setBrand(brandService.get(productPojo.getBrandCategoryId()).getBrand());
+        productData.setCategory(brandService.get(productPojo.getBrandCategoryId()).getCategory());
+
+        return productData;
     }
 
     public ProductData get(String barcode) throws ApiException {
-        ProductPojo pojo = productService.getWithBarcode(barcode);
-        return DtoHelper.convertPojoToDataProduct(pojo);
+        ProductPojo productPojo = productService.getWithBarcode(barcode);
+
+        ProductData productData = DtoHelper.convertPojoToDataProduct(productPojo);
+        productData.setBrand(brandService.get(productPojo.getBrandCategoryId()).getBrand());
+        productData.setCategory(brandService.get(productPojo.getBrandCategoryId()).getCategory());
+
+        return productData;
     }
 
     public List<ProductData> getAll() throws ApiException {
         List<ProductPojo> pojoList = productService.getAll();
         List<ProductData> dataList = new ArrayList<>();
-        for (ProductPojo pojo : pojoList) {
-            dataList.add(DtoHelper.convertPojoToDataProduct(pojo));
+        for (ProductPojo productPojo : pojoList) {
+            ProductData productData = DtoHelper.convertPojoToDataProduct(productPojo);
+            productData.setBrand(brandService.get(productPojo.getBrandCategoryId()).getBrand());
+            productData.setCategory(brandService.get(productPojo.getBrandCategoryId()).getCategory());
+
+            dataList.add(productData);
         }
         return dataList;
     }
@@ -96,7 +111,13 @@ public class ProductDto {
         checkIfBarcodeExistsInProduct(id);
 
         if(Checks.isUnique(id, pojo, getAll())) {
-            return DtoHelper.convertPojoToDataProduct(productService.update(id, pojo));
+            ProductPojo productPojo = productService.update(id, pojo);
+
+            ProductData productData = DtoHelper.convertPojoToDataProduct(productPojo);
+            productData.setBrand(brandService.get(productPojo.getBrandCategoryId()).getBrand());
+            productData.setCategory(brandService.get(productPojo.getBrandCategoryId()).getCategory());
+
+            return productData;
         } else {
             throw new ApiException("Barcode should be Unique");
         }
@@ -107,7 +128,7 @@ public class ProductDto {
 
         List<InventoryPojo> inventoryPojoList = inventoryService.getAll();
         for(InventoryPojo pojo : inventoryPojoList) {
-            if(Objects.equals(actualBarcode, pojo.getBarcode())) {
+            if(Objects.equals(actualBarcode, productService.getWithId(pojo.getId()).getBarcode())) {
                 throw new ApiException("Unable to edit, Barcode exists in Inventory");
             }
         }

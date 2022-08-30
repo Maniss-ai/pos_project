@@ -51,36 +51,35 @@ public class GenerateInvoice {
         }
     }
 
-    // todo check uses
-    public static void generatePdf(HttpServletResponse response) {
-        try {
-            FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
-
-            //Set Up a buffer to obtain the content length
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-            Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, out);
-            TransformerFactory factory = TransformerFactory.newInstance();
-            Transformer transformer = factory.newTransformer(new StreamSource(PATH_TO_XSL));
-            //Make sure the XSL transformation's result is piped through to FOP
-            Result res = new SAXResult(fop.getDefaultHandler());
-
-            //Setup input
-            Source src = new StreamSource(new File(PATH_TO_XML));
-
-            //Start the transformation and rendering process
-            transformer.transform(src, res);
-
-            //Prepare response
-            response.setContentType("application/pdf");
-            response.setContentLength(out.size());
-
-            //Send content to Browser
-            response.getOutputStream().write(out.toByteArray());
-            response.getOutputStream().flush();
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void generatePdf(HttpServletResponse response) {
+//        try {
+//            FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
+//
+//            //Set Up a buffer to obtain the content length
+//            ByteArrayOutputStream out = new ByteArrayOutputStream();
+//
+//            Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, out);
+//            TransformerFactory factory = TransformerFactory.newInstance();
+//            Transformer transformer = factory.newTransformer(new StreamSource(PATH_TO_XSL));
+//            //Make sure the XSL transformation's result is piped through to FOP
+//            Result res = new SAXResult(fop.getDefaultHandler());
+//
+//            //Setup input
+//            Source src = new StreamSource(new File(PATH_TO_XML));
+//
+//            //Start the transformation and rendering process
+//            transformer.transform(src, res);
+//
+//            //Prepare response
+//            response.setContentType("application/pdf");
+//            response.setContentLength(out.size());
+//
+//            //Send content to Browser
+//            response.getOutputStream().write(out.toByteArray());
+//            response.getOutputStream().flush();
+//        }
+//        catch(Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

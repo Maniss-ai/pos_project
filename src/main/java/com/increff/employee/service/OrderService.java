@@ -21,18 +21,12 @@ public class OrderService {
 
     @Transactional
     public List<OrderPojo> getSelectedOrdersWithId(Integer orderId) throws ApiException {
-        try {
-            List<OrderPojo> orderPojoList = dao.selectAllWithId(orderId);
-            if(orderPojoList.size() == 0) {
-                throw new ApiException("Order Id doesn't exists");
-            }
-            else {
-                return orderPojoList;
-            }
-        }
-        catch (Exception e) {
+        List<OrderPojo> orderPojoList = dao.selectAllWithId(orderId);
+        if(orderPojoList.size() == 0) {
             throw new ApiException("Order Id doesn't exists");
         }
+
+        return orderPojoList;
     }
 
     @Transactional

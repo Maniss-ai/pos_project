@@ -4,6 +4,7 @@ import com.increff.employee.AbstractUnitTest;
 import com.increff.employee.model.data.OrderData;
 import com.increff.employee.model.data.OrderItemData;
 import com.increff.employee.model.form.*;
+import com.increff.employee.pojo.*;
 import com.increff.employee.service.ApiException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -104,6 +105,38 @@ public class OrderDtoTest extends AbstractUnitTest {
     public void testEmptyViewOrderForm() throws ParseException, ApiException {
         ViewOrderForm viewOrderForm = new ViewOrderForm();
         orderDto.search(viewOrderForm);
+    }
+
+    @Test(expected = ApiException.class)
+    public void testGetOrder() throws ApiException {
+        BrandForm brandForm = new BrandForm();
+        brandForm.setBrand("puma");
+        brandForm.setCategory("shoes");
+        brandDto.add(brandForm);
+
+        ProductForm productForm = new ProductForm();
+        productForm.setBrand("puma");
+        productForm.setCategory("shoes");
+        productForm.setBarcode("puma111");
+        productForm.setProduct("sports shoes");
+        productForm.setMrp(2999.362);
+        productDto.add(productForm);
+
+        InventoryForm inventoryForm = new InventoryForm();
+        inventoryForm.setBarcode("puma111");
+        inventoryForm.setInventory(78);
+        inventoryDto.add(inventoryForm);
+
+        OrderItemForm orderItemForm = new OrderItemForm();
+        orderItemForm.setSellingPrice(100.023);
+        orderItemForm.setBarcode(inventoryForm.getBarcode());
+        orderItemForm.setQuantity(10);
+        OrderItemData orderItemData = orderItemDto.add(orderItemForm);
+
+        Integer orderId = orderItemData.getOrderId();
+        OrderPojo orderPojo = orderDto.getOrder(1);
+
+        Assert.assertEquals(100.023 * 10, orderPojo.getBillAmount(), 1);
     }
 
 }

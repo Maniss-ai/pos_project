@@ -39,8 +39,9 @@ public class OrderItemDto {
 
     public OrderItemData add(OrderItemForm form) throws ApiException {
         Checks.nullCheckOrderItem(form);
-        OrderItemPojo pojo = DtoHelper.convertFormToPojoOrderItem(form, 0);
-        DtoHelper.normalizeOrderItem(pojo);
+        OrderItemPojo orderItemPojo = DtoHelper.convertFormToPojoOrderItem(form, 0);
+        orderItemPojo.setProductId(productService.getWithBarcode(form.getBarcode()).getId());
+//        DtoHelper.normalizeOrderItem(pojo);
 
         // get inventoryId using barcodeId match ....
         Integer inventoryId = getInventoryIdMatchWithBarcode(form.getBarcode());
@@ -50,7 +51,7 @@ public class OrderItemDto {
         if(inventoryItems < form.getQuantity()) {
             throw new ApiException("There's only " + inventoryItems + " items available in the Inventory");
         }
-        else if(!isSellingPriceLessThanMRP(pojo)) {
+        else if(!isSellingPriceLessThanMRP(orderItemPojo)) {
             throw new ApiException("Selling Price Can't be More Than MRP");
         }
         else {
@@ -58,23 +59,29 @@ public class OrderItemDto {
                 throw new ApiException("Order already exists, Please Update");
             }
             else {
-                return DtoHelper.convertPojoToDataOrderItem(orderItemService.add(pojo));
+                OrderItemData orderItemData = DtoHelper.convertPojoToDataOrderItem(orderItemService.add(orderItemPojo));
+                orderItemData.setBarcode(form.getBarcode());
+                return orderItemData;
             }
         }
     }
 
-    public OrderItemData get(Integer id) throws ApiException {
-        OrderItemPojo pojo = orderItemService.get(id);
-        return DtoHelper.convertPojoToDataOrderItem(pojo);
+    public OrderItemData get(Integer orderItemId) throws ApiException {
+        OrderItemPojo pojo = orderItemService.get(orderItemId);
+        OrderItemData orderItemData = DtoHelper.convertPojoToDataOrderItem(pojo);
+        orderItemData.setBarcode(productService.getWithId(orderItemService.get(orderItemId).getProductId()).getBarcode());
+        return orderItemData;
     }
 
-    public List<OrderItemData> getAll() {
+    public List<OrderItemData> getAll() throws ApiException {
         List<OrderItemPojo> pojoList = orderItemService.getAll();
         List<OrderItemData> dataList = new ArrayList<>();
         for (OrderItemPojo pojo : pojoList) {
             // if order is not placed than display it ....
             if(pojo.getOrderId() == 0) {
-                dataList.add(DtoHelper.convertPojoToDataOrderItem(pojo));
+                OrderItemData orderItemData = DtoHelper.convertPojoToDataOrderItem(pojo);
+                orderItemData.setBarcode(productService.getWithId(pojo.getProductId()).getBarcode());
+                dataList.add(orderItemData);
             }
         }
         return dataList;
@@ -115,23 +122,26 @@ public class OrderItemDto {
         for (OrderItemForm form : orderFormList) {
 //            form.setOrderId(orderId);
             OrderItemPojo orderItemPojo = DtoHelper.convertFormToPojoOrderItem(form, orderId);
-            orderItemService.updateOrderId(orderItemPojo.getBarcode(), orderItemPojo);
+            orderItemPojo.setProductId(productService.getWithBarcode(form.getBarcode()).getId());
+
+            orderItemService.updateOrderId(orderItemPojo.getProductId(), orderItemPojo);
 
             // update inventory ....
-            Integer currentInventory = inventoryService.getCheck(orderItemPojo.getBarcode()).getInventory();
+            Integer currentInventory = inventoryService.getCheck(orderItemPojo.getProductId()).getInventory();
             currentInventory -= orderItemPojo.getQuantity();
 
             InventoryPojo inventoryPojo = new InventoryPojo();
             inventoryPojo.setInventory(currentInventory);
-            inventoryPojo.setBarcode(orderItemPojo.getBarcode());
-            inventoryService.update(orderItemPojo.getBarcode(), inventoryPojo);
+//            inventoryPojo.setBarcode(orderItemPojo.getBarcode());
+            inventoryService.update(orderItemPojo.getProductId(), inventoryPojo);
         }
     }
 
     public OrderItemData update(Integer orderItemId, OrderItemUpdateForm form) throws ApiException {
         Checks.nullCheckForUpdateOrderItem(form);
         String barcode = get(orderItemId).getBarcode();
-        OrderItemPojo pojo = DtoHelper.convertFormToPojoForUpdateOrderItem(form, 0, barcode);
+        OrderItemPojo orderItemPojo = DtoHelper.convertFormToPojoForUpdateOrderItem(form, 0);
+        orderItemPojo.setProductId(orderItemService.get(orderItemId).getProductId());
 
         // get inventoryId using barcodeId match ....
         Integer inventoryId = getInventoryIdMatchWithBarcode(barcode);
@@ -140,32 +150,35 @@ public class OrderItemDto {
         if(inventoryItems < form.getQuantity()) {
             throw new ApiException("There's only " + inventoryItems + " items available in the Inventory");
         }
-        else if(!isSellingPriceLessThanMRP(pojo)) {
+        else if(!isSellingPriceLessThanMRP(orderItemPojo)) {
             throw new ApiException("Selling Price can't be more than MRP");
         }
         else {
-            return DtoHelper.convertPojoToDataOrderItem(orderItemService.update(orderItemId, pojo));
+            OrderItemData orderItemData = DtoHelper.convertPojoToDataOrderItem(orderItemService.update(orderItemId, orderItemPojo));
+            orderItemData.setBarcode(productService.getWithId(orderItemService.get(orderItemId).getProductId()).getBarcode());
+            return orderItemData;
         }
     }
 
-    private boolean alreadyAdded(OrderItemForm form) {
+    private boolean alreadyAdded(OrderItemForm form) throws ApiException {
         List<OrderItemPojo> list = orderItemService.getAll();
         for(OrderItemPojo orderItemPojo : list) {
-            if(Objects.equals(orderItemPojo.getBarcode(), form.getBarcode()) && 0 == orderItemPojo.getOrderId()) {
+            if(Objects.equals(productService.getWithId(orderItemPojo.getProductId()).getBarcode(), form.getBarcode()) && 0 == orderItemPojo.getOrderId()) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean isSellingPriceLessThanMRP(OrderItemPojo pojo) throws ApiException {
-        ProductPojo productPojo = productService.getWithBarcode(pojo.getBarcode());
+    private boolean isSellingPriceLessThanMRP(OrderItemPojo orderItemPojo) throws ApiException {
+        ProductPojo productPojo = productService.getWithId(orderItemPojo.getProductId());
 
-        if(pojo.getSellingPrice() > productPojo.getMrp()) {
+        if(orderItemPojo.getSellingPrice() > productPojo.getMrp()) {
             return false;
         }
         else {
-            pojo.setBarcode(productService.getWithBarcode(pojo.getBarcode()).getBarcode());
+//             TODO
+//            orderItemPojo.setBarcode(productService.getWithBarcode(orderItemPojo.getBarcode()).getBarcode());
             return true;
         }
     }
@@ -174,7 +187,7 @@ public class OrderItemDto {
         Integer inventoryId = -1;
         List<InventoryPojo> list = inventoryService.getAll();
         for(InventoryPojo inventoryPojo : list) {
-            if(Objects.equals(inventoryPojo.getBarcode(), barcode)) {
+            if(Objects.equals(productService.getWithId(inventoryPojo.getId()).getBarcode(), barcode)) {
                 inventoryId = inventoryPojo.getId();
                 break;
             }

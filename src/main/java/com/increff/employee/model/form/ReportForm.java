@@ -10,5 +10,4 @@ public class ReportForm {
     private String category;
     private String startDate;
     private String endDate;
-
 }

@@ -28,29 +28,24 @@ public class OrderItemDaoTest extends AbstractUnitTest {
         brandDao.insert(brandPojo);
 
         ProductPojo productPojo = new ProductPojo();
-        productPojo.setBrand("puma");
-        productPojo.setCategory("shoes");
         productPojo.setBarcode("puma111");
         productPojo.setProduct("sports shoes");
         productPojo.setMrp(2999.362);
         productDao.insert(productPojo);
 
         InventoryPojo inventoryPojo = new InventoryPojo();
-        inventoryPojo.setBarcode("puma111");
         inventoryPojo.setInventory(38);
         inventoryDao.insert(inventoryPojo);
 
         OrderItemPojo orderItemPojo = new OrderItemPojo();
         orderItemPojo.setOrderId(0);
         orderItemPojo.setSellingPrice(100.023);
-        orderItemPojo.setBarcode(inventoryPojo.getBarcode());
         orderItemPojo.setQuantity(10);
 
         orderItemPojo = orderItemDao.insert(orderItemPojo);
 
         Assert.assertEquals(0, orderItemPojo.getOrderId(), 1);
         Assert.assertEquals(100.02, orderItemPojo.getSellingPrice(), 0.2);
-        Assert.assertEquals(inventoryPojo.getBarcode(), orderItemPojo.getBarcode());
         Assert.assertEquals(10, orderItemPojo.getQuantity(), 1);
         Assert.assertEquals(0, orderItemPojo.getOrderId(), 1);
     }
@@ -63,22 +58,18 @@ public class OrderItemDaoTest extends AbstractUnitTest {
         brandDao.insert(brandPojo);
 
         ProductPojo productPojo = new ProductPojo();
-        productPojo.setBrand("puma");
-        productPojo.setCategory("shoes");
         productPojo.setBarcode("puma111");
         productPojo.setProduct("sports shoes");
         productPojo.setMrp(2999.362);
         productDao.insert(productPojo);
 
         InventoryPojo inventoryPojo = new InventoryPojo();
-        inventoryPojo.setBarcode("puma111");
         inventoryPojo.setInventory(38);
         inventoryDao.insert(inventoryPojo);
 
         OrderItemPojo orderItemPojo = new OrderItemPojo();
         orderItemPojo.setOrderId(0);
         orderItemPojo.setSellingPrice(100.023);
-        orderItemPojo.setBarcode(inventoryPojo.getBarcode());
         orderItemPojo.setQuantity(10);
 
         orderItemPojo = orderItemDao.insert(orderItemPojo);
@@ -88,7 +79,6 @@ public class OrderItemDaoTest extends AbstractUnitTest {
 
         Assert.assertEquals(0, orderItemPojo.getOrderId(), 1);
         Assert.assertEquals(100.02, orderItemPojo.getSellingPrice(), 0.2);
-        Assert.assertEquals(inventoryPojo.getBarcode(), orderItemPojo.getBarcode());
         Assert.assertEquals(10, orderItemPojo.getQuantity(), 1);
         Assert.assertEquals(0, orderItemPojo.getOrderId(), 1);
     }
@@ -101,22 +91,18 @@ public class OrderItemDaoTest extends AbstractUnitTest {
         brandDao.insert(brandPojo);
 
         ProductPojo productPojo = new ProductPojo();
-        productPojo.setBrand("puma");
-        productPojo.setCategory("shoes");
         productPojo.setBarcode("puma111");
         productPojo.setProduct("sports shoes");
         productPojo.setMrp(2999.362);
         productDao.insert(productPojo);
 
         InventoryPojo inventoryPojo = new InventoryPojo();
-        inventoryPojo.setBarcode("puma111");
         inventoryPojo.setInventory(38);
         inventoryDao.insert(inventoryPojo);
 
         OrderItemPojo orderItemPojo = new OrderItemPojo();
         orderItemPojo.setOrderId(0);
         orderItemPojo.setSellingPrice(100.023);
-        orderItemPojo.setBarcode(inventoryPojo.getBarcode());
         orderItemPojo.setQuantity(10);
 
         orderItemPojo = orderItemDao.insert(orderItemPojo);
@@ -126,7 +112,6 @@ public class OrderItemDaoTest extends AbstractUnitTest {
 
         Assert.assertEquals(0, orderItemPojo.getOrderId(), 1);
         Assert.assertEquals(100.02, orderItemPojo.getSellingPrice(), 0.2);
-        Assert.assertEquals(inventoryPojo.getBarcode(), orderItemPojo.getBarcode());
         Assert.assertEquals(10, orderItemPojo.getQuantity(), 1);
         Assert.assertEquals(0, orderItemPojo.getOrderId(), 1);
     }

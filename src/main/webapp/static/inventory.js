@@ -121,8 +121,15 @@ var processCountInventory = 0;
 var jsonArrayInventory = [];
 var rowInventory = [];
 
-function processDataInventory(){
+function processDataInventory() {
 	var file = $('#inventoryFile')[0].files[0];
+	var fileName = document.querySelector('#inventoryFile').value;
+
+	// check for TSV extension ...
+	if(fileName.substring(fileName.length-3, fileName.length) != "tsv") {
+		$.notify("Please select TSV file", "warn");
+		return;
+	}
 
 	if(document.getElementById("inventoryFile").files.length == 0) {
 		$.notify("Please select TSV file", "warn");
@@ -170,7 +177,7 @@ function uploadRowsInventory() {
 
 /****************************************** BULK ADD INVENTORY : TODO ******************************************/
 function bulkAddInventory() {
-	var url = getInventoryUrl() + "/bulk-add-inventory";
+	var url = getInventoryUrl() + "/bulk-add";
 	console.log(jsonArrayInventory);
 	// Make ajax call
 	$.ajax({
@@ -258,6 +265,7 @@ function updateUploadDialogInventory(){
 function updateFileNameInventory(){
 	var $file = $('#inventoryFile');
 	var fileName = $file.val();
+	fileName = fileName.replace(/^.*[\\\/]/, '');
 	$('#inventoryFileName').html(fileName);
 }
 /*************************************  UPLOAD DATA: END  *************************************/

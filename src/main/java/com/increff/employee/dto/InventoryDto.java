@@ -4,6 +4,7 @@ import com.increff.employee.model.data.InventoryData;
 import com.increff.employee.model.form.InventoryForm;
 import com.increff.employee.model.form.InventoryUpdateForm;
 import com.increff.employee.pojo.InventoryPojo;
+import com.increff.employee.pojo.ProductPojo;
 import com.increff.employee.service.ApiException;
 import com.increff.employee.service.InventoryService;
 import com.increff.employee.service.ProductService;
@@ -26,16 +27,20 @@ public class InventoryDto {
     // CRUD ....
     public InventoryData add(InventoryForm form) throws ApiException {
         Checks.nullCheckInventory(form);
-        InventoryPojo pojo = DtoHelper.convertFormToPojoInventory(form);
-        DtoHelper.normalizeInventory(pojo);
-        productService.getInventoryBarcode(pojo);
+        InventoryPojo inventoryPojo = DtoHelper.convertFormToPojoInventory(form);
+        DtoHelper.normalizeInventory(inventoryPojo);
+        ProductPojo productPojo = productService.getInventoryBarcode(form.getBarcode());
+        inventoryPojo.setId(productPojo.getId());
 
         if (Checks.doesNotExistInventory(form, getAll())) {
-            return DtoHelper.convertPojoToDataInventory(inventoryService.add(pojo));
+            InventoryData inventoryData = DtoHelper.convertPojoToDataInventory(inventoryService.add(inventoryPojo));
+            inventoryData.setBarcode(form.getBarcode());
+
+            return inventoryData;
         } else {
-                InventoryUpdateForm inventoryUpdateForm = new InventoryUpdateForm();
-                inventoryUpdateForm.setInventory(form.getInventory());
-                return update(pojo.getBarcode(), inventoryUpdateForm);
+            InventoryUpdateForm inventoryUpdateForm = new InventoryUpdateForm();
+            inventoryUpdateForm.setInventory(form.getInventory());
+            return update(form.getBarcode(), inventoryUpdateForm);
         }
     }
 
@@ -65,22 +70,34 @@ public class InventoryDto {
 
     public InventoryData get(Integer id) throws ApiException {
         InventoryPojo pojo = inventoryService.get(id);
-        return DtoHelper.convertPojoToDataInventory(pojo);
+
+        InventoryData inventoryData = DtoHelper.convertPojoToDataInventory(pojo);
+        inventoryData.setBarcode(productService.getWithId(id).getBarcode());
+
+        return inventoryData;
     }
 
-    public List<InventoryData> getAll() {
+    public List<InventoryData> getAll() throws ApiException {
         List<InventoryPojo> pojoList = inventoryService.getAll();
         List<InventoryData> dataList = new ArrayList<>();
-        for (InventoryPojo pojo : pojoList) {
-            dataList.add(DtoHelper.convertPojoToDataInventory(pojo));
+        for (InventoryPojo inventoryPojo : pojoList) {
+            InventoryData inventoryData = DtoHelper.convertPojoToDataInventory(inventoryPojo);
+            inventoryData.setBarcode(productService.getWithId(inventoryPojo.getId()).getBarcode());
+
+            dataList.add(inventoryData);
         }
         return dataList;
     }
 
     public InventoryData update(String barcode, InventoryUpdateForm form) throws ApiException {
+        Integer productId = productService.getWithBarcode(barcode).getId();
         Checks.nullCheckForUpdateInventory(form);
         InventoryPojo pojo = DtoHelper.convertFormToPojoForUpdateInventory(form);
-        return DtoHelper.convertPojoToDataInventory(inventoryService.update(barcode, pojo));
+
+        InventoryData inventoryData = DtoHelper.convertPojoToDataInventory(inventoryService.update(productId, pojo));
+        inventoryData.setBarcode(barcode);
+
+        return inventoryData;
     }
 
 }

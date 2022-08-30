@@ -43,4 +43,5 @@ public class AppRestControllerAdvice {
         data.setMessage("An unknown error has occurred this time - " + e.getMessage());
         return data;
     }
+
 }

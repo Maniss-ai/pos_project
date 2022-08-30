@@ -1,5 +1,6 @@
 package com.increff.employee.service;
 
+import com.increff.employee.model.form.ReportForm;
 import com.increff.employee.pojo.BrandPojo;
 import com.increff.employee.pojo.ProductPojo;
 import com.increff.employee.AbstractUnitTest;
@@ -23,8 +24,6 @@ public class ProductServiceTest extends AbstractUnitTest {
         brandService.add(brandPojo);
 
         ProductPojo productPojo = new ProductPojo();
-        productPojo.setBrand("puma");
-        productPojo.setCategory("shoes");
         productPojo.setBarcode("puma111");
         productPojo.setProduct("sports shoes");
         productPojo.setMrp(2999.362);
@@ -40,8 +39,6 @@ public class ProductServiceTest extends AbstractUnitTest {
         brandService.add(brandPojo);
 
         ProductPojo productPojo = new ProductPojo();
-        productPojo.setBrand("puma");
-        productPojo.setCategory("shoes");
         productPojo.setBarcode("puma111");
         productPojo.setProduct("sports shoes");
         productPojo.setMrp(2999.362);
@@ -50,8 +47,6 @@ public class ProductServiceTest extends AbstractUnitTest {
         int id = productPojo.getId();
         productPojo = productService.getWithId(id);
 
-        Assert.assertEquals("puma", productPojo.getBrand());
-        Assert.assertEquals("shoes", productPojo.getCategory());
         Assert.assertEquals("puma111", productPojo.getBarcode());
         Assert.assertEquals("sports shoes", productPojo.getProduct());
         Assert.assertEquals(2999.36, productPojo.getMrp(), 0.01);
@@ -65,8 +60,6 @@ public class ProductServiceTest extends AbstractUnitTest {
         brandService.add(brandPojo);
 
         ProductPojo productPojo = new ProductPojo();
-        productPojo.setBrand("puma");
-        productPojo.setCategory("shoes");
         productPojo.setBarcode("puma111");
         productPojo.setProduct("sports shoes");
         productPojo.setMrp(2999.362);
@@ -75,8 +68,6 @@ public class ProductServiceTest extends AbstractUnitTest {
         String barcode = productPojo.getBarcode();
         productPojo = productService.getWithBarcode(barcode);
 
-        Assert.assertEquals("puma", productPojo.getBrand());
-        Assert.assertEquals("shoes", productPojo.getCategory());
         Assert.assertEquals("puma111", productPojo.getBarcode());
         Assert.assertEquals("sports shoes", productPojo.getProduct());
         Assert.assertEquals(2999.36, productPojo.getMrp(), 0.01);
@@ -93,8 +84,6 @@ public class ProductServiceTest extends AbstractUnitTest {
 
         for(int i = 0; i < 5; i++) {
             ProductPojo productPojo = new ProductPojo();
-            productPojo.setBrand("brand" + i+1);
-            productPojo.setCategory("category" + i+1);
             productPojo.setBarcode("barcode" + i+1);
             productPojo.setProduct("products" + i+1);
             productPojo.setMrp(100.234 * (i+1));
@@ -114,15 +103,11 @@ public class ProductServiceTest extends AbstractUnitTest {
         brandService.add(brandPojo);
 
         ProductPojo productPojo = new ProductPojo();
-        productPojo.setBrand("puma");
-        productPojo.setCategory("shoes");
         productPojo.setBarcode("puma111");
         productPojo.setProduct("sports shoes");
         productPojo.setMrp(2999.362);
         productService.add(productPojo);
 
-        productPojo.setBrand("puma");
-        productPojo.setCategory("shoes");
         productPojo.setBarcode("puma222");
         productPojo.setProduct("neon shoes");
         productPojo.setMrp(8999.362);
@@ -134,6 +119,74 @@ public class ProductServiceTest extends AbstractUnitTest {
         productPojo = productService.update(id, productPojo);
 
         Assert.assertEquals("puma333", productPojo.getBarcode());
+    }
+
+    @Test
+    public void testGetProductWithBrandCategory() {
+        BrandPojo brandPojo = new BrandPojo();
+        brandPojo.setBrand("puma");
+        brandPojo.setCategory("shoes");
+        brandService.add(brandPojo);
+
+        ProductPojo productPojo = new ProductPojo();
+        productPojo.setBarcode("puma111");
+        productPojo.setProduct("sports shoes");
+        productPojo.setMrp(2999.362);
+        productService.add(productPojo);
+
+        ReportForm reportForm = new ReportForm();
+        reportForm.setBrand("puma");
+        reportForm.setCategory("shoes");
+
+        List<ProductPojo> productPojoList = productService.getProductWithBrandCategory(reportForm);
+
+        Assert.assertEquals(1, productPojoList.size());
+    }
+
+    @Test
+    public void testGetProductWithCategory() {
+        BrandPojo brandPojo = new BrandPojo();
+        brandPojo.setBrand("puma");
+        brandPojo.setCategory("shoes");
+        brandService.add(brandPojo);
+
+        ProductPojo productPojo = new ProductPojo();
+        productPojo.setBarcode("puma111");
+        productPojo.setProduct("sports shoes");
+        productPojo.setMrp(2999.362);
+        productService.add(productPojo);
+
+        ReportForm reportForm = new ReportForm();
+        reportForm.setCategory("shoes");
+
+        List<ProductPojo> productPojoList = productService.getProductWithCategory(reportForm);
+
+        Assert.assertEquals(1, productPojoList.size());
+    }
+
+    @Test(expected = ApiException.class)
+    public void getCheckWhenIdNotExist() throws ApiException {
+        int id = 0;
+        productService.getCheck(id);
+    }
+
+    @Test
+    public void getCheckWhenIdExist() throws ApiException {
+        BrandPojo brandPojo = new BrandPojo();
+        brandPojo.setBrand("puma");
+        brandPojo.setCategory("shoes");
+        brandService.add(brandPojo);
+
+        ProductPojo productPojo = new ProductPojo();
+        productPojo.setBarcode("puma111");
+        productPojo.setProduct("sports shoes");
+        productPojo.setMrp(2999.362);
+        productPojo = productService.add(productPojo);
+
+        int id = productPojo.getId();
+        productPojo = productService.getCheck(id);
+
+        Assert.assertEquals("puma111", productPojo.getBarcode());
     }
 
 }

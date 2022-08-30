@@ -2,7 +2,6 @@ package com.increff.employee.service;
 
 import com.increff.employee.dao.BrandDao;
 import com.increff.employee.pojo.BrandPojo;
-import com.increff.employee.pojo.ProductPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,12 +56,32 @@ public class BrandService {
     }
 
     @Transactional
-    public BrandPojo getBrandCategory(ProductPojo pojo) throws ApiException {
+    public BrandPojo getBrandCategory(String brand, String category) throws ApiException {
         try {
-            return dao.getBrandCategory(pojo);
+            return dao.getBrandCategory(brand, category);
         }
         catch (Exception e) {
-            throw new ApiException("Brand Category doesn't exists");
+            throw new ApiException("Brand Category pair doesn't exists");
+        }
+    }
+
+    @Transactional
+    public List<BrandPojo> getBrand(String brand) throws ApiException {
+        try {
+            return dao.getBrand(brand);
+        }
+        catch (Exception e) {
+            throw new ApiException("Brand Category pair doesn't exists");
+        }
+    }
+
+    @Transactional
+    public List<BrandPojo> getCategory(String category) throws ApiException {
+        try {
+            return dao.getCategory(category);
+        }
+        catch (Exception e) {
+            throw new ApiException("Brand Category pair doesn't exists");
         }
     }
 

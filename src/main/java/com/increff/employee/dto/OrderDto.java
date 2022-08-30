@@ -1,15 +1,12 @@
 package com.increff.employee.dto;
 
+import com.increff.employee.service.*;
 import com.increff.employee.util.ObjectToXml;
 import com.increff.employee.model.data.OrderData;
 import com.increff.employee.model.data.OrderItemData;
 import com.increff.employee.model.form.ViewOrderForm;
 import com.increff.employee.pojo.OrderItemPojo;
 import com.increff.employee.pojo.OrderPojo;
-import com.increff.employee.service.ApiException;
-import com.increff.employee.service.InventoryService;
-import com.increff.employee.service.OrderItemService;
-import com.increff.employee.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
@@ -32,7 +29,7 @@ public class OrderDto {
     @Autowired
     private OrderService orderService;
     @Autowired
-    private InventoryService inventoryService;
+    private ProductService productService;
     @Autowired
     private OrderItemService orderItemService;
 
@@ -40,7 +37,6 @@ public class OrderDto {
         List<OrderPojo> pojoList;
         List<OrderData> dataList = new ArrayList<>();
 
-          // TODO convert Hash OrderId to original orderId then pass perform operations
         if(form.getOrderId() != null && form.getOrderId() != 0) {
             checkOrderIdExists(form.getOrderId());
             pojoList = orderService.getSelectedOrdersWithId(form.getOrderId());
@@ -67,11 +63,14 @@ public class OrderDto {
         return dataList;
     }
 
-    public List<OrderItemData> getSingleOrder(Integer orderId) {
+    public List<OrderItemData> getSingleOrder(Integer orderId) throws ApiException {
         List<OrderItemPojo> pojoList = orderItemService.getSingleOrder(orderId);
         List<OrderItemData> dataList = new ArrayList<>();
         for(OrderItemPojo pojo : pojoList) {
-            dataList.add(DtoHelper.convertPojoToDataOrderItem(pojo));
+            OrderItemData orderItemData = DtoHelper.convertPojoToDataOrderItem(pojo);
+            orderItemData.setBarcode(productService.getWithId(pojo.getProductId()).getBarcode());
+
+            dataList.add(orderItemData);
         }
         return dataList;
     }

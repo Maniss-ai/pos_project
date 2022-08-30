@@ -28,22 +28,18 @@ public class OrderServiceTest extends AbstractUnitTest {
         brandService.add(brandPojo);
 
         ProductPojo productPojo = new ProductPojo();
-        productPojo.setBrand("puma");
-        productPojo.setCategory("shoes");
         productPojo.setBarcode("puma111");
         productPojo.setProduct("sports shoes");
         productPojo.setMrp(2999.362);
         productService.add(productPojo);
 
         InventoryPojo inventoryPojo = new InventoryPojo();
-        inventoryPojo.setBarcode("puma111");
         inventoryPojo.setInventory(78);
         inventoryService.add(inventoryPojo);
 
         OrderItemPojo orderItemPojo = new OrderItemPojo();
         orderItemPojo.setOrderId(0);
         orderItemPojo.setSellingPrice(100.023);
-        orderItemPojo.setBarcode(inventoryPojo.getBarcode());
         orderItemPojo.setQuantity(10);
 
         orderItemPojo = orderItemService.add(orderItemPojo);
@@ -68,22 +64,18 @@ public class OrderServiceTest extends AbstractUnitTest {
         brandService.add(brandPojo);
 
         ProductPojo productPojo = new ProductPojo();
-        productPojo.setBrand("puma");
-        productPojo.setCategory("shoes");
         productPojo.setBarcode("puma111");
         productPojo.setProduct("sports shoes");
         productPojo.setMrp(2999.362);
         productService.add(productPojo);
 
         InventoryPojo inventoryPojo = new InventoryPojo();
-        inventoryPojo.setBarcode("puma111");
         inventoryPojo.setInventory(78);
         inventoryService.add(inventoryPojo);
 
         OrderItemPojo orderItemPojo = new OrderItemPojo();
         orderItemPojo.setOrderId(0);
         orderItemPojo.setSellingPrice(100.023);
-        orderItemPojo.setBarcode(inventoryPojo.getBarcode());
         orderItemPojo.setQuantity(10);
 
         orderItemPojo = orderItemService.add(orderItemPojo);

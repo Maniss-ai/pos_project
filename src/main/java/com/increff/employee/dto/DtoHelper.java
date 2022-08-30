@@ -35,8 +35,8 @@ public class DtoHelper {
     protected static ProductData convertPojoToDataProduct(ProductPojo pojo) {
         ProductData data = new ProductData();
         data.setBarcode(pojo.getBarcode());
-        data.setBrand(pojo.getBrand());
-        data.setCategory(pojo.getCategory());
+//        data.setBrand(pojo.getBrand());
+//        data.setCategory(pojo.getCategory());
         data.setProduct(pojo.getProduct());
         data.setMrp(Precision.round(pojo.getMrp(), 2));
         data.setId(pojo.getId());
@@ -44,8 +44,8 @@ public class DtoHelper {
     }
     protected static ProductPojo convertFormToPojoProduct(ProductForm form) {
         ProductPojo pojo = new ProductPojo();
-        pojo.setBrand(form.getBrand());
-        pojo.setCategory(form.getCategory());
+//        pojo.setBrand(form.getBrand());
+//        pojo.setCategory(form.getCategory());
         pojo.setBarcode(form.getBarcode());
         pojo.setProduct(form.getProduct());
         pojo.setMrp(Precision.round(form.getMrp(), 2));
@@ -55,8 +55,8 @@ public class DtoHelper {
     public static void normalizeProduct(ProductPojo p) {
         p.setBarcode(p.getBarcode().toLowerCase().trim());
         p.setProduct(p.getProduct().toLowerCase().trim());
-        p.setBrand(p.getBrand().toLowerCase().trim());
-        p.setCategory(p.getCategory().toLowerCase().trim());
+//        p.setBrand(p.getBrand().toLowerCase().trim());
+//        p.setCategory(p.getCategory().toLowerCase().trim());
     }
 
     public static void normalizeForUpdateProduct(ProductPojo p) {
@@ -75,7 +75,7 @@ public class DtoHelper {
     // Inventory Conversions
     protected static InventoryData convertPojoToDataInventory(InventoryPojo pojo) {
         InventoryData data = new InventoryData();
-        data.setBarcode(pojo.getBarcode());
+//        data.setBarcode(pojo.getBarcode());
         data.setInventory(pojo.getInventory());
         data.setId(pojo.getId());
         return data;
@@ -83,7 +83,7 @@ public class DtoHelper {
 
     protected static InventoryPojo convertFormToPojoInventory(InventoryForm form) {
         InventoryPojo pojo = new InventoryPojo();
-        pojo.setBarcode(form.getBarcode());
+//        pojo.setBarcode(form.getBarcode());
         pojo.setInventory(form.getInventory());
         return pojo;
     }
@@ -95,14 +95,14 @@ public class DtoHelper {
     }
 
     public static void normalizeInventory(InventoryPojo p) {
-        p.setBarcode(p.getBarcode().toLowerCase().trim());
+//        p.setBarcode(p.getBarcode().toLowerCase().trim());
     }
 
     // OrderItem Conversions
     protected static OrderItemData convertPojoToDataOrderItem(OrderItemPojo pojo) {
         OrderItemData data = new OrderItemData();
         data.setOrderId(pojo.getOrderId());
-        data.setBarcode(pojo.getBarcode());
+//        data.setBarcode(pojo.getBarcode());
         data.setQuantity(pojo.getQuantity());
         data.setSellingPrice(Precision.round(pojo.getSellingPrice(), 2));
         data.setId(pojo.getId());
@@ -112,15 +112,15 @@ public class DtoHelper {
     protected static OrderItemPojo convertFormToPojoOrderItem(OrderItemForm form, Integer orderId) {
         OrderItemPojo pojo = new OrderItemPojo();
         pojo.setOrderId(orderId);
-        pojo.setBarcode(form.getBarcode());
+//        pojo.setBarcode(form.getBarcode());
         pojo.setQuantity(form.getQuantity());
         pojo.setSellingPrice(Precision.round(form.getSellingPrice(), 2));
         return pojo;
     }
 
-    protected static OrderItemPojo convertFormToPojoForUpdateOrderItem(OrderItemUpdateForm form, Integer orderId, String barcode) {
+    protected static OrderItemPojo convertFormToPojoForUpdateOrderItem(OrderItemUpdateForm form, Integer orderId) {
         OrderItemPojo pojo = new OrderItemPojo();
-        pojo.setBarcode(barcode);
+//        pojo.setBarcode(barcode);
         pojo.setOrderId(orderId);
         pojo.setQuantity(form.getQuantity());
         pojo.setSellingPrice(Precision.round(form.getSellingPrice(), 2));
@@ -128,7 +128,6 @@ public class DtoHelper {
     }
 
     // Order Conversions
-    // TODO convert original orderId to Hash OrderId then pass it to orderData
     protected static OrderData convertPojoToDataOrder(OrderPojo pojo) {
         OrderData data = new OrderData();
         data.setId(pojo.getOrderId());
@@ -140,14 +139,14 @@ public class DtoHelper {
     protected static OrderItemPojo convertFormToPojoOrder(OrderItemForm form) {
         OrderItemPojo pojo = new OrderItemPojo();
 //        pojo.setOrderId(form.getOrderId());
-        pojo.setBarcode(form.getBarcode());
+//        pojo.setBarcode(form.getBarcode());
         pojo.setQuantity(form.getQuantity());
         pojo.setSellingPrice(Precision.round(form.getSellingPrice(), 2));
         return pojo;
     }
 
-    public static void normalizeOrderItem(OrderItemPojo p) {
-        p.setBarcode(p.getBarcode().toLowerCase().trim());
-    }
+//    public static void normalizeOrderItem(OrderItemPojo p) {
+//        p.setBarcode(p.getBarcode().toLowerCase().trim());
+//    }
 
 }

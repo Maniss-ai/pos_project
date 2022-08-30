@@ -15,7 +15,7 @@ import java.util.List;
 public class InventoryDao extends AbstractDao {
     private static final String SELECT_ID = "select p from InventoryPojo p where id=:id";
     private static final String SELECT_ALL = "select p from InventoryPojo p";
-    private static final String SELECT_BARCODE = "select p from InventoryPojo p where barcode=:barcode";
+//    private static final String SELECT_BARCODE = "select p from InventoryPojo p where barcode=:barcode";
 
     @PersistenceContext
     @Autowired
@@ -38,9 +38,9 @@ public class InventoryDao extends AbstractDao {
         return query.getResultList();
     }
 
-    public InventoryPojo selectBarcode(String barcode) {
-        TypedQuery<InventoryPojo> query = getQuery(SELECT_BARCODE, InventoryPojo.class);
-        query.setParameter("barcode", barcode);
+    public InventoryPojo selectBarcode(Integer productId) {
+        TypedQuery<InventoryPojo> query = getQuery(SELECT_ID, InventoryPojo.class);
+        query.setParameter("id", productId);
         return query.getSingleResult();
     }
 

@@ -25,18 +25,18 @@ public class ProductController {
     }
 
     @ApiOperation(value = "Add products in bulk")
-    @RequestMapping(path = "/api/product/bulk-add-product", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/product/bulk-add", method = RequestMethod.POST)
     public List<ProductData> bulkAddProduct(@RequestBody List<ProductForm> productFormList) throws ApiException {
         return dto.bulkAddProduct(productFormList);
     }
 
-    @ApiOperation(value = "Gets a product by Id")
+    @ApiOperation(value = "Get a product by Id")
     @RequestMapping(path = "/api/product/{id}", method = RequestMethod.GET)
     public ProductData get(@PathVariable Integer id) throws ApiException {
         return dto.getWithId(id);
     }
 
-    @ApiOperation(value = "Gets a product by barcode")
+    @ApiOperation(value = "Get a product by barcode")
     @RequestMapping(path = "/api/product/barcode/{barcode}", method = RequestMethod.GET)
     public ProductData getWithBarcode(@PathVariable String barcode) throws ApiException {
         return dto.get(barcode);
@@ -48,7 +48,7 @@ public class ProductController {
         return dto.getAll();
     }
 
-    @ApiOperation(value = "Updates a Product")
+    @ApiOperation(value = "Update a Product")
     @RequestMapping(path = "/api/product/{id}", method = RequestMethod.PUT)
     public ProductData update(@PathVariable Integer id, @RequestBody ProductUpdateForm form) throws ApiException {
         return dto.update(id, form);

@@ -18,19 +18,19 @@ public class InventoryController {
     @Autowired
     private InventoryDto inventoryDto;
 
-    @ApiOperation(value = "Adds an Inventory")
+    @ApiOperation(value = "Add an Inventory")
     @RequestMapping(path = "/api/inventory", method = RequestMethod.POST)
     public InventoryData add(@RequestBody InventoryForm inventoryForm) throws ApiException {
         return inventoryDto.add(inventoryForm);
     }
 
     @ApiOperation(value = "Add Inventory in Bulk")
-    @RequestMapping(path = "/api/inventory/bulk-add-inventory", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/inventory/bulk-add", method = RequestMethod.POST)
     public List<InventoryData> addBulkInventory(@RequestBody List<InventoryForm> inventoryFormList) throws ApiException {
         return inventoryDto.bulkAddInventory(inventoryFormList);
     }
 
-    @ApiOperation(value = "Gets an Inventory by ID")
+    @ApiOperation(value = "Get an Inventory by ID")
     @RequestMapping(path = "/api/inventory/{id}", method = RequestMethod.GET)
     public InventoryData get(@PathVariable Integer id) throws ApiException {
         return inventoryDto.get(id);
@@ -38,11 +38,10 @@ public class InventoryController {
 
     @ApiOperation(value = "Get list of all Inventory")
     @RequestMapping(path = "/api/inventory", method = RequestMethod.GET)
-    public List<InventoryData> getAll() {
+    public List<InventoryData> getAll() throws ApiException {
         return inventoryDto.getAll();
     }
-
-    @ApiOperation(value = "Updates an Inventory")
+    @ApiOperation(value = "Update an Inventory")
     @RequestMapping(path = "/api/inventory/{barcode}", method = RequestMethod.PUT)
     public void update(@PathVariable String barcode, @RequestBody InventoryUpdateForm inventoryUpdateForm) throws ApiException {
         inventoryDto.update(barcode, inventoryUpdateForm);

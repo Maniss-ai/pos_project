@@ -25,8 +25,8 @@ public class OrderItemController extends javax.servlet.http.HttpServlet implemen
 
     @ApiOperation(value = "Submit (place) order")
     @RequestMapping(path = "/api/order/submit-order", method = RequestMethod.POST)
-    public void submit(@RequestBody List<OrderItemForm> orderFormList) throws ApiException {
-        dto.submit(orderFormList);
+    public void submit(@RequestBody List<OrderItemForm> orderItemFormList) throws ApiException {
+        dto.submit(orderItemFormList);
     }
 
     @ApiOperation(value = "Get order item by Id")
@@ -37,7 +37,7 @@ public class OrderItemController extends javax.servlet.http.HttpServlet implemen
 
     @ApiOperation(value = "Get list of all order items")
     @RequestMapping(path = "/api/order/order-item", method = RequestMethod.GET)
-    public List<OrderItemData> getAll() {
+    public List<OrderItemData> getAll() throws ApiException {
         return dto.getAll();
     }
 

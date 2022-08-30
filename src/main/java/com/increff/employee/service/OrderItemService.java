@@ -30,8 +30,12 @@ public class OrderItemService {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public List<OrderItemPojo> getSingleOrder(Integer orderId) {
-        return dao.selectSingleOrder(orderId);
+    public List<OrderItemPojo> getSingleOrder(Integer orderId) throws ApiException {
+        List<OrderItemPojo> orderItemPojoList = dao.selectSingleOrder(orderId);;
+        if(orderItemPojoList.size() == 0) {
+            throw new ApiException("Order Id doesn't not exists");
+        }
+        return orderItemPojoList;
     }
 
     @Transactional
@@ -43,7 +47,7 @@ public class OrderItemService {
     public OrderItemPojo update(Integer placeOrderId, OrderItemPojo p) throws ApiException {
         OrderItemPojo pojo = getCheck(placeOrderId);
         pojo.setOrderId(p.getOrderId());
-        pojo.setBarcode(p.getBarcode());
+//        pojo.setBarcode(p.getBarcode());
         pojo.setQuantity(p.getQuantity());
         pojo.setSellingPrice(p.getSellingPrice());
 
@@ -51,53 +55,50 @@ public class OrderItemService {
     }
 
     @Transactional(rollbackOn  = ApiException.class)
-    public void updateOrderId(String barcode, OrderItemPojo p) throws ApiException {
-        OrderItemPojo pojo = getCheckOrderId(barcode);
+    public void updateOrderId(Integer productId, OrderItemPojo p) throws ApiException {
+        OrderItemPojo pojo = getCheckOrderId(productId);
         pojo.setOrderId(p.getOrderId());
-        pojo.setBarcode(p.getBarcode());
+//        pojo.setBarcode(p.getBarcode());
         pojo.setQuantity(p.getQuantity());
         pojo.setSellingPrice(p.getSellingPrice());
     }
 
+    @Transactional
+    public List<OrderItemPojo> getWithProductId(Integer productId) {
+        return dao.selectWithProductId(productId);
+    }
+    @Transactional
     public List<OrderItemPojo> getCheckWithBarcode(String barcode) throws ApiException {
-        try {
-            List<OrderItemPojo> orderItemPojoList = dao.select1(barcode);
-            if (orderItemPojoList == null) {
-                throw new ApiException("Product with barcode: " + barcode + " does not exit");
-            }
-            return orderItemPojoList;
-        }
-        catch (ApiException e) {
+        List<OrderItemPojo> orderItemPojoList = dao.select1(barcode);
+        if (orderItemPojoList.size() == 0) {
             throw new ApiException("Product with barcode: " + barcode + " does not exit");
         }
+        return orderItemPojoList;
     }
 
     @Transactional
     public OrderItemPojo getCheck(Integer orderItemId) throws ApiException {
+        OrderItemPojo p;
         try {
-            OrderItemPojo p = dao.select(orderItemId);
-            if (p == null) {
-                throw new ApiException("Product id does not exit");
-            }
-            return p;
+            p = dao.select(orderItemId);
         }
         catch (Exception e) {
             throw new ApiException("Product id does not exit");
         }
+        return p;
     }
 
     @Transactional
-    public OrderItemPojo getCheckOrderId(String barcode) throws ApiException {
+    public OrderItemPojo getCheckOrderId(Integer productId) throws ApiException {
+        OrderItemPojo p;
         try {
-            OrderItemPojo p = dao.selectOrderId(barcode);
-            if (p != null) {
-                return p;
-            }
+            p = dao.selectOrderId(productId);
         }
         catch (Exception e) {
-            throw new ApiException("Product with barcode: " + barcode + " does not exit");
+            throw new ApiException("Product with does not exit");
         }
-        return null;
+
+        return p;
     }
 
     @Transactional

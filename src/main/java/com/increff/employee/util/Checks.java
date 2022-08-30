@@ -122,11 +122,14 @@ public class Checks {
 
     // Order Item Checks
     public static void nullCheckOrderItem(OrderItemForm form) throws ApiException {
-        if(form.getBarcode().isEmpty() || form.getBarcode() == null) {
+        if(form.getBarcode() == null || form.getBarcode().isEmpty()) {
             throw new ApiException("Barcode can't be empty");
         }
         else if(form.getQuantity() == null || form.getQuantity() == 0) {
             throw new ApiException("Quantity can't be empty");
+        }
+        else if(form.getSellingPrice() == null || form.getSellingPrice() == 0) {
+            throw new ApiException("Selling price can't be 0");
         }
     }
 
@@ -136,14 +139,14 @@ public class Checks {
         }
     }
 
-    public  static boolean isUniqueOrderItem(OrderItemPojo pojo, List<OrderItemData> dataList) {
-        for(OrderItemData placeOrderData : dataList) {
-            if(Objects.equals(placeOrderData.getBarcode(), pojo.getBarcode())) {
-                return false;
-            }
-        }
-        return true;
-    }
+//    public  static boolean isUniqueOrderItem(OrderItemPojo pojo, List<OrderItemData> dataList) {
+//        for(OrderItemData placeOrderData : dataList) {
+//            if(Objects.equals(placeOrderData.getBarcode(), pojo.getBarcode())) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
     
     // Report Checks
     public static boolean checkBrandCategoryExists(String brand, String category, List<BrandPojo> brandPojoList) {

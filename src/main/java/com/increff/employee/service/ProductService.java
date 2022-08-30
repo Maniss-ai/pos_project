@@ -46,9 +46,9 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductPojo getInventoryBarcode(InventoryPojo pojo) throws ApiException {
+    public ProductPojo getInventoryBarcode(String barcode) throws ApiException {
         try {
-            return dao.getInventoryBarcode(pojo.getBarcode());
+            return dao.getInventoryBarcode(barcode);
         }
         catch (Exception e) {
             throw new ApiException("Barcode doesn't exists");
@@ -56,33 +56,14 @@ public class ProductService {
     }
 
     @Transactional
-    public List<ProductPojo> getProductWithBrandCategory(ReportForm form) {
-        return dao.getProductWithBrandCategory(form);
-    }
-
-    @Transactional
-    public List<ProductPojo> getProductWithBrand(String brand) {
-        return dao.getProductWithBrand(brand);
-    }
-
-    @Transactional
-    public List<ProductPojo> getProductWithCategory(ReportForm form) {
-        return dao.getProductWithCategory(form);
-    }
-
-    @Transactional
-    public List<ProductPojo> getProductWithDate(ReportForm form) {
-        return dao.getProductWithDate(form);
+    public List<ProductPojo> getWithBrandCategory(Integer brandCategory) {
+        return dao.getWithBrandCategory(brandCategory);
     }
 
     @Transactional
     public ProductPojo getCheck(Integer id) throws ApiException {
         try {
-            ProductPojo p = dao.select(id);
-            if (p == null) {
-                throw new ApiException("Brand-Category does not exit");
-            }
-            return p;
+            return dao.select(id);
         }
         catch (Exception e) {
             throw new ApiException("Barcode doesn't exists");
@@ -91,11 +72,7 @@ public class ProductService {
 
     private ProductPojo getCheckWithBarcode(String barcode) throws ApiException {
         try {
-            ProductPojo p = dao.getInventoryBarcode(barcode);
-            if (p == null) {
-                throw new ApiException("Brand-Category " + getWithBarcode(barcode).getBrand() + " does not exit");
-            }
-            return p;
+            return dao.getInventoryBarcode(barcode);
         }
         catch (Exception e) {
             throw new ApiException("Barcode doesn't exists");
