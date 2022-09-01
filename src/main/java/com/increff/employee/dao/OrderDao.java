@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Repository
@@ -20,7 +20,7 @@ public class OrderDao extends AbstractDao {
     @Autowired
     private final EntityManager entityManager = getEntityManager();
 
-    public List<OrderPojo> selectAllWithoutId(LocalDate startDate, LocalDate endDate) {
+    public List<OrderPojo> selectAllWithoutId(ZonedDateTime startDate, ZonedDateTime endDate) {
         TypedQuery<OrderPojo> query = getQuery(SELECT_ALL_WITHOUT_ID, OrderPojo.class);
         query.setParameter("startDate", startDate);
         query.setParameter("endDate", endDate);

@@ -7,7 +7,6 @@ import com.increff.employee.pojo.*;
 import com.increff.employee.service.*;
 import com.increff.employee.util.Checks;
 import com.mysql.cj.conf.ConnectionUrlParser;
-import com.sun.xml.bind.v2.TODO;
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -41,7 +40,6 @@ public class ReportDto {
             if(sdf.parse(form.getStartDate()).compareTo(sdf.parse(form.getEndDate())) > 0) {
                 throw new ApiException("Start Date should come before End Date");
             }
-
             // check weather brand or category exists ...
             if(form.getBrand() != null && form.getCategory() != null && !form.getBrand().isEmpty() && !form.getCategory().isEmpty() && !Checks.checkBrandCategoryExists(form.getBrand(), form.getCategory(), brandService.getAll())) {
                 throw new ApiException("Brand or Category doesn't exists");
@@ -56,9 +54,8 @@ public class ReportDto {
             StringBuilder salesData = new StringBuilder("Brand\tCategory\tQuantity\tRevenue\n");
             List<ProductPojo> productPojoList;
 //            TODO CHANGE BRAND & Category from productDao Query ........ MAJOR CHANGE ........
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate startDate = LocalDate.parse(form.getStartDate(), formatter);
-            LocalDate endDate = LocalDate.parse(form.getEndDate(), formatter);
+            ZonedDateTime startDate = ZonedDateTime.parse(form.getStartDate());
+            ZonedDateTime endDate = ZonedDateTime.parse(form.getEndDate());
 
             // USING BRAND and CATEGORY + DATE
             if(form.getBrand() != null && !form.getBrand().isEmpty() && form.getCategory() != null && !form.getCategory().isEmpty()) {
@@ -149,7 +146,7 @@ public class ReportDto {
         return dataListString;
     }
 
-    private void getReportWithBrandCategory(LocalDate startDate, LocalDate endDate, StringBuilder salesData, List<ProductPojo> productPojoList) {
+    private void getReportWithBrandCategory(ZonedDateTime startDate, ZonedDateTime endDate, StringBuilder salesData, List<ProductPojo> productPojoList) {
         // GET PlaceOrderPojo using Barcode and Add to DATA LIST .... ....
         List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
         for (ProductPojo pojo : productPojoList) {
@@ -184,7 +181,7 @@ public class ReportDto {
         salesData.append(totalQuantity).append("\t").append(Precision.round(totalRevenue, 2));
     }
 
-    private void getReportWithBrand(LocalDate startDate, LocalDate endDate, StringBuilder salesData, List<ProductPojo> productPojoList, String brand) throws ApiException {
+    private void getReportWithBrand(ZonedDateTime startDate, ZonedDateTime endDate, StringBuilder salesData, List<ProductPojo> productPojoList, String brand) throws ApiException {
         List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
         for (ProductPojo productPojo : productPojoList) {
             orderItemPojoList.addAll(orderItemService.getWithProductId(productPojo.getId()));
@@ -242,7 +239,7 @@ public class ReportDto {
         }
     }
 
-    private void getReportWithCategory(LocalDate startDate, LocalDate endDate, StringBuilder salesData, List<ProductPojo> productPojoList, ReportForm form) throws ApiException {
+    private void getReportWithCategory(ZonedDateTime startDate, ZonedDateTime endDate, StringBuilder salesData, List<ProductPojo> productPojoList, ReportForm form) throws ApiException {
         List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
         for (ProductPojo pojo : productPojoList) {
             orderItemPojoList.addAll(orderItemService.getWithProductId(pojo.getId()));

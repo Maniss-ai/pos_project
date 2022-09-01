@@ -7,8 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Getter
@@ -18,6 +17,6 @@ public class OrderPojo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer orderId;
 
-    private LocalDate time;
+    private ZonedDateTime time;
     private Double billAmount;
 }

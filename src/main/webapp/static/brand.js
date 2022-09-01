@@ -18,7 +18,6 @@ function addBrand(event){
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
-	   		console.log("Brand created");
 	   		getBrandList();
 			$.notify("Brand added successfully", "success");
 	   },
@@ -32,14 +31,11 @@ function updateBrand(event){
 	$('#edit-brand-modal').modal('toggle');
 	//Get the ID
 	var id = $("#brand-edit-form input[name=id]").val();
-	console.log("BRAND ID : " + id);
 	var url = getBrandUrl() + "/" + id;
 
 	//Set the values to update
 	var $form = $("#brand-edit-form");
 	var json = toJson($form);
-
-	console.log("json update : " + json);
 
 	$.ajax({
 	   url: url,
@@ -49,7 +45,6 @@ function updateBrand(event){
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
-	   		console.log("Brand update");
 	   		getBrandList();
 			$.notify("Brand updated successfully", "success");
 	   },
@@ -66,8 +61,6 @@ function getBrandList() {
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		console.log("Brand data fetched");
-	   		console.log(data);
 	   		displayBrandList(data);
 	   },
 	   error: handleAjaxError
@@ -122,7 +115,6 @@ function uploadRowsBrand() {
 	var row = fileDataBrand[processCountBrand];
 	processCountBrand++;
 	rowBrand.push(row);
-	console.log(rowBrand);
 
 	var json = {}
 	json["brand"] = row.brand;
@@ -135,9 +127,7 @@ function uploadRowsBrand() {
 
 /****************************************** BULK ADD BRAND : TODO ******************************************/
 function bulkAddBrand() {
-	console.log("8. WORKING FINE!!!");
 	var url = getBrandUrl() + "/bulk-add";
-	console.log(jsonArray);
 	// Make ajax call
 	$.ajax({
 	   url: url,
@@ -164,7 +154,6 @@ function createErrorDataBrand(lines) {
 	var countLine = 0;
 
 	for(var i in rowBrand) {
-		console.log(i);
 		if(countRow == lines[countLine][0]) {
 			rowBrand[i].line_number = lines[countLine][0];
 			rowBrand[i].error = lines[countLine].substring(3, lines[countLine].length);
@@ -177,7 +166,6 @@ function createErrorDataBrand(lines) {
 }
 
 function downloadErrorsBrand() {
-	console.log("errorDataBrand   : " + errorDataBrand.length);
 	if(errorDataBrand.length) {
 		writeFileDataBrand(errorDataBrand);
 	}
@@ -230,7 +218,6 @@ function refreshData() {
 }
 
 function displayBrandList(data){
-	console.log('Printing brand data');
 	var tbody = $('#brand-table').children('tbody');
 	tbody.empty();
 	var value_count = 1;
@@ -253,8 +240,6 @@ function displayEditBrand(id){
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		console.log("Brand data fetched");
-	   		console.log(data);
 	   		displayBrand(data);
 	   },
 	   error: handleAjaxError
@@ -272,14 +257,12 @@ function displayBrand(data){
 //HELPER METHOD
 function toJson($form) {
     var serialized = $form.serializeArray();
-    console.log(serialized);
     var s = '';
     var data = {};
     for(s in serialized){
         data[serialized[s]['name']] = serialized[s]['value']
     }
     var json = JSON.stringify(data);
-    console.log(json);
     return json;
 }
 
@@ -303,7 +286,6 @@ function readFileDataBrand(file, callback){
 
 
 function writeFileDataBrand(arr) {
-	console.log("BRAND LOG : " + arr);
 	var config = {
 		quoteChar: '',
 		escapeChar: '',
@@ -311,7 +293,6 @@ function writeFileDataBrand(arr) {
 	};
 	
 	var data = Papa.unparse(arr, config);
-	console.log("data : " + data);
     var blob = new Blob([data], {type: 'text/tsv;charset=utf-8;'});
     var fileUrl =  null;
 

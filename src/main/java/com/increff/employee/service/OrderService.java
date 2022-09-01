@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
@@ -15,7 +15,7 @@ public class OrderService {
     private OrderDao dao;
 
     @Transactional
-    public List<OrderPojo> getSelectedOrdersWithoutId(LocalDate startDate, LocalDate endDate) {
+    public List<OrderPojo> getSelectedOrdersWithoutId(ZonedDateTime startDate, ZonedDateTime endDate) {
         return dao.selectAllWithoutId(startDate, endDate);
     }
 

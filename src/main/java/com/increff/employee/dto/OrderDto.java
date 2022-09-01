@@ -18,8 +18,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -47,12 +46,17 @@ public class OrderDto {
                 throw new ApiException("Start Date should come before End Date");
             }
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate startDate = LocalDate.parse(form.getStartDate(), formatter);
-            LocalDate endDate = LocalDate.parse(form.getEndDate(), formatter);
+            try {
+                ZonedDateTime startDate = ZonedDateTime.parse(form.getStartDate());
+                ZonedDateTime endDate = ZonedDateTime.parse(form.getEndDate());
 
-            pojoList = orderService.getSelectedOrdersWithoutId(startDate, endDate);
-        }
+                pojoList = orderService.getSelectedOrdersWithoutId(startDate, endDate);
+            }
+
+            catch (Exception e) {
+                throw new ApiException("Invalid Date time format must be zone date time");
+            }
+            }
         else {
             throw new ApiException("Please provide either OrderId or Date range");
         }

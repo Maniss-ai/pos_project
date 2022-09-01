@@ -19,7 +19,6 @@ function addPlaceOrder(event) {
 	var $form = $("#place_order-form");
 	var json = toJsonPO($form);
 	json = JSON.stringify(json);
-	console.log("json object: " + json);
 	var url = getPlaceOrderUrl();
 
 	$.ajax({
@@ -30,10 +29,8 @@ function addPlaceOrder(event) {
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
-	   		console.log("place order created");
-			console.log(response);
 	   		getPlaceOrderList();
-			$.notify("Order added successfully", "success");
+			$.notify("Order item added successfully", "success");
 	   },
 	   error: handleAjaxErrorPlaceOrder
 	});
@@ -46,7 +43,6 @@ function updatePlaceOrder(event) {
 	//Get the ID
 	var id = $("#place_order-edit-form input[name=id]").val();
 	var barcode = $("#place_order-edit-form input[name=barcode]").val();
-	console.log(barcode)
 	var url = getPlaceOrderUrl() + "/" + id;
 	
 
@@ -57,8 +53,6 @@ function updatePlaceOrder(event) {
 
 	json = JSON.stringify(json);
 
-	console.log("JSON:::: " + json);
-
 	$.ajax({
 	   url: url,
 	   type: 'PUT',
@@ -67,9 +61,8 @@ function updatePlaceOrder(event) {
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
-	   		console.log("place order update");
 	   		getPlaceOrderList();
-			$.notify("Order updated successfully", "success");
+			$.notify("Order item updated successfully", "success");
 	   },
 	   error: handleAjaxErrorPlaceOrder
 	});
@@ -83,7 +76,6 @@ function getPlaceOrderList() {
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		console.log("GET: Place Order data fetched");
 			data_list = data;
 			getBarcodePlaceOrder(0, data);
 	   },
@@ -102,8 +94,6 @@ function getBarcodePlaceOrder(index, data) {
 		url: url,
 		type: 'GET',
 		success: function(product_data) {
-				console.log("Barcode data fetched");
-				console.log(product_data);
 				data[index].barcode = product_data.barcode;
 				data[index].product_name = product_data.product;
 				getBarcodePlaceOrder(index+1, data);
@@ -118,8 +108,6 @@ function getBarcodeList(event) {
 		url: url,
 		type: 'GET',
 		success: function(data) {
-				console.log("Barcode data fetched");
-				console.log(data);
 				displayBarcodeList(data);     //...
 		},
 		error: handleAjaxErrorPlaceOrder
@@ -136,8 +124,6 @@ function submitPlaceOrder(event) {
 
 	var data = JSON.stringify(data_list);
 
-	console.log("MY DATA: " + data);
-
 	$.ajax({
 	   url: url,
 	   type: 'POST',
@@ -146,7 +132,6 @@ function submitPlaceOrder(event) {
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
-	   		console.log("submit place order created");
 	   		getPlaceOrderList();
 			$.notify("Order placed successfully", "success");
 	   },
@@ -159,7 +144,6 @@ function submitPlaceOrder(event) {
 //UI DISPLAY METHODS
 
 function displayPlaceOrderList(data) {
-	console.log('Printing place order data');
 	var tbody = $('#place_order-table').children('tbody');
 	tbody.empty();
 	var value_count = 1;
@@ -201,7 +185,6 @@ function displayPlaceOrder(data) {
 }
 
 function displayBarcodeList(data) {
-	console.log('Printing Barcode data');
 	var barcode = $('#barcode');
     barcode.empty();
 	
@@ -225,7 +208,6 @@ function displayBarcodeList(data) {
 //HELPER METHOD
 function toJsonPO($form) {
     var serialized = $form.serializeArray();
-    console.log("serialized : " + serialized);
     var s = '';
     var data = {};
     for(s in serialized){

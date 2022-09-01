@@ -2,9 +2,7 @@ package com.increff.employee.util;
 
 import com.increff.employee.dto.OrderInvoicePojo;
 import com.increff.employee.model.data.OrderItemData;
-import com.increff.employee.model.form.OrderForm;
 import com.increff.employee.model.form.OrderInvoice;
-import com.increff.employee.pojo.InventoryPojo;
 import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.service.OrderItemService;
 import org.apache.commons.math3.util.Precision;
@@ -15,12 +13,14 @@ import javax.xml.bind.Marshaller;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectToXml {
     @Autowired
     private static OrderItemService orderItemService;
+    final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss z");
 
     public static void generateXmlString(List<OrderItemData> placeOrderDataList, OrderPojo orderPojo) throws Exception {
         // convert placeOrderPojoList -> OrderInvoicePojoList
@@ -49,7 +49,8 @@ public class ObjectToXml {
         Marshaller marshallerObj = contextObj.createMarshaller();
         marshallerObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-        OrderInvoice orderInvoice = new OrderInvoice(1, orderInvoicePojoList, orderPojo.getTime().toString(), orderPojo.getOrderId(), totalAmount);
+        String time = orderPojo.getTime().format(formatter);
+        OrderInvoice orderInvoice = new OrderInvoice(1, orderInvoicePojoList, time, orderPojo.getOrderId(), totalAmount);
         StringWriter stringWriter = new StringWriter();
         marshallerObj.marshal(orderInvoice, stringWriter);
 

@@ -48,13 +48,26 @@
 
                     </fo:block>
 
-                    <fo:block font-size="12pt" text-align="center" font-family="Helvetica" font-weight="bold"
-                              space-after="5mm">
 
-                        Order Time -
-                        <xsl:value-of
-                                select="java:format(java:java.text.SimpleDateFormat.new('dd-MM-yyyy hh:mm:ss'), java:java.util.Date.new())"/>
-
+                    <fo:block space-after="5mm">
+                        <fo:table>
+                            <fo:table-column column-width="10cm"/>
+                            <fo:table-column column-width="10cm"/>
+                            <fo:table-body>
+                                <fo:table-row>
+                                    <fo:table-cell>
+                                        <fo:block font-size="12pt" text-align="left" font-weight="bold">
+                                            Order Time - <xsl:value-of select="time"/>
+                                        </fo:block>
+                                    </fo:table-cell>
+                                    <fo:table-cell>
+                                        <fo:block font-size="12pt" text-align="right" font-weight="bold">
+                                            Invoice Time - <xsl:value-of select="java:format(java:java.text.SimpleDateFormat.new('dd/MM/yyyy - hh:mm:ss z'), java:java.util.Date.new())"/>
+                                        </fo:block>
+                                    </fo:table-cell>
+                                </fo:table-row>
+                            </fo:table-body>
+                        </fo:table>
                     </fo:block>
 
                     <fo:block font-size="10pt">
@@ -132,7 +145,7 @@
 
                         <!--                         TODO-->
                         Total Bill Amount:
-                        <xsl:value-of select="totalAmount"/>
+                        <xsl:value-of select="format-number(totalAmount,'0.00')"/>
                          Rs.
                     </fo:block>
 
@@ -192,7 +205,7 @@
 
                 <fo:block text-align="center" font-size="13pt">
 
-                    <xsl:value-of select="sellingPrice"/>
+                    <xsl:value-of select="format-number(sellingPrice,'0.00')"/>
 
                 </fo:block>
 
@@ -202,7 +215,7 @@
 
                 <fo:block text-align="center" font-size="13pt">
 
-                    <xsl:value-of select="billAmount"/>
+                    <xsl:value-of select="format-number(billAmount,'0.00')"/>
 
                 </fo:block>
 

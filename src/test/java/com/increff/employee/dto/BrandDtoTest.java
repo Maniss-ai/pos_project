@@ -1,6 +1,5 @@
 package com.increff.employee.dto;
 
-
 import com.increff.employee.model.data.BrandData;
 import com.increff.employee.model.form.BrandForm;
 import com.increff.employee.AbstractUnitTest;

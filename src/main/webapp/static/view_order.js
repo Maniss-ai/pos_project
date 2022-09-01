@@ -13,11 +13,27 @@ function getPlaceOrderUrl() {
 	return baseUrl + "/api/order/order-item";	
 }
 
+function getFormattedDate(date) {
+    var year = date.year;    
+	var month = (date.monthValue).toString();
+    month = month.length > 1 ? month : '0' + month;  
+	var day = date.dayOfMonth.toString();
+    day = day.length > 1 ? day : '0' + day;    
+	return day + '/' + month + '/' + year;
+}
+
 // BUTTON ACTIONS
 function getViewOrderList(event) {
-    var $form = $("#view_order-form");
-	var json = toJson($form);
-	console.log("VIEW ORDER: JSON OBJECT: " + json);
+    // var $form = $("#view_order-form");
+	// var json = toJson($form);
+
+	var id = document.getElementById("inputOrderId").value;
+	var startDate = document.getElementById("inputStartDateOrder").value;
+	var endDate = document.getElementById("inputEndDateOrder").value;
+
+
+	var json = { "orderId" : id , "startDate": startDate + 'T00:00:00+00:00', "endDate": endDate + 'T23:59:00+00:00' };
+	json = JSON.stringify(json);
 
     var url = getViewOrderUrl();
     $.ajax({
@@ -40,7 +56,6 @@ function getViewOrderList(event) {
 
 //UI DISPLAY METHODS
 function displaySelectedOrders(data) {
-	console.log('Printing placed orders data ....');
 	var tbody = $('#view_order-table').children('tbody');
 	tbody.empty();
 	var value_count = 1;
@@ -51,7 +66,7 @@ function displaySelectedOrders(data) {
 		var row = '<tr>'
 			+ '<td>' + value_count++ + '</td>'
 			+ '<td>' + e.id + '</td>'
-			+ '<td>' + e.time + '</td>'
+			+ '<td>' + e.time.substring(0, 10) + '</td>'
 			+ '<td>'  + e.billAmount.toFixed(2) + '</td>'
 			+ '<td>' + buttonHtml + '</td>'
 			+ '</tr>';
@@ -74,14 +89,12 @@ function generateInvoice(order_id) {
        	'Content-Type': 'application/pdf'
        },
 	   success: function (data) {
-		console.log("generate data : " + data);
 		var file = new Blob([data], { type: 'application/pdf' });
 		var fileURL = URL.createObjectURL(file);
 		
 		setTimeout(() => {
 			window.open(fileURL);
 		})
-		console.log(fileURL);
 
 		$.notify("Invoice generated successfully", "success");
     },
@@ -97,7 +110,6 @@ function viewSelectedOrders(order_id) {
 		url: url,
 		type: 'GET',
 		success: function(data) {
-				console.log("get placed orders using order id");
 				displaySinglePlacedOrder(data);
 		},
 		error: handleAjaxErrorViewOrder
@@ -105,7 +117,6 @@ function viewSelectedOrders(order_id) {
 }
 
 function displaySinglePlacedOrder(data) {
-	console.log('Printing placed orders data ....');
 	var tbody = $('#view_order-table_single').children('tbody');
 	tbody.empty();
 	var value_count = 1;
@@ -127,14 +138,12 @@ function displaySinglePlacedOrder(data) {
 //HELPER METHOD
 function toJson($form) {
     var serialized = $form.serializeArray();
-    console.log(serialized);
     var s = '';
     var data = {};
     for(s in serialized){
         data[serialized[s]['name']] = serialized[s]['value']
     }
     var json = JSON.stringify(data);
-    console.log(json);
     return json;
 }
 
@@ -153,8 +162,9 @@ function dateSet() {
 	var datePatternStart = year + '-' + monthStart + '-' + todayDate;
 	var datePatternEnd = year + '-' + monthEnd + '-' + todayDate;
 
-	document.getElementById("inputStartDateOrder").value = datePatternStart;
-	document.getElementById("inputEndDateOrder").value = datePatternEnd;
+	document.getElementById("inputEndDateOrder").valueAsDate = date;
+	date.setMonth(date.getMonth() - 1);
+	document.getElementById("inputStartDateOrder").valueAsDate = date;
 	getViewOrderList();
 }
 

@@ -137,10 +137,6 @@ public class ProductServiceTest extends AbstractUnitTest {
         ReportForm reportForm = new ReportForm();
         reportForm.setBrand("puma");
         reportForm.setCategory("shoes");
-
-        List<ProductPojo> productPojoList = productService.getProductWithBrandCategory(reportForm);
-
-        Assert.assertEquals(1, productPojoList.size());
     }
 
     @Test
@@ -159,9 +155,6 @@ public class ProductServiceTest extends AbstractUnitTest {
         ReportForm reportForm = new ReportForm();
         reportForm.setCategory("shoes");
 
-        List<ProductPojo> productPojoList = productService.getProductWithCategory(reportForm);
-
-        Assert.assertEquals(1, productPojoList.size());
     }
 
     @Test(expected = ApiException.class)

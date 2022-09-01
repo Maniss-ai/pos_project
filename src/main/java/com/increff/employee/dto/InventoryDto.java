@@ -9,6 +9,7 @@ import com.increff.employee.service.ApiException;
 import com.increff.employee.service.InventoryService;
 import com.increff.employee.service.ProductService;
 import com.increff.employee.util.Checks;
+import org.hibernate.annotations.Check;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,8 @@ public class InventoryDto {
         Checks.nullCheckInventory(form);
         InventoryPojo inventoryPojo = DtoHelper.convertFormToPojoInventory(form);
         DtoHelper.normalizeInventory(inventoryPojo);
+        Checks.isInventoryNegative(inventoryPojo.getInventory());
+
         ProductPojo productPojo = productService.getInventoryBarcode(form.getBarcode());
         inventoryPojo.setId(productPojo.getId());
 
@@ -93,6 +96,7 @@ public class InventoryDto {
         Integer productId = productService.getWithBarcode(barcode).getId();
         Checks.nullCheckForUpdateInventory(form);
         InventoryPojo pojo = DtoHelper.convertFormToPojoForUpdateInventory(form);
+        Checks.isInventoryNegative(pojo.getInventory());
 
         InventoryData inventoryData = DtoHelper.convertPojoToDataInventory(inventoryService.update(productId, pojo));
         inventoryData.setBarcode(barcode);

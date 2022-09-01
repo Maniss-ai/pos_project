@@ -59,12 +59,14 @@ public class Checks {
         else if(form.getProduct().isEmpty() || form.getProduct() == null) {
             throw new ApiException("Product name can't be empty");
         }
-        else if(form.getMrp() == null || form.getMrp() == 0) {
+        else if(form.getMrp() == null) {
             throw new ApiException("MRP can't be empty");
+        } else if (form.getMrp() == 0) {
+            throw new ApiException("MRP can't be 0");
         }
     }
 
-    public static boolean isUnique(ProductPojo pojo, List<ProductData> dataList) throws ApiException {
+    public static boolean isUnique(ProductPojo pojo, List<ProductData> dataList) {
         for(ProductData productData : dataList) {
             if(Objects.equals(productData.getBarcode(), pojo.getBarcode())) {
                 return false;
@@ -84,14 +86,25 @@ public class Checks {
 
 
     public static void nullCheckProduct(ProductForm form) throws ApiException {
-        if(form.getBarcode().isEmpty() || form.getBarcode() == null) {
+        if(form.getBarcode() == null || form.getBarcode().isEmpty()) {
             throw new ApiException("Barcode can't be empty");
-        }
-        else if(form.getProduct().isEmpty() || form.getProduct() == null) {
+        } else if (form.getBrand() == null || form.getBrand().isEmpty()) {
+            throw new ApiException("Brand can't be empty");
+        } else if (form.getCategory() == null || form.getCategory().isEmpty()) {
+            throw new ApiException("Category can't be empty");
+        } else if(form.getProduct() == null || form.getProduct().isEmpty()) {
             throw new ApiException("Product name can't be empty");
         }
-        else if(form.getMrp() == null || form.getMrp() == 0) {
+        else if(form.getMrp() == null) {
             throw new ApiException("MRP can't be empty");
+        } else if (form.getMrp() == 0) {
+            throw new ApiException("MRP can't be 0");
+        }
+    }
+
+    public static void isMrpNegative(Double MRP) throws ApiException {
+        if(MRP < 0) {
+            throw new ApiException("MRP can't be negative");
         }
     }
 
@@ -120,22 +133,34 @@ public class Checks {
         return true;
     }
 
+    public static void isInventoryNegative(Integer inventory) throws ApiException {
+        if(inventory < 0) {
+            throw new ApiException("Inventory can't be negative");
+        }
+    }
+
     // Order Item Checks
     public static void nullCheckOrderItem(OrderItemForm form) throws ApiException {
         if(form.getBarcode() == null || form.getBarcode().isEmpty()) {
             throw new ApiException("Barcode can't be empty");
         }
-        else if(form.getQuantity() == null || form.getQuantity() == 0) {
+        else if(form.getQuantity() == null) {
             throw new ApiException("Quantity can't be empty");
+        } else if (form.getQuantity() == 0) {
+            throw new ApiException("Quantity can't be 0");
+        } else if(form.getSellingPrice() == null) {
+            throw new ApiException("Selling price can't be empty");
         }
-        else if(form.getSellingPrice() == null || form.getSellingPrice() == 0) {
+        else if (form.getSellingPrice() == 0) {
             throw new ApiException("Selling price can't be 0");
         }
     }
 
     public static void nullCheckForUpdateOrderItem(OrderItemUpdateForm form) throws ApiException {
-        if(form.getQuantity() == null || form.getQuantity() == 0) {
+        if(form.getQuantity() == null) {
             throw new ApiException("Quantity can't be empty");
+        } else if (form.getQuantity() == 0){
+            throw new ApiException("Quantity can't be 0");
         }
     }
 

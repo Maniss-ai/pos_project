@@ -66,7 +66,7 @@ public class ProductService {
             return dao.select(id);
         }
         catch (Exception e) {
-            throw new ApiException("Barcode doesn't exists");
+            throw new ApiException("Id doesn't exists");
         }
     }
 

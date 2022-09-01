@@ -14,9 +14,16 @@ function getInventoryReportUrl(){
 }
 
 function generateSalesReport(event) {
-	var $form = $("#report-form");
-	var json = toJson($form);
-	console.log("SALES REPORT: JSON OBJECT: " + json);
+	// var $form = $("#report-form");
+	// var json = toJson($form);
+
+	var brand = document.getElementById("inputBrand").value;
+	var category = document.getElementById("inputCategory").value;
+	var startDate = document.getElementById("inputStartDateReport").value;
+	var endDate = document.getElementById("inputEndDateReport").value;
+
+	var json = { "brand" : brand, "category" : category , "startDate": startDate + 'T00:00:00+00:00', "endDate": endDate + 'T23:59:00+00:00' };
+	json = JSON.stringify(json);
 
     var url = getSalesReportUrl();
     $.ajax({
@@ -27,9 +34,6 @@ function generateSalesReport(event) {
             'Content-Type': 'application/json'
         },
         success: function(data) {
-            console.log("Getting Sales Reports ...." + data.split("\n").length);
-            console.log(data);
-			console.log("SIZE : " + data.split("\n").length)
 			// if(data.split("\n").length <= 1) {
 			// 	$.notify("Empty sales report for selected date", "info");
 			// 	return;
@@ -47,8 +51,6 @@ function generateBrandReport(event) {
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		console.log("Brand Report fetched");
-			console.log(data);
 	   		writeFileDataReport(data);
 			$.notify("Brand Report generated successfully", "success");
 	   },
@@ -62,8 +64,6 @@ function generateInventoryReport(event) {
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		console.log("Inventory Report fetched");
-	   		console.log(data);
 			writeFileDataReport(data);
 			$.notify("Inventory Report generated successfully", "success");
 	   },
@@ -74,7 +74,6 @@ function generateInventoryReport(event) {
 /**************************  HELPER FUNCTIONS  **************************/
 
 function writeFileDataReport(data) {
-	console.log("REPORT DATA : " + data);
     var blob = new Blob([data], {type: 'text/tsv;charset=utf-8;'});
     var fileUrl =  null;
 

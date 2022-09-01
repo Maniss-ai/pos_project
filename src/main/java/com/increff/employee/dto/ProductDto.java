@@ -33,6 +33,7 @@ public class ProductDto {
         ProductPojo pojo = DtoHelper.convertFormToPojoProduct(form);
         DtoHelper.normalizeProduct(pojo);
         boolean unique = Checks.isUnique(pojo, getAll());
+        Checks.isMrpNegative(pojo.getMrp());
         BrandPojo brandPojo = brandService.getBrandCategory(form.getBrand(), form.getCategory());
 
         pojo.setBrandCategoryId(brandPojo.getId());
@@ -108,7 +109,7 @@ public class ProductDto {
         Checks.nullCheckForUpdateProduct(form);
         ProductPojo pojo = DtoHelper.convertFormToPojoUpdateProduct(form);
         DtoHelper.normalizeForUpdateProduct(pojo);
-        checkIfBarcodeExistsInProduct(id);
+        Checks.isMrpNegative(pojo.getMrp());
 
         if(Checks.isUnique(id, pojo, getAll())) {
             ProductPojo productPojo = productService.update(id, pojo);
@@ -120,17 +121,6 @@ public class ProductDto {
             return productData;
         } else {
             throw new ApiException("Barcode should be Unique");
-        }
-    }
-
-    public void checkIfBarcodeExistsInProduct(Integer id) throws ApiException {
-        String actualBarcode = productService.getWithId(id).getBarcode();
-
-        List<InventoryPojo> inventoryPojoList = inventoryService.getAll();
-        for(InventoryPojo pojo : inventoryPojoList) {
-            if(Objects.equals(actualBarcode, productService.getWithId(pojo.getId()).getBarcode())) {
-                throw new ApiException("Unable to edit, Barcode exists in Inventory");
-            }
         }
     }
 

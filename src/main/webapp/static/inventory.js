@@ -13,7 +13,6 @@ function addInventory(event) {
 	//Set the values to update
 	var $form = $("#inventory-form");
 	var json = toJson($form);
-	console.log("json object: " + json);
 	var url = getInventoryUrl();
 
 	$.ajax({
@@ -24,7 +23,6 @@ function addInventory(event) {
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
-	   		console.log("inventory created :: " + response[0]);
 	   		getInventoryList();
 			$.notify("Inventory added successfully", "success");
 	   },
@@ -43,7 +41,6 @@ function updateInventory(event) {
 	//Set the values to update
 	var $form = $("#inventory-edit-form");
 	var json = toJson($form);
-	console.log(json);
 
 	$.ajax({
 	   url: url,
@@ -53,7 +50,6 @@ function updateInventory(event) {
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
-	   		console.log("inventory update");
 	   		getInventoryList();
 			$.notify("Inventory updated successfully", "success");
 	   },
@@ -70,8 +66,6 @@ function getInventoryList() {
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		console.log("Inventory data fetched");
-			console.log(data);
 			getBarcode(0, data);
 	   },
 	   error: handleAjaxErrorInventory
@@ -89,8 +83,6 @@ function getBarcode(index, data) {
 		url: url,
 		type: 'GET',
 		success: function(product_data) {
-				console.log("Barcode data fetched");
-				console.log(product_data);
 				data[index].product_name = product_data.product;
 				data[index].mrp = product_data.mrp;
 				getBarcode(index+1, data);     //...
@@ -105,8 +97,6 @@ function getBarcodeList(event) {
 		url: url,
 		type: 'GET',
 		success: function(data) {
-				console.log("Barcode List data fetched");
-				console.log(data);
 				displayBarcodeList(data);     //...
 		},
 		error: handleAjaxErrorInventory
@@ -136,14 +126,12 @@ function processDataInventory() {
 		resetUploadDialogInventory();
 		return;
 	}
-	console.log("WORKING 1.");
 	readFileDataInventory(file, readFileDataInventoryCallback);
 	resetUploadDialogInventory();
 }
 
 function readFileDataInventoryCallback(results){
 	fileDataInventory = results.data;
-	console.log("WORKING 2.");
 	uploadRowsInventory();
 }
 
@@ -164,7 +152,6 @@ function uploadRowsInventory() {
 	
 	// var json = JSON.stringify(row);
 
-	console.log(row);
 
 	var json = {}
 	json["barcode"] = row.barcode;
@@ -178,7 +165,6 @@ function uploadRowsInventory() {
 /****************************************** BULK ADD INVENTORY : TODO ******************************************/
 function bulkAddInventory() {
 	var url = getInventoryUrl() + "/bulk-add";
-	console.log(jsonArrayInventory);
 	// Make ajax call
 	$.ajax({
 	   url: url,
@@ -192,14 +178,11 @@ function bulkAddInventory() {
 			$.notify("Bulk Inventory added successfully", "success");
 	   },
 	   error: function(response) {
-			console.log(response);
 			var lines = response.responseJSON.message.split("\n");
-			console.log("RESPONSE: " + lines);
 			$.notify("Error in tsv file, please download errors", {autoHide : false});
 
 			createErrorDataInventory(lines);
 
-			console.log(errorDataInventory);
 			updateUploadDialogInventory();
 		}
 	});
@@ -210,12 +193,10 @@ function createErrorDataInventory(lines) {
 	var countLine = 0;
 
 	for(var i in rowInventory) {
-		console.log(i);
 		if(countRow == lines[countLine][0]) {
 			rowInventory[i].line_number = lines[countLine][0];
 			rowInventory[i].error = lines[countLine].substring(3, lines[countLine].length);
 			errorDataInventory.push(rowInventory[i]);
-			console.log("errorDataBrand : " + errorDataInventory);
 			countLine++;
 		}
 
@@ -224,7 +205,7 @@ function createErrorDataInventory(lines) {
 }
 
 function downloadErrorsInventory() {
-	if(errorDataBrand.length) {
+	if(errorDataInventory.length) {
 		writeFileDataInventory(errorDataInventory);
 	}
 	else {
@@ -273,13 +254,11 @@ function updateFileNameInventory(){
 //UI DISPLAY METHODS
 
 function displayInventoryList(data) {
-	console.log('Printing inventory data');
 	var tbody = $('#inventory-table').children('tbody');
 	tbody.empty();
 	var value_count = 1;
 	for(var i in data) {
 		var e = data[i];
-		console.log(e);
 		var buttonHtml = ' <button class="btn btn-primary" onclick="displayEditInventory(' + e.id + ',' + e.mrp + ')">Edit</button>'
 		var row = '<tr>'
 			+ '<td>' + value_count++ + '</td>'
@@ -299,7 +278,6 @@ function displayEditInventory(id, mrp) {
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		console.log("inventory data fetched");
 			data.mrp = mrp;
 	   		displayInventory(data);
 	   },
@@ -308,7 +286,6 @@ function displayEditInventory(id, mrp) {
 }
 
 function displayInventory(data) {
-	console.log("BARCODE VALUE:" + data.barcode)
 	$("#inventory-edit-form input[name=barcode]").val(data.barcode);
 	$("#inventory-edit-form input[name=inventory]").val(data.inventory);
 	$("#inventory-edit-form input[name=mrp]").val(data.mrp);
@@ -316,7 +293,6 @@ function displayInventory(data) {
 }
 
 function displayBarcodeList(data) {
-	console.log('Printing Barcode data');
 	var barcode = $('#barcode');
 	barcode.empty();
 
@@ -340,14 +316,12 @@ function displayBarcodeList(data) {
 //HELPER METHOD
 function toJson($form) {
     var serialized = $form.serializeArray();
-    console.log(serialized);
     var s = '';
     var data = {};
     for(s in serialized){
         data[serialized[s]['name']] = serialized[s]['value']
     }
     var json = JSON.stringify(data);
-    console.log(json);
     return json;
 }
 

@@ -6,8 +6,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.time.ZonedDateTime;
+
 
 public class OrderItemServiceTest extends AbstractUnitTest {
     @Autowired
@@ -58,7 +58,7 @@ public class OrderItemServiceTest extends AbstractUnitTest {
     public void testGetCheckOrderIdExist() {
         OrderPojo orderPojo = new OrderPojo();
         orderPojo.setBillAmount(397.234);
-        orderPojo.setTime(LocalDate.now());
+        orderPojo.setTime(ZonedDateTime.now());
 
         orderItemService.submit(orderPojo);
     }
@@ -78,7 +78,7 @@ public class OrderItemServiceTest extends AbstractUnitTest {
     @Test
     public void testSubmit() {
         OrderPojo orderPojo = new OrderPojo();
-        orderPojo.setTime(LocalDate.now());
+        orderPojo.setTime(ZonedDateTime.now());
         orderPojo.setBillAmount(9289.92);
 
         orderItemService.submit(orderPojo);

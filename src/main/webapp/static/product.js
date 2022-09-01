@@ -23,7 +23,6 @@ function addProduct(event) {
 			'Content-Type': 'application/json'
 		},
 		success: function (response) {
-			console.log("Product created");
 			getProductList();
 			$.notify("Product added successfully", "success");
 		},
@@ -43,8 +42,6 @@ function updateProduct(event) {
 	var $form = $("#product-edit-form");
 	var json = toJsonProduct($form);
 
-	console.log("UPDATE PRODUCT : " + json);
-
 	$.ajax({
 		url: url,
 		type: 'PUT',
@@ -53,7 +50,6 @@ function updateProduct(event) {
 			'Content-Type': 'application/json'
 		},
 		success: function (response) {
-			console.log("Product update");
 			getProductList();
 			$.notify("Product updated successfully", "success");
 		},
@@ -71,8 +67,6 @@ function getProductList() {
 		url: url,
 		type: 'GET',
 		success: function (data) {
-			console.log("Product data fetched");
-			console.log(data);
 			displayProductList(data);
 		},
 		error: handleAjaxErrorProduct
@@ -85,8 +79,6 @@ function getBrandCategoryList(event) {
 		url: url,
 		type: 'GET',
 		success: function (data) {
-			console.log("Brand-Category data fetched");
-			console.log(data);
 			displayBrandCategoryList(data);     //...
 		},
 		error: handleAjaxErrorProduct
@@ -141,7 +133,6 @@ function uploadRowsProduct() {
 	processCountProduct++;
 	rowProduct.push(row);
 
-	console.log(row);
 
 	var json = {}
 	json["barcode"] = row.barcode;
@@ -159,7 +150,6 @@ function uploadRowsProduct() {
 /****************************************** BULK ADD BRAND : TODO ******************************************/
 function bulkAddProduct() {
 	var url = getProductUrl() + "/bulk-add";
-	console.log(jsonArrayProduct);
 	// Make ajax call
 	$.ajax({
 	   url: url,
@@ -174,12 +164,10 @@ function bulkAddProduct() {
 	   },
 	   error: function(response) {
 			var lines = response.responseJSON.message.split("\n");
-			console.log("RESPONSE: " + lines);
 
 			$.notify("Error in tsv file, please download errors", {autoHide : false});
 			createErrorDataProduct(lines);
 
-			console.log(errorDataProduct);
 			updateUploadDialogProduct();
 	   }
 	});
@@ -190,12 +178,10 @@ function createErrorDataProduct(lines) {
 	var countLine = 0;
 
 	for(var i in rowProduct) {
-		console.log(i);
 		if(countRow == lines[countLine][0]) {
 			rowProduct[i].line_number = lines[countLine][0];
 			rowProduct[i].error = lines[countLine].substring(3, lines[countLine].length);;
 			errorDataProduct.push(rowProduct[i]);
-			console.log("errorDataProduct : " + errorDataProduct);
 			countLine++;
 		}
 
@@ -204,7 +190,6 @@ function createErrorDataProduct(lines) {
 }
 
 function downloadErrorsProduct() {
-	console.log("errorDataProduct   : " + errorDataProduct.length);
 	if(errorDataProduct.length) {
 		writeFileDataProduct(errorDataProduct);
 	}
@@ -255,13 +240,11 @@ function updateFileNameProduct() {
 //UI DISPLAY METHODS
 
 function displayProductList(data) {
-	console.log('Printing Product data');
 	var tbody = $('#product-table').children('tbody');
 	tbody.empty();
 	var value_count = 1;
 	for (var i in data) {
 		var e = data[i];
-		console.log(e);
 		var buttonHtml = ' <button class="btn btn-primary" onclick="displayEditProduct(' + e.id + ')">Edit</button>'
 		var row = '<tr>'
 			+ '<td>' + value_count++ + '</td>'
@@ -277,14 +260,11 @@ function displayProductList(data) {
 }
 
 function displayEditProduct(id) {
-	console.log("working fine : " + id);
 	var url = getProductUrl() + "/" + id;
 	$.ajax({
 		url: url,
 		type: 'GET',
 		success: function (data) {
-			console.log("product data fetched");
-			console.log(data);
 			displayProduct(data);
 		},
 		error: handleAjaxErrorProduct
@@ -302,7 +282,6 @@ function displayProduct(data) {
 }
 
 function displayBrandCategoryList(data) {
-	console.log('Printing Brand-Category data');
 	var selector = $('#selector');
 	selector.empty();
 
@@ -336,7 +315,6 @@ var cnt = 0;
 //HELPER METHOD
 function toJsonProduct($form) {
 	var serialized = $form.serializeArray();
-	console.log("serialized : " + serialized);
 	var s = '';
 	var data = {};
 	for (s in serialized) {
@@ -362,7 +340,6 @@ function readFileDataProduct(file, callback) {
 
 
 function writeFileDataProduct(arr) {
-	console.log("WORKING FINE!!!!");
 	var config = {
 		quoteChar: '',
 		escapeChar: '',

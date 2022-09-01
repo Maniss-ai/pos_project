@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -41,7 +41,8 @@ public class OrderItemDto {
         Checks.nullCheckOrderItem(form);
         OrderItemPojo orderItemPojo = DtoHelper.convertFormToPojoOrderItem(form, 0);
         orderItemPojo.setProductId(productService.getWithBarcode(form.getBarcode()).getId());
-//        DtoHelper.normalizeOrderItem(pojo);
+        Checks.isMrpNegative(orderItemPojo.getSellingPrice());
+        Checks.isInventoryNegative(orderItemPojo.getQuantity());
 
         // get inventoryId using barcodeId match ....
         Integer inventoryId = getInventoryIdMatchWithBarcode(form.getBarcode());
@@ -106,7 +107,7 @@ public class OrderItemDto {
 
         OrderPojo orderPojo = new OrderPojo();
 
-        orderPojo.setTime(LocalDate.now());
+        orderPojo.setTime(ZonedDateTime.now());
 
         double totalBillAmount = 0.0;
         for(OrderItemForm form : orderFormList) {
@@ -142,6 +143,9 @@ public class OrderItemDto {
         String barcode = get(orderItemId).getBarcode();
         OrderItemPojo orderItemPojo = DtoHelper.convertFormToPojoForUpdateOrderItem(form, 0);
         orderItemPojo.setProductId(orderItemService.get(orderItemId).getProductId());
+
+        Checks.isMrpNegative(orderItemPojo.getSellingPrice());
+        Checks.isInventoryNegative(orderItemPojo.getQuantity());
 
         // get inventoryId using barcodeId match ....
         Integer inventoryId = getInventoryIdMatchWithBarcode(barcode);
