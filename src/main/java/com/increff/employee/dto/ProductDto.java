@@ -32,6 +32,7 @@ public class ProductDto {
         Checks.nullCheckProduct(form);
         ProductPojo pojo = DtoHelper.convertFormToPojoProduct(form);
         DtoHelper.normalizeProduct(pojo);
+        Checks.checkLength(form);
         boolean unique = Checks.isUnique(pojo, getAll());
         Checks.isMrpNegative(pojo.getMrp());
         BrandPojo brandPojo = brandService.getBrandCategory(form.getBrand(), form.getCategory());
@@ -60,6 +61,10 @@ public class ProductDto {
             }
             catch (Exception e) {
                 error.append(row).append(": ").append(e.getMessage()).append("\n");
+            }
+
+            if(row > 5000) {
+                throw new ApiException("Can't process, File contains more than 5000 rows");
             }
 
             row++;
@@ -109,6 +114,9 @@ public class ProductDto {
         Checks.nullCheckForUpdateProduct(form);
         ProductPojo pojo = DtoHelper.convertFormToPojoUpdateProduct(form);
         DtoHelper.normalizeForUpdateProduct(pojo);
+        if(form.getBarcode().length() > 20) {
+            throw new ApiException("Barcode is too long");
+        }
         Checks.isMrpNegative(pojo.getMrp());
 
         if(Checks.isUnique(id, pojo, getAll())) {

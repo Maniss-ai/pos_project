@@ -11,6 +11,5 @@ import javax.persistence.*;
 public class InventoryPojo {
     @Id
     private Integer id;
-//    private String barcode;
     private Integer inventory;
 }

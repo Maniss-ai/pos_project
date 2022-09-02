@@ -1,12 +1,11 @@
 package com.increff.employee.util;
 
+import com.increff.employee.dto.DtoHelper;
 import com.increff.employee.model.data.BrandData;
 import com.increff.employee.model.data.InventoryData;
-import com.increff.employee.model.data.OrderItemData;
 import com.increff.employee.model.data.ProductData;
 import com.increff.employee.model.form.*;
 import com.increff.employee.pojo.BrandPojo;
-import com.increff.employee.pojo.OrderItemPojo;
 import com.increff.employee.pojo.ProductPojo;
 import com.increff.employee.service.ApiException;
 
@@ -14,13 +13,29 @@ import java.util.List;
 import java.util.Objects;
 
 public class Checks {
-    // Brand Checks
-    public static void nullCheckBrand(BrandForm form) throws ApiException {
-        if(form.getBrand() == null || form.getBrand().isEmpty()) {
-            throw new ApiException("Brand can't be null");
+    public static boolean isBlank(String value) {
+        for(int i = 0; i < value.length(); i++) {
+            if(value.charAt(i) != ' ') {
+                return false;
+            }
         }
-        else if(form.getCategory() == null || form.getCategory().isEmpty()) {
-            throw new ApiException("Category can't be null");
+        return true;
+    }
+    // Brand Checks
+    public static void checkLength(BrandForm form) throws ApiException {
+        if(form.getBrand().length() > 20) {
+            throw new ApiException("Brand name is too long");
+        }
+        else if(form.getCategory().length() > 20) {
+            throw new ApiException("Category name is too long");
+        }
+    }
+    public static void nullCheckBrand(BrandForm form) throws ApiException {
+        if(form.getBrand() == null || form.getBrand().isEmpty() || isBlank(form.getBrand())) {
+            throw new ApiException("Brand can't be empty");
+        }
+        else if((form.getCategory() == null) || form.getCategory().isEmpty() || isBlank(form.getCategory())) {
+            throw new ApiException("Category can't be empty");
         }
     }
 
@@ -52,11 +67,23 @@ public class Checks {
     }
 
     // product Checks
+    public static void checkLength(ProductForm form) throws ApiException {
+        if(form.getBrand().length() > 20) {
+            throw new ApiException("Brand name is too long");
+        } else if(form.getCategory().length() > 20) {
+            throw new ApiException("Category name is too long");
+        } else if (form.getProduct().length() > 20) {
+            throw new ApiException("Product name is too long");
+        } else if (form.getBarcode().length() > 20) {
+            throw new ApiException("Barcode is too long");
+        }
+    }
+
     public static void nullCheckForUpdateProduct(ProductUpdateForm form) throws ApiException {
-        if(form.getBarcode().isEmpty() || form.getBarcode() == null) {
+        if(form.getBarcode().isEmpty() || form.getBarcode() == null || isBlank(form.getBarcode())) {
             throw new ApiException("Barcode can't be empty");
         }
-        else if(form.getProduct().isEmpty() || form.getProduct() == null) {
+        else if(form.getProduct().isEmpty() || form.getProduct() == null || isBlank(form.getProduct())) {
             throw new ApiException("Product name can't be empty");
         }
         else if(form.getMrp() == null) {
@@ -86,13 +113,13 @@ public class Checks {
 
 
     public static void nullCheckProduct(ProductForm form) throws ApiException {
-        if(form.getBarcode() == null || form.getBarcode().isEmpty()) {
+        if(form.getBarcode() == null || form.getBarcode().isEmpty() || isBlank(form.getBarcode())) {
             throw new ApiException("Barcode can't be empty");
-        } else if (form.getBrand() == null || form.getBrand().isEmpty()) {
+        } else if (form.getBrand() == null || form.getBrand().isEmpty() || isBlank(form.getBrand())) {
             throw new ApiException("Brand can't be empty");
-        } else if (form.getCategory() == null || form.getCategory().isEmpty()) {
+        } else if (form.getCategory() == null || form.getCategory().isEmpty() || isBlank(form.getCategory())) {
             throw new ApiException("Category can't be empty");
-        } else if(form.getProduct() == null || form.getProduct().isEmpty()) {
+        } else if(form.getProduct() == null || form.getProduct().isEmpty() || isBlank(form.getProduct())) {
             throw new ApiException("Product name can't be empty");
         }
         else if(form.getMrp() == null) {
@@ -109,13 +136,19 @@ public class Checks {
     }
 
     // Inventory Checks
+    public static void checkLength(InventoryForm form) throws ApiException {
+        if (form.getBarcode().length() > 20) {
+            throw new ApiException("Barcode is too long");
+        }
+    }
+
     public static void nullCheckInventory(InventoryForm form) throws ApiException {
-        if(form.getBarcode().isEmpty() || form.getBarcode() == null) {
+        if(form.getBarcode().isEmpty() || form.getBarcode() == null || isBlank(form.getBarcode())) {
             throw new ApiException("Barcode can't be empty");
         }
-//        else if(form.getInventory() == null) {
-//            throw new ApiException("Inventory can't be empty");
-//        }
+        else if(form.getInventory() == null) {
+            throw new ApiException("Inventory can't be empty");
+        }
     }
 
     public static void nullCheckForUpdateInventory(InventoryUpdateForm form) throws ApiException {
@@ -140,8 +173,15 @@ public class Checks {
     }
 
     // Order Item Checks
+    public static void checkLength(OrderItemForm form) throws ApiException {
+        if (form.getBarcode().length() > 20) {
+            throw new ApiException("Barcode is too long");
+        }
+
+    }
+
     public static void nullCheckOrderItem(OrderItemForm form) throws ApiException {
-        if(form.getBarcode() == null || form.getBarcode().isEmpty()) {
+        if(form.getBarcode() == null || form.getBarcode().isEmpty() || isBlank(form.getBarcode())) {
             throw new ApiException("Barcode can't be empty");
         }
         else if(form.getQuantity() == null) {
@@ -174,6 +214,14 @@ public class Checks {
 //    }
     
     // Report Checks
+    public static void checkLength(ReportForm form) throws ApiException {
+        DtoHelper.normalizeReport(form);
+        if(form.getBrand().length() > 20) {
+            throw new ApiException("Brand name is too long");
+        } else if(form.getCategory().length() > 20) {
+            throw new ApiException("Category name is too long");
+        }
+    }
     public static boolean checkBrandCategoryExists(String brand, String category, List<BrandPojo> brandPojoList) {
         for(BrandPojo brandPojo : brandPojoList) {
             if(Objects.equals(brandPojo.getBrand(), brand) && Objects.equals(brandPojo.getCategory(), category)) {

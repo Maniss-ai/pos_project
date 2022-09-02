@@ -34,14 +34,19 @@ function generateSalesReport(event) {
             'Content-Type': 'application/json'
         },
         success: function(data) {
-			// if(data.split("\n").length <= 1) {
-			// 	$.notify("Empty sales report for selected date", "info");
-			// 	return;
-			// }
-			writeFileDataReport(data);
-			$.notify("Sales Report generated successfully", "success");
+			console.log("LENGTH : " + data.split("\n").length);
+			if(data.split("\n").length <= 2) {
+				$.notify("Empty sales report for selected date", "info");
+				return;
+			} else {
+				writeFileDataReport(data);
+				$.notify("Sales Report generated successfully", "success");
+			}
         },
-        error: handleAjaxErrorReport
+        error: function(error) {
+			dateSetReport();
+			handleAjaxErrorViewOrder(error);
+		}
     });
 }
 

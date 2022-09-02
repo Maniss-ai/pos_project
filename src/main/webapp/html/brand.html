@@ -24,13 +24,13 @@
 
 					<div class="input-group mb-3">
 						<span class="input-group-text" id="inputBrand">Brand</span>
-						<input type="text" class="form-control" aria-label="Sizing example input"
+						<input maxlength="20" type="text" class="form-control" aria-label="Sizing example input"
 							aria-describedby="inputBrand" name="brand" placeholder="Enter brand">
 					</div>
 
 					<div class="input-group mb-3">
 						<span class="input-group-text" id="inputCategory">Category</span>
-						<input type="text" class="form-control" aria-label="Sizing example input"
+						<input maxlength="20" type="text" class="form-control" aria-label="Sizing example input"
 							aria-describedby="inputCategory" name="category" placeholder="Enter category">
 					</div>
 
@@ -91,13 +91,13 @@
 
 							<div class="input-group mb-3">
 								<span class="input-group-text" id="inputBrand">Brand</span>
-								<input type="text" class="form-control" aria-label="Sizing example input"
+								<input maxlength="20" type="text" class="form-control" aria-label="Sizing example input"
 									aria-describedby="inputBrand" name="brand" placeholder="Enter brand">
 							</div>
 
 							<div class="input-group mb-3">
 								<span class="input-group-text" id="inputCategory">Category</span>
-								<input type="text" class="form-control" aria-label="Sizing example input"
+								<input maxlength="20" type="text" class="form-control" aria-label="Sizing example input"
 									aria-describedby="inputCategory" name="category" placeholder="Enter category">
 							</div>
 
@@ -131,7 +131,7 @@
 							<label class="custom-file-label" for="brandFile" id="brandFileName">Choose
 								file</label>
 						</div>
-						<a th:href="@{/static/Brand.tsv}" target="_blank">Download Sample</a>
+						<a STYLE="color: rgb(56, 108, 187)" th:href="@{/static/Brand.tsv}" target="_blank">Download Sample</a>
 						<br>
 						Rows: <span id="rowCountBrand">0</span>,
 						Processed: <span id="processCountBrand">0</span>,

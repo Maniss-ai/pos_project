@@ -20,7 +20,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-
 @Service
 public class ReportDto {
     @Autowired
@@ -34,12 +33,20 @@ public class ReportDto {
     @Autowired
     private OrderService orderService;
 
-    public StringBuilder getAllSales(ReportForm form) throws ApiException, ParseException {
+    public StringBuilder getAllSales(ReportForm form) throws ApiException {
+        Checks.checkLength(form);
         if(form.getStartDate() != null && form.getEndDate() != null && !form.getStartDate().isEmpty() && !form.getEndDate().isEmpty()) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            if(sdf.parse(form.getStartDate()).compareTo(sdf.parse(form.getEndDate())) > 0) {
-                throw new ApiException("Start Date should come before End Date");
+            List<ProductPojo> productPojoList;
+            ZonedDateTime startDate = ZonedDateTime.parse(form.getStartDate());
+            ZonedDateTime endDate = ZonedDateTime.parse(form.getEndDate());
+
+            if(startDate.isAfter(endDate)) {
+                throw new ApiException("Start Date cannot be greater then End Date");
             }
+            if(startDate.isAfter(ZonedDateTime.now())) {
+                throw new ApiException("Start Date cannot be greater then Today");
+            }
+
             // check weather brand or category exists ...
             if(form.getBrand() != null && form.getCategory() != null && !form.getBrand().isEmpty() && !form.getCategory().isEmpty() && !Checks.checkBrandCategoryExists(form.getBrand(), form.getCategory(), brandService.getAll())) {
                 throw new ApiException("Brand or Category doesn't exists");
@@ -51,13 +58,8 @@ public class ReportDto {
                 throw new ApiException("Category doesn't exists");
             }
 
-            StringBuilder salesData = new StringBuilder("Brand\tCategory\tQuantity\tRevenue\n");
-            List<ProductPojo> productPojoList;
-//            TODO CHANGE BRAND & Category from productDao Query ........ MAJOR CHANGE ........
-            ZonedDateTime startDate = ZonedDateTime.parse(form.getStartDate());
-            ZonedDateTime endDate = ZonedDateTime.parse(form.getEndDate());
-
             // USING BRAND and CATEGORY + DATE
+            StringBuilder salesData = new StringBuilder("Brand\tCategory\tQuantity\tRevenue\n");
             if(form.getBrand() != null && !form.getBrand().isEmpty() && form.getCategory() != null && !form.getCategory().isEmpty()) {
                 salesData.append(form.getBrand()).append("\t").append(form.getCategory()).append("\t");
                 Integer brandCategory = brandService.getBrandCategory(form.getBrand(), form.getCategory()).getId();

@@ -29,6 +29,7 @@ public class BrandDto {
         Checks.nullCheckBrand(form);
         BrandPojo pojo = DtoHelper.convertFormToPojoBrand(form);
         DtoHelper.normalizeBrand(pojo);
+        Checks.checkLength(form);
         if(Checks.isUniqueBrand(pojo, getAll())) {
             return DtoHelper.convertPojoToDataBrand(brandService.add(pojo));
         }
@@ -36,7 +37,6 @@ public class BrandDto {
             throw new ApiException("Brand Category pair already exists");
         }
     }
-
 
     @Transactional(rollbackOn = ApiException.class)
     public List<BrandData> bulkAddBrand(List<BrandForm> formList) throws ApiException {
@@ -50,6 +50,10 @@ public class BrandDto {
             }
             catch (Exception e) {
                 error.append(row).append(": ").append(e.getMessage()).append("\n");
+            }
+
+            if(row > 5000) {
+                throw new ApiException("Can't process, File contains more than 5000 rows");
             }
 
             row++;
@@ -80,6 +84,7 @@ public class BrandDto {
         Checks.nullCheckBrand(form);
         BrandPojo pojo = DtoHelper.convertFormToPojoBrand(form);
         DtoHelper.normalizeBrand(pojo);
+        Checks.checkLength(form);
         try {
             brandService.getCheck(id);
         }

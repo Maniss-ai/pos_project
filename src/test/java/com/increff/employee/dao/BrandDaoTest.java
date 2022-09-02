@@ -15,29 +15,21 @@ public class BrandDaoTest extends AbstractUnitTest {
 
     @Test
     public void testInsert() {
-        BrandPojo brandPojo = new BrandPojo();
-        brandPojo.setBrand("adidas");
-        brandPojo.setCategory("pants");
+        BrandPojo brandPojo = brandDao.insert(addBrandPojo());
 
-        brandPojo = brandDao.insert(brandPojo);
-
-        Assert.assertEquals("adidas", brandPojo.getBrand());
-        Assert.assertEquals("pants", brandPojo.getCategory());
+        Assert.assertEquals("brand", brandPojo.getBrand());
+        Assert.assertEquals("category", brandPojo.getCategory());
     }
 
     @Test
-    public void testSelectWhenIdExists() throws ApiException {
-        BrandPojo brandPojo = new BrandPojo();
-        brandPojo.setBrand("adidas");
-        brandPojo.setCategory("pants");
-
-        brandPojo = brandDao.insert(brandPojo);
+    public void testSelect() {
+        BrandPojo brandPojo = brandDao.insert(addBrandPojo());
 
         int id = brandPojo.getId();
         brandPojo = brandDao.select(id);
 
-        Assert.assertEquals("adidas", brandPojo.getBrand());
-        Assert.assertEquals("pants", brandPojo.getCategory());
+        Assert.assertEquals("brand", brandPojo.getBrand());
+        Assert.assertEquals("category", brandPojo.getCategory());
     }
 
     @Test
@@ -52,6 +44,22 @@ public class BrandDaoTest extends AbstractUnitTest {
         List<BrandPojo> brandPojoList = brandDao.selectAll();
 
         Assert.assertEquals(5, brandPojoList.size());
+    }
+
+    @Test
+    public void testGetBrand() {
+        brandDao.getBrand("puma");
+    }
+
+    @Test
+    public void testGetCategory() {
+        brandDao.getCategory("shoes");
+    }
+
+    @Test
+    public void testGetBrandCategory() {
+        brandDao.insert(addBrandPojo());
+        brandDao.getBrandCategory("brand", "category");
     }
 
 }

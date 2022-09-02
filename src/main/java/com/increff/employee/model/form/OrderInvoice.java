@@ -1,6 +1,6 @@
 package com.increff.employee.model.form;
 
-import com.increff.employee.dto.OrderInvoicePojo;
+import com.increff.employee.pojo.OrderInvoicePojo;
 import lombok.Getter;
 import lombok.Setter;
 

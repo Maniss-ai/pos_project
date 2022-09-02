@@ -47,10 +47,14 @@ function getViewOrderList(event) {
             if(!$.trim(view_order_data)) {
 				$.notify("No Orders on selected date", "info");
 			}
-	
-            displaySelectedOrders(view_order_data);
+			else {
+				displaySelectedOrders(view_order_data);
+			}
         },
-        error: handleAjaxErrorViewOrder
+        error: function(error) {
+			dateSet();
+			handleAjaxErrorViewOrder(error);
+		}
     });
 }
 
@@ -58,13 +62,11 @@ function getViewOrderList(event) {
 function displaySelectedOrders(data) {
 	var tbody = $('#view_order-table').children('tbody');
 	tbody.empty();
-	var value_count = 1;
 	for(var i in data) {
 		var e = data[i];
 		var buttonHtml = '<button class="btn btn-primary" onclick="generateInvoice(' + e.id + ')">Generate Invoice</button>'
 		buttonHtml += ' <button class="btn btn-primary" onclick="viewSelectedOrders(' + e.id + ')">View Order</button>'
 		var row = '<tr>'
-			+ '<td>' + value_count++ + '</td>'
 			+ '<td>' + e.id + '</td>'
 			+ '<td>' + e.time.substring(0, 10) + '</td>'
 			+ '<td>'  + e.billAmount.toFixed(2) + '</td>'
@@ -154,17 +156,14 @@ function handleAjaxErrorViewOrder(response){
 
 function dateSet() {
 	var date = new Date();
-	var year = date.getFullYear();
-	var monthStart = String(date.getMonth()).padStart(2,'0');
-	var monthEnd = String(date.getMonth()+1).padStart(2,'0');
-	var todayDate = String(date.getDate()).padStart(2,'0');
-
-	var datePatternStart = year + '-' + monthStart + '-' + todayDate;
-	var datePatternEnd = year + '-' + monthEnd + '-' + todayDate;
 
 	document.getElementById("inputEndDateOrder").valueAsDate = date;
 	date.setMonth(date.getMonth() - 1);
 	document.getElementById("inputStartDateOrder").valueAsDate = date;
+}
+
+function dateSetWithViewOrderList() {
+	dateSet();
 	getViewOrderList();
 }
 
@@ -174,5 +173,4 @@ function init() {
 }
 
 $(document).ready(init);
-// $(document).ready(getViewOrderList);
-$(document).ready(dateSet);
+$(document).ready(dateSetWithViewOrderList);

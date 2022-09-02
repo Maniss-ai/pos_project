@@ -38,7 +38,7 @@ public class InventoryDaoTest extends AbstractUnitTest {
     }
 
     @Test
-    public void testSelect() throws ApiException {
+    public void testSelect() {
         BrandPojo brandPojo = new BrandPojo();
         brandPojo.setBrand("puma");
         brandPojo.setCategory("shoes");

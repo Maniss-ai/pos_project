@@ -3,11 +3,7 @@ package com.increff.employee.dto;
 import com.increff.employee.model.data.*;
 import com.increff.employee.model.form.*;
 import com.increff.employee.pojo.*;
-import com.increff.employee.service.ApiException;
 import org.apache.commons.math3.util.Precision;
-
-import java.util.List;
-import java.util.Objects;
 
 public class DtoHelper {
     // Brand Conversions and normalize
@@ -94,8 +90,8 @@ public class DtoHelper {
         return pojo;
     }
 
-    public static void normalizeInventory(InventoryPojo p) {
-//        p.setBarcode(p.getBarcode().toLowerCase().trim());
+    public static void normalizeInventory(InventoryForm inventoryForm) {
+        inventoryForm.setBarcode(inventoryForm.getBarcode().toLowerCase().trim());
     }
 
     // OrderItem Conversions
@@ -145,8 +141,17 @@ public class DtoHelper {
         return pojo;
     }
 
-//    public static void normalizeOrderItem(OrderItemPojo p) {
-//        p.setBarcode(p.getBarcode().toLowerCase().trim());
-//    }
+    public static void normalizeOrderItem(OrderItemForm form) {
+        form.setBarcode(form.getBarcode().toLowerCase().trim());
+    }
+
+    public static void normalizeReport(ReportForm reportForm) {
+        if(reportForm.getBrand() != null && !reportForm.getBrand().isEmpty()) {
+            reportForm.setBrand(reportForm.getBrand().toLowerCase().trim());
+        }
+        if(reportForm.getCategory() != null && !reportForm.getCategory().isEmpty()) {
+            reportForm.setCategory(reportForm.getCategory().toLowerCase().trim());
+        }
+    }
 
 }

@@ -117,12 +117,12 @@ function processDataInventory() {
 
 	// check for TSV extension ...
 	if(fileName.substring(fileName.length-3, fileName.length) != "tsv") {
-		$.notify("Please select TSV file", "warn");
+		$.notify("select TSV file", "warn");
 		return;
 	}
 
 	if(document.getElementById("inventoryFile").files.length == 0) {
-		$.notify("Please select TSV file", "warn");
+		$.notify("select TSV file", "warn");
 		resetUploadDialogInventory();
 		return;
 	}
@@ -179,7 +179,7 @@ function bulkAddInventory() {
 	   },
 	   error: function(response) {
 			var lines = response.responseJSON.message.split("\n");
-			$.notify("Error in tsv file, please download errors", {autoHide : false});
+			$.notify("Error in tsv file, download errors", {autoHide : false});
 
 			createErrorDataInventory(lines);
 

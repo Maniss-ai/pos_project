@@ -81,12 +81,12 @@ function processDataBrand() {
 
 	// check for TSV extension ...
 	if(fileName.substring(fileName.length-3, fileName.length) != "tsv") {
-		$.notify("Please select TSV file", "warn");
+		$.notify("select TSV file", "warn");
 		return;
 	}
 
 	if(document.getElementById("brandFile").files.length == 0) {
-		$.notify("Please select TSV file", "warn");
+		$.notify("select TSV file", "warn");
 		resetUploadDialogBrand();
 		return;
 	}
@@ -142,7 +142,7 @@ function bulkAddBrand() {
 	   },
 	   error: function(response) {
 			var lines = response.responseJSON.message.split("\n");
-			$.notify("Error in tsv file, please download errors", {autoHide : false});
+			$.notify("Error in tsv file, download errors", {autoHide : false});
 			createErrorDataBrand(lines);
 			updateUploadDialogBrand();
 		}

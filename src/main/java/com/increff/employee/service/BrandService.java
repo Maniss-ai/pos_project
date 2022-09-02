@@ -2,6 +2,7 @@ package com.increff.employee.service;
 
 import com.increff.employee.dao.BrandDao;
 import com.increff.employee.pojo.BrandPojo;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,11 +45,7 @@ public class BrandService {
     @Transactional
     public BrandPojo getCheck(Integer id) throws ApiException {
         try {
-            BrandPojo p = dao.select(id);
-            if (p == null) {
-                throw new ApiException("Brand " + get(id).getBrand() + " does not exit");
-            }
-            return p;
+            return dao.select(id);
         }
         catch (Exception e) {
             throw new ApiException("Id doesn't exists");
@@ -67,22 +64,21 @@ public class BrandService {
 
     @Transactional
     public List<BrandPojo> getBrand(String brand) throws ApiException {
-        try {
-            return dao.getBrand(brand);
+        List<BrandPojo> brandPojoList = dao.getBrand(brand);
+        if(brandPojoList.size() == 0) {
+            throw new ApiException("Brand doesn't exists");
         }
-        catch (Exception e) {
-            throw new ApiException("Brand Category pair doesn't exists");
-        }
+
+        return brandPojoList;
     }
 
     @Transactional
     public List<BrandPojo> getCategory(String category) throws ApiException {
-        try {
-            return dao.getCategory(category);
-        }
-        catch (Exception e) {
-            throw new ApiException("Brand Category pair doesn't exists");
-        }
+        List<BrandPojo> brandPojoList = dao.getCategory(category);
+        if(brandPojoList.size() == 0)
+            throw new ApiException("Category doesn't exists");
+
+        return brandPojoList;
     }
 
 }

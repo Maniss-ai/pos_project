@@ -34,7 +34,7 @@
 						<span class="input-group-text" id="inputGroup-sizing-default">Inventory</span>
 						<input type="number" class="form-control" aria-label="Sizing example input"
 							aria-describedby="inputGroup-sizing-default" name="inventory" id="inputInventory"
-							placeholder="Enter Inventor" min="0" onkeypress="return onlyNumberKey(event)" step="0.01">
+							placeholder="Enter Inventory" min="0" onkeypress="return onlyNumberKey(event)" step="0.01">
 					</div>
 
 					<div class="row">&nbsp;</div>
@@ -137,7 +137,7 @@
 							<label class="custom-file-label" for="inventoryFile" id="inventoryFileName">Choose
 								file</label>
 						</div>
-						<a th:href="@{/static/Inventory.tsv}" target="_blank">Download Sample</a>
+						<a STYLE="color: rgb(56, 108, 187)" th:href="@{/static/Inventory.tsv}" target="_blank">Download Sample</a>
 						<br>
 						Rows: <span id="rowCountInventory">0</span>,
 						Processed: <span id="processCountInventory">0</span>,

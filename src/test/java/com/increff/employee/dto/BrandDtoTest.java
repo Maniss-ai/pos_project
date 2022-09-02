@@ -17,21 +17,15 @@ public class BrandDtoTest extends AbstractUnitTest {
 
     @Test
     public void testAddNormalize() throws ApiException {
-        BrandForm brandForm = new BrandForm();
-        brandForm.setBrand("PuMa    ");
-        brandForm.setCategory("    SHOES    ");
+        BrandData brandData = brandDto.add(addBrandForm());
 
-        BrandData brandData = brandDto.add(brandForm);
-
-        Assert.assertEquals("puma", brandData.getBrand());
-        Assert.assertEquals("shoes", brandData.getCategory());
+        Assert.assertEquals("brand", brandData.getBrand());
+        Assert.assertEquals("category", brandData.getCategory());
     }
 
     @Test(expected = ApiException.class)
     public void testAddDuplicate() throws ApiException {
-        BrandForm brandForm = new BrandForm();
-        brandForm.setBrand("  PuMa    ");
-        brandForm.setCategory("    SHOES    ");
+        BrandForm brandForm = addBrandForm();
 
         brandDto.add(brandForm);
         brandDto.add(brandForm);
@@ -73,22 +67,17 @@ public class BrandDtoTest extends AbstractUnitTest {
 
     @Test(expected = ApiException.class)
     public void testGetWhenIdNotExists() throws ApiException {
-        int id = 0;
-        brandDto.get(id);
+        brandDto.get(0);
     }
 
     @Test
     public void testGetWhenIdExists() throws ApiException {
-        BrandForm brandForm = new BrandForm();
-        brandForm.setBrand("PuMa    ");
-        brandForm.setCategory("    SHOES    ");
-        BrandData brandData = brandDto.add(brandForm);
-
+        BrandData brandData = brandDto.add(addBrandForm());
         int id = brandData.getId();
         brandData = brandDto.get(id);
 
-        Assert.assertEquals("puma", brandData.getBrand());
-        Assert.assertEquals("shoes", brandData.getCategory());
+        Assert.assertEquals("brand", brandData.getBrand());
+        Assert.assertEquals("category", brandData.getCategory());
     }
 
     @Test
@@ -101,9 +90,7 @@ public class BrandDtoTest extends AbstractUnitTest {
     @Test
     public void testUpdate() throws ApiException {
         BrandForm brandForm = new BrandForm();
-        brandForm.setBrand("PuMa    ");
-        brandForm.setCategory("    SHOES    ");
-        BrandData brandData = brandDto.add(brandForm);
+        BrandData brandData = brandDto.add(addBrandForm());
 
         int id = brandData.getId();
         brandForm.setBrand("   Adidas ");
@@ -120,15 +107,23 @@ public class BrandDtoTest extends AbstractUnitTest {
         testAddNormalize();
 
         BrandForm brandForm = new BrandForm();
-        brandForm.setBrand("  AdiDaS    ");
-        brandForm.setCategory("    ShiRtS    ");
-        BrandData brandData = brandDto.add(brandForm);
+        BrandData brandData = brandDto.add(addBrandForm());
 
         int id = brandData.getId();
         brandForm.setBrand("   PUMA ");
         brandForm.setCategory("   ShoeS   ");
 
         brandDto.update(id, brandForm);
+    }
+
+    @Test(expected = ApiException.class)
+    public void testUpdateIdNotExist() throws ApiException {
+        BrandForm brandForm = new BrandForm();
+
+        brandForm.setBrand("   Adidas ");
+        brandForm.setCategory("   ShiRtS   ");
+
+        brandDto.update(0, brandForm);
     }
 
 }

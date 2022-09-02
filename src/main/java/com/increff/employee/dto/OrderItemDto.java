@@ -40,7 +40,9 @@ public class OrderItemDto {
     public OrderItemData add(OrderItemForm form) throws ApiException {
         Checks.nullCheckOrderItem(form);
         OrderItemPojo orderItemPojo = DtoHelper.convertFormToPojoOrderItem(form, 0);
+        DtoHelper.normalizeOrderItem(form);
         orderItemPojo.setProductId(productService.getWithBarcode(form.getBarcode()).getId());
+        Checks.checkLength(form);
         Checks.isMrpNegative(orderItemPojo.getSellingPrice());
         Checks.isInventoryNegative(orderItemPojo.getQuantity());
 
@@ -57,7 +59,7 @@ public class OrderItemDto {
         }
         else {
             if(alreadyAdded(form)) {
-                throw new ApiException("Order already exists, Please Update");
+                throw new ApiException("Order item already exists, Please Update");
             }
             else {
                 OrderItemData orderItemData = DtoHelper.convertPojoToDataOrderItem(orderItemService.add(orderItemPojo));
@@ -91,7 +93,7 @@ public class OrderItemDto {
     @Transactional
     public void submit(List<OrderItemForm> orderFormList) throws ApiException {
         if(orderFormList.isEmpty()) {
-            throw new ApiException("Please add product to place an order");
+            throw new ApiException("add order item to place an order");
         }
 
         for(OrderItemForm orderItemForm : orderFormList) {

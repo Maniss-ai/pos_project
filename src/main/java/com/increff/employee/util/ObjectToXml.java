@@ -1,6 +1,6 @@
 package com.increff.employee.util;
 
-import com.increff.employee.dto.OrderInvoicePojo;
+import com.increff.employee.pojo.OrderInvoicePojo;
 import com.increff.employee.model.data.OrderItemData;
 import com.increff.employee.model.form.OrderInvoice;
 import com.increff.employee.pojo.OrderPojo;

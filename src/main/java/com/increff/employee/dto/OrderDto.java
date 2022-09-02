@@ -1,12 +1,15 @@
 package com.increff.employee.dto;
 
-import com.increff.employee.service.*;
-import com.increff.employee.util.ObjectToXml;
 import com.increff.employee.model.data.OrderData;
 import com.increff.employee.model.data.OrderItemData;
 import com.increff.employee.model.form.ViewOrderForm;
 import com.increff.employee.pojo.OrderItemPojo;
 import com.increff.employee.pojo.OrderPojo;
+import com.increff.employee.service.ApiException;
+import com.increff.employee.service.OrderItemService;
+import com.increff.employee.service.OrderService;
+import com.increff.employee.service.ProductService;
+import com.increff.employee.util.ObjectToXml;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
@@ -16,9 +19,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
+import java.time.zone.ZoneRulesException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +34,7 @@ public class OrderDto {
     @Autowired
     private OrderItemService orderItemService;
 
-    public List<OrderData> search(ViewOrderForm form) throws ApiException, ParseException {
+    public List<OrderData> search(ViewOrderForm form) throws ApiException {
         List<OrderPojo> pojoList;
         List<OrderData> dataList = new ArrayList<>();
 
@@ -41,22 +43,24 @@ public class OrderDto {
             pojoList = orderService.getSelectedOrdersWithId(form.getOrderId());
         }
         else if(form.getStartDate() != null && form.getEndDate() != null && !form.getStartDate().isEmpty() && !form.getEndDate().isEmpty()) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            if(sdf.parse(form.getStartDate()).compareTo(sdf.parse(form.getEndDate())) > 0) {
-                throw new ApiException("Start Date should come before End Date");
-            }
-
+            ZonedDateTime startDate, endDate;
             try {
-                ZonedDateTime startDate = ZonedDateTime.parse(form.getStartDate());
-                ZonedDateTime endDate = ZonedDateTime.parse(form.getEndDate());
-
-                pojoList = orderService.getSelectedOrdersWithoutId(startDate, endDate);
+                startDate = ZonedDateTime.parse(form.getStartDate());
+                endDate = ZonedDateTime.parse(form.getEndDate());
             }
-
             catch (Exception e) {
                 throw new ApiException("Invalid Date time format must be zone date time");
             }
+
+            if(startDate.isAfter(endDate)) {
+                throw new ApiException("Start Date cannot be greater then End Date");
             }
+            if(startDate.isAfter(ZonedDateTime.now())) {
+                throw new ApiException("Start Date cannot be greater then Today");
+            }
+
+            pojoList = orderService.getSelectedOrdersWithoutId(startDate, endDate);
+        }
         else {
             throw new ApiException("Please provide either OrderId or Date range");
         }

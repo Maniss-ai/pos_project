@@ -19,7 +19,7 @@ public class InventoryServiceTest extends AbstractUnitTest {
     ProductService productService;
 
     @Test
-    public void testAdd(){
+    public void testAdd() {
         BrandPojo brandPojo = new BrandPojo();
         brandPojo.setBrand("puma");
         brandPojo.setCategory("shoes");

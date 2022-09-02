@@ -25,11 +25,12 @@ public class InventoryDto {
     @Autowired
     private ProductService productService;
 
-    // CRUD ....
+    // CRUD
     public InventoryData add(InventoryForm form) throws ApiException {
         Checks.nullCheckInventory(form);
         InventoryPojo inventoryPojo = DtoHelper.convertFormToPojoInventory(form);
-        DtoHelper.normalizeInventory(inventoryPojo);
+        DtoHelper.normalizeInventory(form);
+        Checks.checkLength(form);
         Checks.isInventoryNegative(inventoryPojo.getInventory());
 
         ProductPojo productPojo = productService.getInventoryBarcode(form.getBarcode());
@@ -38,7 +39,6 @@ public class InventoryDto {
         if (Checks.doesNotExistInventory(form, getAll())) {
             InventoryData inventoryData = DtoHelper.convertPojoToDataInventory(inventoryService.add(inventoryPojo));
             inventoryData.setBarcode(form.getBarcode());
-
             return inventoryData;
         } else {
             InventoryUpdateForm inventoryUpdateForm = new InventoryUpdateForm();
@@ -59,6 +59,10 @@ public class InventoryDto {
             }
             catch (Exception e) {
                 error.append(row).append(": ").append(e.getMessage()).append("\n");
+            }
+
+            if(row > 5000) {
+                throw new ApiException("Can't process, File contains more than 5000 rows");
             }
 
             row++;

@@ -11,9 +11,9 @@ public class ApiException extends Exception {
 		super(string);
 	}
 
-	@Override
-	public void printStackTrace(PrintStream var1) {
-		var1.println(this.getMessage());
-	}
+//	@Override
+//	public void printStackTrace(PrintStream var1) {
+//		var1.println(this.getMessage());
+//	}
 
 }

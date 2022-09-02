@@ -12,44 +12,30 @@ public class BrandServiceTest extends AbstractUnitTest {
 
     @Test
     public void testAdd() {
-        BrandPojo brandPojo = new BrandPojo();
-        brandPojo.setBrand("puma");
-        brandPojo.setCategory("shoes");
+        BrandPojo brandPojo = brandService.add(addBrandPojo());
 
-        brandPojo = brandService.add(brandPojo);
-
-        Assert.assertEquals("puma", brandPojo.getBrand());
-        Assert.assertEquals("shoes", brandPojo.getCategory());
+        Assert.assertEquals("brand", brandPojo.getBrand());
+        Assert.assertEquals("category", brandPojo.getCategory());
     }
 
     @Test
     public void testGetWhenIdExists() throws ApiException {
-        BrandPojo brandPojo = new BrandPojo();
-        brandPojo.setBrand("puma");
-        brandPojo.setCategory("shoes");
-
-        brandPojo = brandService.add(brandPojo);
-
+        BrandPojo brandPojo = brandService.add(addBrandPojo());
         brandPojo = brandService.get(brandPojo.getId());
 
-        Assert.assertEquals("puma", brandPojo.getBrand());
-        Assert.assertEquals("shoes", brandPojo.getCategory());
+        Assert.assertEquals("brand", brandPojo.getBrand());
+        Assert.assertEquals("category", brandPojo.getCategory());
     }
 
     @Test(expected = ApiException.class)
     public void testGetWhenIdNotExists() throws ApiException {
-        int id = 0;
-        brandService.get(id);
+        brandService.get(0);
     }
 
     @Test
     public void testGetAll() {
         for(int i = 0; i < 5; i++) {
-            BrandPojo brandPojo = new BrandPojo();
-            brandPojo.setBrand("Brand" + i+1);
-            brandPojo.setCategory("Category" + i+1);
-
-            brandService.add(brandPojo);
+            brandService.add(addBrandPojo());
         }
 
         Assert.assertEquals(5, brandService.getAll().size());
@@ -57,19 +43,53 @@ public class BrandServiceTest extends AbstractUnitTest {
 
     @Test
     public void testUpdate() throws ApiException {
-        BrandPojo brandPojo = new BrandPojo();
-        brandPojo.setBrand("puma");
-        brandPojo.setCategory("shoes");
-        brandPojo = brandService.add(brandPojo);
+        BrandPojo brandPojo = brandService.add(addBrandPojo());
 
         int id = brandPojo.getId();
-        brandPojo.setBrand("adidas");
-        brandPojo.setCategory("shirts");
-
+        brandPojo.setBrand("puma");
+        brandPojo.setCategory("shoes");
         brandPojo = brandService.update(id, brandPojo);
 
-        Assert.assertEquals("adidas", brandPojo.getBrand());
-        Assert.assertEquals("shirts", brandPojo.getCategory());
+        Assert.assertEquals("puma", brandPojo.getBrand());
+        Assert.assertEquals("shoes", brandPojo.getCategory());
     }
+
+    @Test
+    public void testGetBrand() throws ApiException {
+        brandService.add(addBrandPojo());
+
+        Assert.assertEquals("brand", brandService.getBrand("brand").get(0).getBrand());
+        Assert.assertEquals("category", brandService.getBrand("brand").get(0).getCategory());
+    }
+
+    @Test
+    public void testGetCategory() throws ApiException {
+        brandService.add(addBrandPojo());
+
+        Assert.assertEquals("brand", brandService.getCategory("category").get(0).getBrand());
+        Assert.assertEquals("category", brandService.getCategory("category").get(0).getCategory());
+    }
+    @Test
+    public void testGetBrandCategory() throws ApiException {
+        brandService.add(addBrandPojo());
+
+        Assert.assertEquals("brand", brandService.getBrandCategory("brand", "category").getBrand());
+        Assert.assertEquals("category", brandService.getBrandCategory("brand", "category").getCategory());
+    }
+
+    @Test(expected = Exception.class)
+    public void testGetBrandException() throws ApiException {
+        brandService.getBrand("value");
+    }
+
+    @Test(expected = Exception.class)
+    public void testGetCategoryException() throws ApiException {
+        brandService.getCategory("value");
+    }
+    @Test(expected = Exception.class)
+    public void testGetBrandCategoryException() throws ApiException {
+        brandService.getBrandCategory("brand", "category");
+    }
+
 
 }
