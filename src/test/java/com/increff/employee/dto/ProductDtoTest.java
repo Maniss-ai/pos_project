@@ -22,17 +22,8 @@ public class ProductDtoTest extends AbstractUnitTest {
 
     @Test(expected = ApiException.class)
     public void testAddDuplicate() throws ApiException {
-        BrandForm brandForm = new BrandForm();
-        brandForm.setBrand("PuMa    ");
-        brandForm.setCategory("    SHOES    ");
-        brandDto.add(brandForm);
-
-        ProductForm productForm = new ProductForm();
-        productForm.setBrand("    PUma");
-        productForm.setCategory("    shOES   ");
-        productForm.setBarcode("    PUmA111   ");
-        productForm.setProduct("    SportS ShoES   ");
-        productForm.setMrp(2999.362);
+        brandDto.add(addBrandForm());
+        ProductForm productForm = addProductForm();
 
         productDto.add(productForm);
         productDto.add(productForm);
@@ -40,36 +31,18 @@ public class ProductDtoTest extends AbstractUnitTest {
 
     @Test
     public void testAddNormalize() throws ApiException {
-        BrandForm brandForm = new BrandForm();
-        brandForm.setBrand("PuMa    ");
-        brandForm.setCategory("    SHOES    ");
-
-        brandDto.add(brandForm);
-
-        ProductForm productForm = new ProductForm();
-        productForm.setBrand("    PUma");
-        productForm.setCategory("    shOES   ");
-        productForm.setBarcode("    PUmA111   ");
-        productForm.setProduct("    SportS ShoES   ");
-        productForm.setMrp(2999.362);
+        brandDto.add(addBrandForm());
+        ProductForm productForm = addProductForm();
 
         ProductData productData = productDto.add(productForm);
 
-        Assert.assertEquals("puma", productData.getBrand());
-        Assert.assertEquals("shoes", productData.getCategory());
-        Assert.assertEquals("puma111", productData.getBarcode());
-        Assert.assertEquals("sports shoes", productData.getProduct());
-        Assert.assertEquals(2999.36, productData.getMrp(), 0.01);
+        Assert.assertEquals("brand", productData.getBrand());
+        Assert.assertEquals("category", productData.getCategory());
     }
 
     @Test(expected = ApiException.class)
     public void testAddBrandCategoryPairNotExists() throws ApiException {
-        ProductForm productForm = new ProductForm();
-        productForm.setBrand("    PUma");
-        productForm.setCategory("    shOES   ");
-        productForm.setBarcode("    PUmA111   ");
-        productForm.setProduct("    SportS ShoES   ");
-        productForm.setMrp(2999.362);
+        ProductForm productForm = addProductForm();
 
         productDto.add(productForm);
     }
@@ -136,28 +109,16 @@ public class ProductDtoTest extends AbstractUnitTest {
 
     @Test
     public void testGetWithIdWhenIdExists() throws ApiException {
-        BrandForm brandForm = new BrandForm();
-        brandForm.setBrand("PuMa    ");
-        brandForm.setCategory("    SHOES    ");
-        brandDto.add(brandForm);
-
-        ProductForm productForm = new ProductForm();
-        productForm.setBrand("    PUma");
-        productForm.setCategory("    shOES   ");
-        productForm.setBarcode("    PUmA111   ");
-        productForm.setProduct("    SportS ShoES   ");
-        productForm.setMrp(2999.362);
-
-        ProductData productData = productDto.add(productForm);
+        brandDto.add(addBrandForm());
+        ProductData productData = productDto.add(addProductForm());
 
         int id = productData.getId();
         productData = productDto.getWithId(id);
 
-        Assert.assertEquals("puma", productData.getBrand());
-        Assert.assertEquals("shoes", productData.getCategory());
-        Assert.assertEquals("puma111", productData.getBarcode());
-        Assert.assertEquals("sports shoes", productData.getProduct());
-        Assert.assertEquals(2999.36, productData.getMrp(), 0.01);
+        Assert.assertEquals("brand", productData.getBrand());
+        Assert.assertEquals("category", productData.getCategory());
+        Assert.assertEquals("barcode", productData.getBarcode());
+        Assert.assertEquals("product", productData.getProduct());
     }
 
     @Test(expected = ApiException.class)
@@ -168,28 +129,14 @@ public class ProductDtoTest extends AbstractUnitTest {
 
     @Test
     public void testGetWithBarcode() throws ApiException {
-        BrandForm brandForm = new BrandForm();
-        brandForm.setBrand("PuMa    ");
-        brandForm.setCategory("    SHOES    ");
-        brandDto.add(brandForm);
-
-        ProductForm productForm = new ProductForm();
-        productForm.setBrand("    PUma");
-        productForm.setCategory("    shOES   ");
-        productForm.setBarcode("    PUmA111   ");
-        productForm.setProduct("    SportS ShoES   ");
-        productForm.setMrp(2999.362);
-
-        ProductData productData = productDto.add(productForm);
+        brandDto.add(addBrandForm());
+        ProductData productData = productDto.add(addProductForm());
 
         String barcode = productData.getBarcode();
         productData = productDto.get(barcode);
 
-        Assert.assertEquals("puma", productData.getBrand());
-        Assert.assertEquals("shoes", productData.getCategory());
-        Assert.assertEquals("puma111", productData.getBarcode());
-        Assert.assertEquals("sports shoes", productData.getProduct());
-        Assert.assertEquals(2999.36, productData.getMrp(), 0.01);
+        Assert.assertEquals("brand", productData.getBrand());
+        Assert.assertEquals("category", productData.getCategory());
     }
 
     @Test

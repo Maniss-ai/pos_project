@@ -34,6 +34,7 @@ public class OrderItemServiceTest extends AbstractUnitTest {
 
         InventoryPojo inventoryPojo = new InventoryPojo();
         inventoryPojo.setInventory(78);
+        inventoryPojo.setId(1);
         inventoryService.add(inventoryPojo);
 
         OrderItemPojo orderItemPojo = new OrderItemPojo();
@@ -68,13 +69,6 @@ public class OrderItemServiceTest extends AbstractUnitTest {
         Integer orderItemId = 0;
         orderItemService.getCheck(orderItemId);
     }
-
-    @Test(expected = ApiException.class)
-    public void testGetCheckOrderWithBarcode() throws ApiException {
-        String barcode = "barcode";
-        orderItemService.getCheckWithBarcode(barcode);
-    }
-
     @Test
     public void testSubmit() {
         OrderPojo orderPojo = new OrderPojo();

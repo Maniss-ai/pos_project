@@ -216,9 +216,9 @@ public class Checks {
     // Report Checks
     public static void checkLength(ReportForm form) throws ApiException {
         DtoHelper.normalizeReport(form);
-        if(form.getBrand().length() > 20) {
+        if(form.getBrand() != null && form.getBrand().length() > 20) {
             throw new ApiException("Brand name is too long");
-        } else if(form.getCategory().length() > 20) {
+        } else if(form.getCategory() != null && form.getCategory().length() > 20) {
             throw new ApiException("Category name is too long");
         }
     }

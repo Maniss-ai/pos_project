@@ -26,8 +26,8 @@ public class OrderDtoTest extends AbstractUnitTest {
     @Autowired
     OrderDto orderDto;
 
-    @Test
-    public void testSearchWithOrderId() throws ApiException, ParseException {
+    @Test(expected = ApiException.class)
+    public void testSearchWithOrderId() throws ApiException {
         BrandForm brandForm = new BrandForm();
         brandForm.setBrand(" pUMa   ");
         brandForm.setCategory(" ShoES   ");
@@ -57,14 +57,14 @@ public class OrderDtoTest extends AbstractUnitTest {
         orderItemDto.submit(orderItemFormList);
 
         ViewOrderForm viewOrderForm = new ViewOrderForm();
-        viewOrderForm.setOrderId(1);
+        viewOrderForm.setOrderId(17);
         List<OrderData> orderDataList = orderDto.search(viewOrderForm);
 
         Assert.assertEquals((inventoryForm.getInventory() - 20) * (productForm.getMrp() - 234.32), orderDataList.get(0).getBillAmount(), 1);
     }
 
     @Test
-    public void testSearchWithDate() throws ApiException, ParseException {
+    public void testSearchWithDate() throws ApiException {
         BrandForm brandForm = new BrandForm();
         brandForm.setBrand(" pUMa   ");
         brandForm.setCategory(" ShoES   ");
@@ -94,15 +94,15 @@ public class OrderDtoTest extends AbstractUnitTest {
         orderItemDto.submit(orderItemFormList);
 
         ViewOrderForm viewOrderForm = new ViewOrderForm();
-        viewOrderForm.setStartDate("2022-06-22");
-        viewOrderForm.setEndDate("2022-12-23");
+        viewOrderForm.setStartDate("2022-07-01T12:45:29+05:30");
+        viewOrderForm.setEndDate("2022-09-07T12:45:29+05:30");
         List<OrderData> orderDataList = orderDto.search(viewOrderForm);
 
         Assert.assertEquals((inventoryForm.getInventory() - 20) * (productForm.getMrp() - 234.32), orderDataList.get(0).getBillAmount(), 1);
     }
 
     @Test(expected = ApiException.class)
-    public void testEmptyViewOrderForm() throws ParseException, ApiException {
+    public void testEmptyViewOrderForm() throws ApiException {
         ViewOrderForm viewOrderForm = new ViewOrderForm();
         orderDto.search(viewOrderForm);
     }
@@ -137,6 +137,36 @@ public class OrderDtoTest extends AbstractUnitTest {
         OrderPojo orderPojo = orderDto.getOrder(1);
 
         Assert.assertEquals(100.023 * 10, orderPojo.getBillAmount(), 1);
+    }
+
+    @Test
+    public void testGetSingleOrder() throws ApiException {
+        BrandForm brandForm = new BrandForm();
+        brandForm.setBrand("puma");
+        brandForm.setCategory("shoes");
+        brandDto.add(brandForm);
+
+        ProductForm productForm = new ProductForm();
+        productForm.setBrand("puma");
+        productForm.setCategory("shoes");
+        productForm.setBarcode("puma111");
+        productForm.setProduct("sports shoes");
+        productForm.setMrp(2999.362);
+        productDto.add(productForm);
+
+        InventoryForm inventoryForm = new InventoryForm();
+        inventoryForm.setBarcode("puma111");
+        inventoryForm.setInventory(78);
+        inventoryDto.add(inventoryForm);
+
+        OrderItemForm orderItemForm = new OrderItemForm();
+        orderItemForm.setSellingPrice(100.023);
+        orderItemForm.setBarcode(inventoryForm.getBarcode());
+        orderItemForm.setQuantity(10);
+        OrderItemData orderItemData = orderItemDto.add(orderItemForm);
+
+        Integer orderId = orderItemData.getOrderId();
+        orderDto.getSingleOrder(orderId);
     }
 
 }

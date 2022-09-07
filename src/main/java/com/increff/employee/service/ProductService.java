@@ -28,7 +28,12 @@ public class ProductService {
 
     @Transactional(rollbackOn = ApiException.class)
     public ProductPojo getWithBarcode(String barcode) throws ApiException {
-        return getCheckWithBarcode(barcode);
+        try {
+            return dao.getInventoryBarcode(barcode);
+        }
+        catch (Exception e) {
+            throw new ApiException("Barcode doesn't exists");
+        }
     }
 
     @Transactional
@@ -70,12 +75,4 @@ public class ProductService {
         }
     }
 
-    private ProductPojo getCheckWithBarcode(String barcode) throws ApiException {
-        try {
-            return dao.getInventoryBarcode(barcode);
-        }
-        catch (Exception e) {
-            throw new ApiException("Barcode doesn't exists");
-        }
-    }
 }

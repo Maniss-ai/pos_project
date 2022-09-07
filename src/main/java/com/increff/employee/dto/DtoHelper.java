@@ -48,11 +48,11 @@ public class DtoHelper {
         return pojo;
     }
 
-    public static void normalizeProduct(ProductPojo p) {
-        p.setBarcode(p.getBarcode().toLowerCase().trim());
-        p.setProduct(p.getProduct().toLowerCase().trim());
-//        p.setBrand(p.getBrand().toLowerCase().trim());
-//        p.setCategory(p.getCategory().toLowerCase().trim());
+    public static void normalizeProduct(ProductForm productForm) {
+        productForm.setBarcode(productForm.getBarcode().toLowerCase().trim());
+        productForm.setProduct(productForm.getProduct().toLowerCase().trim());
+        productForm.setBrand(productForm.getBrand().toLowerCase().trim());
+        productForm.setCategory(productForm.getCategory().toLowerCase().trim());
     }
 
     public static void normalizeForUpdateProduct(ProductPojo p) {

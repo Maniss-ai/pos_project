@@ -35,6 +35,7 @@ public class OrderItemDaoTest extends AbstractUnitTest {
 
         InventoryPojo inventoryPojo = new InventoryPojo();
         inventoryPojo.setInventory(38);
+        inventoryPojo.setId(1);
         inventoryDao.insert(inventoryPojo);
 
         OrderItemPojo orderItemPojo = new OrderItemPojo();
@@ -65,6 +66,7 @@ public class OrderItemDaoTest extends AbstractUnitTest {
 
         InventoryPojo inventoryPojo = new InventoryPojo();
         inventoryPojo.setInventory(38);
+        inventoryPojo.setId(1);
         inventoryDao.insert(inventoryPojo);
 
         OrderItemPojo orderItemPojo = new OrderItemPojo();
@@ -98,6 +100,7 @@ public class OrderItemDaoTest extends AbstractUnitTest {
 
         InventoryPojo inventoryPojo = new InventoryPojo();
         inventoryPojo.setInventory(38);
+        inventoryPojo.setId(1);
         inventoryDao.insert(inventoryPojo);
 
         OrderItemPojo orderItemPojo = new OrderItemPojo();

@@ -126,7 +126,7 @@ public class ProductServiceTest extends AbstractUnitTest {
         BrandPojo brandPojo = new BrandPojo();
         brandPojo.setBrand("puma");
         brandPojo.setCategory("shoes");
-        brandService.add(brandPojo);
+        Integer id = brandService.add(brandPojo).getId();
 
         ProductPojo productPojo = new ProductPojo();
         productPojo.setBarcode("puma111");
@@ -134,9 +134,7 @@ public class ProductServiceTest extends AbstractUnitTest {
         productPojo.setMrp(2999.362);
         productService.add(productPojo);
 
-        ReportForm reportForm = new ReportForm();
-        reportForm.setBrand("puma");
-        reportForm.setCategory("shoes");
+        productService.getWithBrandCategory(id);
     }
 
     @Test
@@ -180,6 +178,22 @@ public class ProductServiceTest extends AbstractUnitTest {
         productPojo = productService.getCheck(id);
 
         Assert.assertEquals("puma111", productPojo.getBarcode());
+    }
+
+    @Test
+    public void testGetCheckInventoryBarcode() throws ApiException {
+        productService.add(addProductPojo());
+        productService.getInventoryBarcode("barcode");
+    }
+
+    @Test(expected = ApiException.class)
+    public void testGetCheckInventoryBarcodeException() throws ApiException {
+        productService.getInventoryBarcode("barcode");
+    }
+
+    @Test(expected = ApiException.class)
+    public void testGetWhenBarcodeNotExist() throws ApiException {
+        productService.getWithBarcode("barcode");
     }
 
 }

@@ -33,6 +33,7 @@ public class InventoryServiceTest extends AbstractUnitTest {
 
         InventoryPojo inventoryPojo = new InventoryPojo();
         inventoryPojo.setInventory(78);
+        inventoryPojo.setId(1);
         inventoryPojo = inventoryService.add(inventoryPojo);
 
         Assert.assertEquals(inventoryPojo.getInventory(), 78, 1);
@@ -53,6 +54,7 @@ public class InventoryServiceTest extends AbstractUnitTest {
 
         InventoryPojo inventoryPojo = new InventoryPojo();
         inventoryPojo.setInventory(78);
+        inventoryPojo.setId(1);
         inventoryPojo = inventoryService.add(inventoryPojo);
 
         int id = inventoryPojo.getId();
@@ -76,14 +78,10 @@ public class InventoryServiceTest extends AbstractUnitTest {
 
         InventoryPojo inventoryPojo = new InventoryPojo();
         inventoryPojo.setInventory(78);
+        inventoryPojo.setId(1);
         inventoryPojo = inventoryService.add(inventoryPojo);
 
         Assert.assertEquals(inventoryPojo.getInventory(), 78, 1);
-    }
-
-    @Test(expected = ApiException.class)
-    public void testGetCheckWithBarcodeWhenBarcodeNotExist() throws ApiException {
-        String barcode = "barcode";
     }
 
     @Test
@@ -106,6 +104,7 @@ public class InventoryServiceTest extends AbstractUnitTest {
         for(int i = 0; i < 5; i++) {
             InventoryPojo inventoryPojo = new InventoryPojo();
             inventoryPojo.setInventory((i+1) * 18);
+            inventoryPojo.setId(i+1);
             inventoryService.add(inventoryPojo);
         }
 
@@ -128,6 +127,7 @@ public class InventoryServiceTest extends AbstractUnitTest {
 
         InventoryPojo inventoryPojo = new InventoryPojo();
         inventoryPojo.setInventory(100);
+        inventoryPojo.setId(1);
         inventoryService.add(inventoryPojo);
 
         inventoryPojo.setInventory(120);

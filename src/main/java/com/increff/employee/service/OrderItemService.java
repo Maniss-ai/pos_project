@@ -67,14 +67,6 @@ public class OrderItemService {
     public List<OrderItemPojo> getWithProductId(Integer productId) {
         return dao.selectWithProductId(productId);
     }
-    @Transactional
-    public List<OrderItemPojo> getCheckWithBarcode(String barcode) throws ApiException {
-        List<OrderItemPojo> orderItemPojoList = dao.select1(barcode);
-        if (orderItemPojoList.size() == 0) {
-            throw new ApiException("Product with barcode: " + barcode + " does not exit");
-        }
-        return orderItemPojoList;
-    }
 
     @Transactional
     public OrderItemPojo getCheck(Integer orderItemId) throws ApiException {

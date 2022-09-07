@@ -30,8 +30,8 @@ public class ProductDto {
 
     public ProductData add(ProductForm form) throws ApiException {
         Checks.nullCheckProduct(form);
+        DtoHelper.normalizeProduct(form);
         ProductPojo pojo = DtoHelper.convertFormToPojoProduct(form);
-        DtoHelper.normalizeProduct(pojo);
         Checks.checkLength(form);
         boolean unique = Checks.isUnique(pojo, getAll());
         Checks.isMrpNegative(pojo.getMrp());
@@ -117,6 +117,7 @@ public class ProductDto {
         if(form.getBarcode().length() > 20) {
             throw new ApiException("Barcode is too long");
         }
+
         Checks.isMrpNegative(pojo.getMrp());
 
         if(Checks.isUnique(id, pojo, getAll())) {

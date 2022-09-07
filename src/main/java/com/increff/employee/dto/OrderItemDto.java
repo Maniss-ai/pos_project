@@ -135,7 +135,6 @@ public class OrderItemDto {
 
             InventoryPojo inventoryPojo = new InventoryPojo();
             inventoryPojo.setInventory(currentInventory);
-//            inventoryPojo.setBarcode(orderItemPojo.getBarcode());
             inventoryService.update(orderItemPojo.getProductId(), inventoryPojo);
         }
     }

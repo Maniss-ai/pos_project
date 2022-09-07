@@ -28,10 +28,11 @@ public class InventoryDaoTest extends AbstractUnitTest {
         productPojo.setBarcode("puma111");
         productPojo.setProduct("sports shoes");
         productPojo.setMrp(2999.362);
-        productDao.insert(productPojo);
+        Integer productId = productDao.insert(productPojo).getId();
 
         InventoryPojo inventoryPojo = new InventoryPojo();
         inventoryPojo.setInventory(38);
+        inventoryPojo.setId(productId);
         inventoryPojo = inventoryDao.insert(inventoryPojo);
 
         Assert.assertEquals(38, inventoryPojo.getInventory(), 1);
@@ -48,10 +49,11 @@ public class InventoryDaoTest extends AbstractUnitTest {
         productPojo.setBarcode("puma111");
         productPojo.setProduct("sports shoes");
         productPojo.setMrp(2999.362);
-        productDao.insert(productPojo);
+        Integer productId = productDao.insert(productPojo).getId();
 
         InventoryPojo inventoryPojo = new InventoryPojo();
         inventoryPojo.setInventory(38);
+        inventoryPojo.setId(productId);
         inventoryPojo = inventoryDao.insert(inventoryPojo);
 
         inventoryPojo = inventoryDao.select(inventoryPojo.getId());
@@ -78,6 +80,7 @@ public class InventoryDaoTest extends AbstractUnitTest {
         for(int i = 0; i < 5; i++) {
             InventoryPojo inventoryPojo = new InventoryPojo();
             inventoryPojo.setInventory((i+1) * 42);
+            inventoryPojo.setId(i+1);
             inventoryDao.insert(inventoryPojo);
         }
 

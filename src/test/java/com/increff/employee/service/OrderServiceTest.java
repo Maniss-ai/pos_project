@@ -35,6 +35,7 @@ public class OrderServiceTest extends AbstractUnitTest {
 
         InventoryPojo inventoryPojo = new InventoryPojo();
         inventoryPojo.setInventory(78);
+        inventoryPojo.setId(1);
         inventoryService.add(inventoryPojo);
 
         OrderItemPojo orderItemPojo = new OrderItemPojo();
@@ -71,6 +72,7 @@ public class OrderServiceTest extends AbstractUnitTest {
 
         InventoryPojo inventoryPojo = new InventoryPojo();
         inventoryPojo.setInventory(78);
+        inventoryPojo.setId(1);
         inventoryService.add(inventoryPojo);
 
         OrderItemPojo orderItemPojo = new OrderItemPojo();

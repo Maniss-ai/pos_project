@@ -35,7 +35,7 @@ function generateSalesReport(event) {
         },
         success: function(data) {
 			console.log("LENGTH : " + data.split("\n").length);
-			if(data.split("\n").length <= 2) {
+			if(data.split("\n").length < 2) {
 				$.notify("Empty sales report for selected date", "info");
 				return;
 			} else {
